@@ -9,6 +9,12 @@
 // before doing so.
 
 // Custom definitions may go here
+
+repositories {
+    maven { url = 'https://jitpack.io' }
+    maven { url = 'https://maven.brott.dev/' }
+}
+
 buildscript {
     repositories {
         maven {

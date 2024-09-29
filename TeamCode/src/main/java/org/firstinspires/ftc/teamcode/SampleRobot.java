@@ -13,11 +13,13 @@ import java.util.List;
 //TODO: change all IDs to what they are in your robot configuration
 @JoosConfig
 public class SampleRobot extends Robot {
-    public final IMUAngleSensor headingSensor = new IMUAngleSensor(
-            hMap, "imu",
-            RevHubOrientationOnRobot.LogoFacingDirection.UP, // TODO: Set these to what they are on your robot
-            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
-    );
+//    public final IMUAngleSensor headingSensor = new IMUAngleSensor(
+//            hMap, "imu",
+//            RevHubOrientationOnRobot.LogoFacingDirection.UP, // TODO: Set these to what they are on your robot
+//            RevHubOrientationOnRobot.UsbFacingDirection.FORWARD
+//    );
+
+
 
     //TODO: Uncomment if using 3-wheel odometry
 //    public static double lateralDistance = 1.0;
@@ -33,6 +35,8 @@ public class SampleRobot extends Robot {
     @Override
     public void init() {
         register(drive);
+
+        drive.setLocalizer(new OTOLocalizer(SparkFunOTOS myOTO));
 
         //TODO: Uncomment if using 3-wheel odometry
 //        drive.setLocalizer(new Standard3WheelLocalizer(
