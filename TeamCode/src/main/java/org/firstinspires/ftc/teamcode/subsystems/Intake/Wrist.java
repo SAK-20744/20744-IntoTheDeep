@@ -6,9 +6,11 @@ import com.qualcomm.robotcore.hardware.Servo;
 public class Wrist {
 
     private Servo wristServo;
+
     public static double driving = 1;
     public static double transfering = 0.5;
     public static double intaking = 0;
+
     private double wristPosition = 0;
 
     public Wrist(HardwareMap hardwareMap) {
