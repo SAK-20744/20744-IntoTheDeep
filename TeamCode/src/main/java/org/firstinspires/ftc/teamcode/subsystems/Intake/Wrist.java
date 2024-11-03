@@ -7,8 +7,8 @@ public class Wrist {
 
     private Servo wristServo;
 
-    public static double driving = 1;
-    public static double transfering = 0.5;
+//    public static double driving = 1;
+    public static double transfering = 1;
     public static double intaking = 0;
 
     private double wristPosition = 0;
@@ -17,9 +17,9 @@ public class Wrist {
         wristServo = hardwareMap.get(Servo.class, "wrist");
     }
 
-    public void driving(){
-        wristServo.setPosition(driving);
-    }
+//    public void driving(){
+//        wristServo.setPosition(driving);
+//    }
     public void transfering(){wristServo.setPosition(transfering);}
     public void intaking(){
         wristServo.setPosition(intaking);

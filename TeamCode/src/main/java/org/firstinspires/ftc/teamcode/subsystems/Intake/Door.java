@@ -7,8 +7,8 @@ public class Door {
 
     private Servo doorServo;
 
-    public static double transfering = 0;
-    public static double intaking = 0.5;
+    public static double transfering = 0.5;
+    public static double intaking = 1;
 
     private double doorPosition = 0;
 

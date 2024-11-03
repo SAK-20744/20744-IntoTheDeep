@@ -8,8 +8,8 @@ public class Extendo {
     private Servo leftExtension;
     private Servo rightExtension;
 
-    public static double driving = 1;  // 0 to 1 values
-    public static double transfering = 0.5;
+//    public static double driving = 1;  // 0 to 1 values
+    public static double transfering = 0.9;
     public static double intaking = 0;
 
     private double leftPosition = 0;
@@ -20,10 +20,10 @@ public class Extendo {
         rightExtension = hardwareMap.get(Servo.class, "rightExtendo");
     }
 
-    public void driving(){
-        leftExtension.setPosition(driving);
-        rightExtension.setPosition(1-driving);
-    }
+//    public void driving(){
+//        leftExtension.setPosition(driving);
+//        rightExtension.setPosition(1-driving);
+//    }
 
     public void transfering(){
         leftExtension.setPosition(transfering);
