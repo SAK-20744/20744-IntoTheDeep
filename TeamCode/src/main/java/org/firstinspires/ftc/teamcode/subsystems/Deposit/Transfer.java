@@ -7,8 +7,8 @@ public class Transfer {
 
     private Servo transferServo;
 
-    public static double holding = 1;
-    public static double depositing = 0.5;
+    public static double holding = 0.5;
+    public static double depositing = 0;
 
     private double transferPosition = 0;
 
