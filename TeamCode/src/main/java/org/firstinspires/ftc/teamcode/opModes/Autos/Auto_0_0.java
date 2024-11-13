@@ -20,7 +20,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Poi
 public class Auto_0_0 extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
-    private DcMotorEx leftLift;
+    private DcMotorEx leftLift, intake;
     private DigitalChannel liftLimit;
 
     private int liftTarget = 0;
@@ -46,6 +46,7 @@ public class Auto_0_0 extends OpMode{
         leftExtendo = hardwareMap.get(Servo.class, "leftExtendo");
         rightExtendo = hardwareMap.get(Servo.class, "rightExtendo");
         leftLift = hardwareMap.get(DcMotorEx.class, "lift");
+        intake = hardwareMap.get(DcMotorEx.class, "intake");
         wrist = hardwareMap.get(Servo.class, "wrist");
         leftV4B = hardwareMap.get(Servo.class, "leftV4B");
         door = hardwareMap.get(Servo.class, "door");
@@ -56,8 +57,6 @@ public class Auto_0_0 extends OpMode{
         wrist.setPosition(0.4);
         leftExtendo.setPosition(0.05);
         rightExtendo.setPosition(0.95);
-
-
 
         //NOT WORKING
         if (gamepad2.left_bumper) {
