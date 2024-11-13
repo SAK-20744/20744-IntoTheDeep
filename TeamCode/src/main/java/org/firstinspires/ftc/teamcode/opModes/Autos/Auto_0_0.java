@@ -97,7 +97,6 @@ public class Auto_0_0 extends OpMode{
         leftExtendo.setPosition(0.05);
         rightExtendo.setPosition(0.95);
 
-
         //NOT WORKING
         telemetry.addData("Lift Current", leftLift.getCurrentPosition());
         telemetry.addData("Lift Limit", liftLimit.getState());
