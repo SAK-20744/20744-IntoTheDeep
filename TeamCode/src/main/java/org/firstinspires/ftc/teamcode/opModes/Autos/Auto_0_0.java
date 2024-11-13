@@ -51,23 +51,31 @@ public class Auto_0_0 extends OpMode{
         leftV4B = hardwareMap.get(Servo.class, "leftV4B");
         door = hardwareMap.get(Servo.class, "door");
         transfer = hardwareMap.get(Servo.class, "trans");
+        pitch = hardwareMap.get(Servo.class, "pitch");
 
         door.setPosition(0.5);
         leftV4B.setPosition(0.13);
         wrist.setPosition(0.4);
+        pitch.setPosition(0.88);
         leftExtendo.setPosition(0.05);
         rightExtendo.setPosition(0.95);
 
-        //NOT WORKING
-        if (gamepad2.left_bumper) {
+        leftLift.setTargetPosition(liftTarget);
+
+    }
+
+    @Override
+    public void init_loop(){
+
+        if (!gamepad2.left_bumper) {
             transfer.setPosition(0.52);
         } else {
             transfer.setPosition(0.17);
         }
 
-        leftLift.setTargetPosition(liftTarget);
+        leftLift.setPower(gamepad2.right_stick_y);
 
-        if (!liftLimit.getState()){
+        if (liftLimit.getState()){
             leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         }
@@ -75,7 +83,6 @@ public class Auto_0_0 extends OpMode{
         telemetry.addData("Lift Current", leftLift.getCurrentPosition());
         telemetry.addData("Lift Limit", liftLimit.getState());
         telemetry.update();
-
     }
 
     @Override
@@ -84,6 +91,7 @@ public class Auto_0_0 extends OpMode{
         leftV4B.setPosition(0.13);
         wrist.setPosition(0.4);
         door.setPosition(0.5);
+        pitch.setPosition(0.88);
         leftLift.setTargetPosition(liftTarget);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftExtendo.setPosition(0.05);
