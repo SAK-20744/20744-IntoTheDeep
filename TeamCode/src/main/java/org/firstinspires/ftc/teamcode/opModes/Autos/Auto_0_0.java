@@ -24,6 +24,8 @@ public class Auto_0_0 extends OpMode{
     private DigitalChannel liftLimit;
 
     private int liftTarget = 0;
+    private double leftV4BTarget = 0.12;
+    private double transferTarget = 0.52;
 
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
@@ -54,7 +56,8 @@ public class Auto_0_0 extends OpMode{
         pitch = hardwareMap.get(Servo.class, "pitch");
 
         door.setPosition(0.5);
-        leftV4B.setPosition(0.13);
+        leftV4B.setPosition(leftV4BTarget);
+        transfer.setPosition(transferTarget);
         wrist.setPosition(0.4);
         pitch.setPosition(0.88);
         leftExtendo.setPosition(0.05);
@@ -88,16 +91,21 @@ public class Auto_0_0 extends OpMode{
     @Override
     public void loop() {
         follower.update();
-        leftV4B.setPosition(0.13);
+        leftV4B.setPosition(leftV4BTarget);
         wrist.setPosition(0.4);
         door.setPosition(0.5);
         pitch.setPosition(0.88);
+        leftLift.setPower(1);
         leftLift.setTargetPosition(liftTarget);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftExtendo.setPosition(0.05);
         rightExtendo.setPosition(0.95);
+        transfer.setPosition(transferTarget);
 
-        //NOT WORKING
+//        leftLift.setTargetPositionTolerance(5);
+
+        telemetry.addData("transfer Pos", transfer.getPosition());
+        telemetry.addData("4Bar Pos", leftV4B.getPosition());
         telemetry.addData("Lift Current", leftLift.getCurrentPosition());
         telemetry.addData("Lift Limit", liftLimit.getState());
         telemetry.update();
@@ -107,7 +115,11 @@ public class Auto_0_0 extends OpMode{
     public void start() {
         super.start();
         follower.followPath(toBasket);
-        liftTarget = 500;
+
+        liftTarget = -2800;
+        leftV4BTarget = 0.85;
+        transferTarget = 0.17;
+
     }
 
     @Override
