@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
 @Autonomous(name = "Preload")
 public class Auto_0_0 extends OpMode{
@@ -31,10 +32,13 @@ public class Auto_0_0 extends OpMode{
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
     private Pose basketPos = new Pose(20,15, Math.toRadians(0));
     private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toPark;
+    private int pathState;
+    private Timer pathTimer;
 
     public void buildPaths() {
         toBasket = new Path(new BezierLine(new Point(startPose), new Point(basketPos)));
         toBasket.setConstantHeadingInterpolation(0);
+        toBasket.setPathEndTimeoutConstraint(2.5);
     }
 
     @Override
@@ -111,13 +115,30 @@ public class Auto_0_0 extends OpMode{
         telemetry.update();
     }
 
+    public void setPathState(int state) {
+        pathState = state;
+        pathTimer.resetTimer();
+//        autonomousPathUpdate();
+    }
+
+    public void resetTimer(){}
+
+
     @Override
     public void start() {
         super.start();
-        follower.followPath(toBasket);
+//        setPathState(0);
+        resetTimer();
 
+        follower.followPath(toBasket);
         liftTarget = -2800;
-        leftV4BTarget = 0.85;
+
+        if (pathTimer.getElapsedTime() > 2500) {
+            leftV4BTarget = 0.85;
+            resetTimer();
+        }
+
+        if(pathTimer.getElapsedTime() > 1000)
         transferTarget = 0.17;
 
     }
