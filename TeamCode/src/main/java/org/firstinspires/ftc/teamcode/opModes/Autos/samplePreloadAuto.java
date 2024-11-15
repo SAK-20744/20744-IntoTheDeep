@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
+//LEFT EDGE 1 TILE OVER
 @Autonomous(name = "0+1")
 public class samplePreloadAuto extends OpMode{
 
