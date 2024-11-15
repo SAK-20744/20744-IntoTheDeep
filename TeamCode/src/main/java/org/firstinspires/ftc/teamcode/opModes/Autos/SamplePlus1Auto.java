@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Poi
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
 @Autonomous(name = "0+1")
-public class samplePreloadAuto extends OpMode{
+public class SamplePlus1Auto extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, intake;
@@ -149,6 +149,38 @@ public class samplePreloadAuto extends OpMode{
             leftV4BTarget = 0.12;
 
         if (pathTimer.getElapsedTime() > 3200)
+            liftTarget = 0;
+
+        if(pathTimer.getElapsedTime() > 3650) {
+            follower.followPath(toSample1);
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_INTAKING;
+            intake.setPower(INTAKE_IN);
+        }
+
+        if(pathTimer.getElapsedTime() > 5000) {
+            wristTarget = WRIST_UP;
+            intake.setPower(INTAKE_OFF);
+            lExtTarget = EXTENDO_RETRACTED;
+            doorTarget = DOOR_OPEN;
+        }
+
+        if(pathTimer.getElapsedTime() > 5750)
+            transferTarget = 0.52;
+
+        if(pathTimer.getElapsedTime() > 6050)
+            liftTarget = LIFT_HIGH_BASKET;
+
+        if (pathTimer.getElapsedTime() > 7600)
+            leftV4BTarget = 0.85;
+
+        if(pathTimer.getElapsedTime() > 8200)
+            transferTarget = 0.17;
+
+        if (pathTimer.getElapsedTime() > 8600)
+            leftV4BTarget = 0.12;
+
+        if (pathTimer.getElapsedTime() > 9500)
             liftTarget = 0;
 
         if(pathTimer.getElapsedTime() > 25000)
