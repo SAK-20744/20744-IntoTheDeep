@@ -22,29 +22,40 @@ public class samplePreloadAuto extends OpMode{
     private DcMotorEx leftLift, intake;
     private DigitalChannel liftLimit;
 
-    private int liftTarget = 0;
-    private double leftV4BTarget = 0.12;
-    private double transferTarget = 0.52;
-    private double lExtTarget = 0.05;
+    //fix wristintaking, and dooropen
+    private final double V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 1, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0, DOOR_CLOSED = 0.5;
+    private final int LIFT_RETRACTED = 0, LIFT_HIGH_BASKET = -2800;
+
+    private int liftTarget = LIFT_RETRACTED;
+    private double leftV4BTarget = V4B_IN;
+    private double transferTarget = TRANSFER_CLOSED;
+    private double lExtTarget = EXTENDO_RETRACTED;
+    private double wristTarget = WRIST_UP;
+    private double doorTarget = DOOR_CLOSED;
 
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
+    private Pose sample1Pos = new Pose(12.5,18.5, Math.toRadians(0));
     private Pose basketPos = new Pose(8.3,19.3, Math.toRadians(-25));
     private Pose avoidPos = new Pose(60, 10, Math.toRadians(120));
     private Pose parkPos = new Pose(53, -15, Math.toRadians(90));
+
     private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toPark;
-    private int pathState;
     private Timer pathTimer;
+//    private int pathState;
 
     public void buildPaths() {
         toBasket = new Path(new BezierLine(new Point(startPose), new Point(basketPos)));
         toBasket.setLinearHeadingInterpolation(startPose.getHeading(), basketPos.getHeading());
         toBasket.setPathEndTimeoutConstraint(2.5);
 
+        toSample1 = new Path(new BezierLine(new Point(basketPos), new Point(sample1Pos)));
+        toSample1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading());
+        toSample1.setPathEndTimeoutConstraint(2.5);
+
         toPark = new Path(new BezierCurve(new Point(basketPos), new Point(avoidPos), new Point(parkPos)));
         toPark.setLinearHeadingInterpolation(basketPos.getHeading(), parkPos.getHeading());
         toPark.setPathEndTimeoutConstraint(2.5);
-
     }
 
     @Override
@@ -66,15 +77,14 @@ public class samplePreloadAuto extends OpMode{
         transfer = hardwareMap.get(Servo.class, "trans");
         pitch = hardwareMap.get(Servo.class, "pitch");
 
-        door.setPosition(0.5);
+        door.setPosition(doorTarget);
         leftV4B.setPosition(leftV4BTarget);
         transfer.setPosition(transferTarget);
-        wrist.setPosition(0.4);
-        pitch.setPosition(0.88);
+        wrist.setPosition(wristTarget);
         leftExtendo.setPosition(lExtTarget);
         rightExtendo.setPosition(1-lExtTarget);
-
         leftLift.setTargetPosition(liftTarget);
+        pitch.setPosition(0.88);
 
     }
 
@@ -103,17 +113,15 @@ public class samplePreloadAuto extends OpMode{
         autonomousPathUpdate();
         follower.update();
         leftV4B.setPosition(leftV4BTarget);
-        wrist.setPosition(0.4);
-        door.setPosition(0.5);
         pitch.setPosition(0.88);
+        door.setPosition(doorTarget);
+        wrist.setPosition(wristTarget);
         leftLift.setPower(1);
         leftLift.setTargetPosition(liftTarget);
         leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftExtendo.setPosition(lExtTarget);
         rightExtendo.setPosition(1-lExtTarget);
         transfer.setPosition(transferTarget);
-
-//        leftLift.setTargetPositionTolerance(5);
 
         telemetry.addData("transfer Pos", transfer.getPosition());
         telemetry.addData("4Bar Pos", leftV4B.getPosition());
@@ -124,12 +132,10 @@ public class samplePreloadAuto extends OpMode{
     }
 
     public void setPathState(int state) {
-        pathState = state;
+//        pathState = state;
         pathTimer.resetTimer();
         autonomousPathUpdate();
     }
-
-    public void resetTimer(){ pathTimer.resetTimer(); }
 
     public void autonomousPathUpdate(){
 
@@ -139,8 +145,8 @@ public class samplePreloadAuto extends OpMode{
         if(pathTimer.getElapsedTime() > 2600)
             transferTarget = 0.17;
 
-        if(pathTimer.getElapsedTime() > 3000)
-            transferTarget = 0.52;
+//        if(pathTimer.getElapsedTime() > 3000)
+//            transferTarget = 0.52;
 
         if (pathTimer.getElapsedTime() > 3100)
             leftV4BTarget = 0.12;
@@ -155,20 +161,15 @@ public class samplePreloadAuto extends OpMode{
             follower.followPath(toPark);
     }
 
-
     @Override
     public void start() {
         super.start();
         setPathState(0);
-//        resetTimer();
         follower.followPath(toBasket);
         liftTarget = -2800;
-
     }
 
     @Override
-    public void stop() {
-        super.stop();
-    }
+    public void stop() { super.stop(); }
 
 }
