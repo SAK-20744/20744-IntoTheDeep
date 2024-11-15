@@ -24,7 +24,7 @@ public class SamplePlus1Auto extends OpMode{
     private DigitalChannel liftLimit;
 
     //fix wristintaking, and dooropen
-    private final double INTAKE_IN = 0, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 1, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
+    private final double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 1, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
     private final int LIFT_RETRACTED = 0, LIFT_HIGH_BASKET = -2800;
 
     private int liftTarget = LIFT_RETRACTED;
@@ -39,7 +39,7 @@ public class SamplePlus1Auto extends OpMode{
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
     private Pose sample1Pos = new Pose(20,19, Math.toRadians(0));
     private Pose basketPos = new Pose(8.3,17, Math.toRadians(-45));
-    private Pose avoidPos = new Pose(55, 15, Math.toRadians(-90));
+    private Pose avoidPos = new Pose(55, 5, Math.toRadians(-90));
     private Pose parkPos = new Pose(55, -5, Math.toRadians(-90));
 
     private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toAvoid, toPark;
@@ -57,11 +57,11 @@ public class SamplePlus1Auto extends OpMode{
 
         score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos)));
         score1.setLinearHeadingInterpolation(sample1Pos.getHeading(), basketPos.getHeading());
-        score1.setPathEndTimeoutConstraint(2.5);
+        score1.setPathEndTimeoutConstraint(5);
 
-        toAvoid = new Path(new BezierLine(new Point(basketPos), new Point(avoidPos)));
-        toAvoid.setLinearHeadingInterpolation(basketPos.getHeading(), avoidPos.getHeading());
-        toAvoid.setPathEndTimeoutConstraint(2.5);
+        toPark = new Path(new BezierCurve(new Point(basketPos), new Point(avoidPos), new Point(parkPos)));
+        toPark.setLinearHeadingInterpolation(basketPos.getHeading(), avoidPos.getHeading());
+        toPark.setPathEndTimeoutConstraint(2.5);
 
     }
 
@@ -165,9 +165,9 @@ public class SamplePlus1Auto extends OpMode{
         }
 
         if(pathTimer.getElapsedTime() > 4250){
+            intakePower = INTAKE_IN;
             lExtTarget = EXTENDO_EXTENDED;
             wristTarget = WRIST_INTAKING;
-            intakePower = INTAKE_IN;
         }
 
         if(pathTimer.getElapsedTime() > 6000) {
@@ -190,17 +190,17 @@ public class SamplePlus1Auto extends OpMode{
             leftV4BTarget = 0.85;
         }
 
-        if(pathTimer.getElapsedTime() > 9200)
+        if(pathTimer.getElapsedTime() > 9600)
             transferTarget = 0.17;
 
-        if (pathTimer.getElapsedTime() > 9600)
+        if (pathTimer.getElapsedTime() > 10000)
             leftV4BTarget = 0.12;
 
-        if (pathTimer.getElapsedTime() > 10500)
+        if (pathTimer.getElapsedTime() > 10750)
             liftTarget = 0;
 
         if(pathTimer.getElapsedTime() > 20000)
-            follower.followPath(toAvoid);
+            follower.followPath(toPark);
     }
 
     @Override
