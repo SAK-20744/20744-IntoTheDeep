@@ -12,12 +12,11 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Autonomous(name = "0+2")
-public class SamplePlus1Auto extends OpMode{
+@Autonomous(name = "0+3")
+public class SamplePlus2Auto extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, intake;
@@ -38,6 +37,7 @@ public class SamplePlus1Auto extends OpMode{
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
     private Pose sample1Pos = new Pose(20,19, Math.toRadians(0));
+    private Pose sample2Pos = new Pose(20,14, Math.toRadians(0));
     private Pose basketPos = new Pose(8.3,17, Math.toRadians(-45));
     private Pose avoidPos = new Pose(55, 5, Math.toRadians(-90));
     private Pose parkPos = new Pose(55, -5, Math.toRadians(-90));
@@ -58,6 +58,14 @@ public class SamplePlus1Auto extends OpMode{
         score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos)));
         score1.setLinearHeadingInterpolation(sample1Pos.getHeading(), basketPos.getHeading());
         score1.setPathEndTimeoutConstraint(5);
+
+        toSample2 = new Path(new BezierLine(new Point(basketPos), new Point(sample2Pos)));
+        toSample2.setLinearHeadingInterpolation(basketPos.getHeading(), sample2Pos.getHeading(), 0.5);
+        toSample2.setPathEndTimeoutConstraint(3);
+
+        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos)));
+        score2.setLinearHeadingInterpolation(sample2Pos.getHeading(), basketPos.getHeading());
+        score2.setPathEndTimeoutConstraint(5);
 
         toPark = new Path(new BezierCurve(new Point(basketPos), new Point(avoidPos), new Point(parkPos)));
         toPark.setLinearHeadingInterpolation(basketPos.getHeading(), avoidPos.getHeading());
@@ -197,6 +205,45 @@ public class SamplePlus1Auto extends OpMode{
             leftV4BTarget = 0.12;
 
         if (pathTimer.getElapsedTime() > 10750)
+            liftTarget = 0;
+
+        if(pathTimer.getElapsedTime() > 3650+7300) {
+            follower.followPath(toSample1);
+        }
+
+        if(pathTimer.getElapsedTime() > 4250+7300){
+            intakePower = INTAKE_IN;
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_INTAKING;
+        }
+
+        if(pathTimer.getElapsedTime() > 6000+7300) {
+            wristTarget = WRIST_UP;
+            intakePower = INTAKE_OFF;
+            lExtTarget = EXTENDO_RETRACTED;
+            doorTarget = DOOR_OPEN;
+        }
+
+        if(pathTimer.getElapsedTime() > 6750+7300)
+            transferTarget = 0.52;
+
+        if(pathTimer.getElapsedTime() > 7050+7300) {
+            follower.followPath(score1);
+            liftTarget = LIFT_HIGH_BASKET;
+        }
+
+        if (pathTimer.getElapsedTime() > 8600+7300) {
+            follower.breakFollowing();
+            leftV4BTarget = 0.85;
+        }
+
+        if(pathTimer.getElapsedTime() > 9600+7300)
+            transferTarget = 0.17;
+
+        if (pathTimer.getElapsedTime() > 10000+7300)
+            leftV4BTarget = 0.12;
+
+        if (pathTimer.getElapsedTime() > 10750+7300)
             liftTarget = 0;
 
 //        if(pathTimer.getElapsedTime() > 20000)
