@@ -36,7 +36,7 @@ public class samplePreloadAuto extends OpMode{
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
     private Pose sample1Pos = new Pose(12.5,18.5, Math.toRadians(0));
-    private Pose basketPos = new Pose(8.3,19.3, Math.toRadians(-25));
+    private Pose basketPos = new Pose(8.3,17, Math.toRadians(-45));
     private Pose avoidPos = new Pose(60, 10, Math.toRadians(120));
     private Pose parkPos = new Pose(53, -15, Math.toRadians(90));
 
@@ -142,10 +142,10 @@ public class samplePreloadAuto extends OpMode{
         if (pathTimer.getElapsedTime() > 1550)
             leftV4BTarget = 0.85;
 
-        if(pathTimer.getElapsedTime() > 2250)
+        if(pathTimer.getElapsedTime() > 2400)
             transferTarget = 0.17;
 
-        if (pathTimer.getElapsedTime() > 2650)
+        if (pathTimer.getElapsedTime() > 2700)
             leftV4BTarget = 0.12;
 
         if (pathTimer.getElapsedTime() > 3200)
