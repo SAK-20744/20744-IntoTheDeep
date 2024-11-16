@@ -24,7 +24,7 @@ public class samplePreloadAuto extends OpMode{
     private DigitalChannel liftLimit;
 
     //fix wristintaking, and dooropen
-    private final double INTAKE_IN = 0, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 1, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0, DOOR_CLOSED = 0.5;
+    private final double INTAKE_IN = 0, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 0.7, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0, DOOR_CLOSED = 0.5;
     private final int LIFT_RETRACTED = 0, LIFT_HIGH_BASKET = -2800;
 
     private int liftTarget = LIFT_RETRACTED;
