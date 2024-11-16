@@ -32,13 +32,14 @@ public class SamplePlus1Auto extends OpMode{
     private double transferTarget = TRANSFER_CLOSED;
     private double lExtTarget = EXTENDO_RETRACTED;
     private double wristTarget = WRIST_UP;
-    private double doorTarget = DOOR_CLOSED;
+    private double doorTarget = DOOR_OPEN;
     private double intakePower = INTAKE_OFF;
 
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
     private Pose sample1Pos = new Pose(20,19, Math.toRadians(0));
     private Pose basketPos = new Pose(8.3,17, Math.toRadians(-45));
+    private Pose basketPos1 = new Pose(8.3,17, Math.toRadians(-45));
     private Pose avoidPos = new Pose(55, 5, Math.toRadians(-90));
     private Pose parkPos = new Pose(55, -5, Math.toRadians(-90));
 
@@ -55,11 +56,11 @@ public class SamplePlus1Auto extends OpMode{
         toSample1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading(), 0.5);
         toSample1.setPathEndTimeoutConstraint(3);
 
-        score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos)));
+        score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos1)));
         score1.setLinearHeadingInterpolation(sample1Pos.getHeading(), basketPos.getHeading());
         score1.setPathEndTimeoutConstraint(5);
 
-        toPark = new Path(new BezierCurve(new Point(basketPos), new Point(avoidPos), new Point(parkPos)));
+        toPark = new Path(new BezierCurve(new Point(basketPos1), new Point(avoidPos), new Point(parkPos)));
         toPark.setLinearHeadingInterpolation(basketPos.getHeading(), avoidPos.getHeading());
         toPark.setPathEndTimeoutConstraint(2.5);
 
@@ -166,6 +167,7 @@ public class SamplePlus1Auto extends OpMode{
 
         if(pathTimer.getElapsedTime() > 4250){
             intakePower = INTAKE_IN;
+            doorTarget = DOOR_CLOSED;
             lExtTarget = EXTENDO_EXTENDED;
             wristTarget = WRIST_INTAKING;
         }
