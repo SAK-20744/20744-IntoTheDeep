@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Autonomous(name = "0+3")
-public class SamplePlus2Auto extends OpMode{
+@Autonomous(name = "0+4")
+public class SamplePlus3Auto extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, intake;
@@ -53,34 +53,29 @@ public class SamplePlus2Auto extends OpMode{
     public void buildPaths() {
         toBasket = new Path(new BezierLine(new Point(startPose), new Point(basketPos)));
         toBasket.setLinearHeadingInterpolation(startPose.getHeading(), basketPos.getHeading());
-        toBasket.setPathEndTimeoutConstraint(2.5);
 
         toSample1 = new Path(new BezierLine(new Point(basketPos), new Point(sample1Pos)));
         toSample1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading(), 0.5);
-        toSample1.setPathEndTimeoutConstraint(3);
 
-        score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos1)));
-        score1.setLinearHeadingInterpolation(sample1Pos.getHeading(), basketPos1.getHeading());
-        score1.setPathEndTimeoutConstraint(5);
+        score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos)));
+        score1.setLinearHeadingInterpolation(sample1Pos.getHeading(), basketPos.getHeading());
 
-        toSample2 = new Path(new BezierLine(new Point(basketPos1), new Point(sample2Pos)));
-        toSample2.setLinearHeadingInterpolation(basketPos1.getHeading(), sample2Pos.getHeading(), 0.25);
-        toSample2.setPathEndTimeoutConstraint(3);
+        toSample2 = new Path(new BezierLine(new Point(basketPos), new Point(sample2Pos)));
+        toSample2.setLinearHeadingInterpolation(basketPos.getHeading(), sample2Pos.getHeading(), 0.25);
 
-        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos2)));
-        score2.setLinearHeadingInterpolation(sample2Pos.getHeading(), basketPos2.getHeading());
-        score2.setPathEndTimeoutConstraint(5);
+        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos)));
+        score2.setLinearHeadingInterpolation(sample2Pos.getHeading(), basketPos.getHeading());
 
-        toSample3 = new Path(new BezierLine(new Point(basketPos2), new Point(sample3Pos)));
-        toSample3.setLinearHeadingInterpolation(basketPos2.getHeading(), sample3Pos.getHeading(), 0.25);
+        toSample3 = new Path(new BezierLine(new Point(basketPos), new Point(sample3Pos)));
+        toSample3.setLinearHeadingInterpolation(basketPos.getHeading(), sample3Pos.getHeading(), 0.25);
         toSample3.setPathEndTimeoutConstraint(3);
 
-        score3 = new Path(new BezierLine(new Point(sample3Pos), new Point(basketPos3)));
-        score3.setLinearHeadingInterpolation(sample3Pos.getHeading(), basketPos3.getHeading());
+        score3 = new Path(new BezierLine(new Point(sample3Pos), new Point(basketPos)));
+        score3.setLinearHeadingInterpolation(sample3Pos.getHeading(), basketPos.getHeading());
         score3.setPathEndTimeoutConstraint(5);
 
-        toPark = new Path(new BezierCurve(new Point(basketPos2), new Point(avoidPos), new Point(parkPos)));
-        toPark.setLinearHeadingInterpolation(basketPos2.getHeading(), avoidPos.getHeading(), 0.25);
+        toPark = new Path(new BezierCurve(new Point(basketPos3), new Point(avoidPos), new Point(parkPos)));
+        toPark.setLinearHeadingInterpolation(basketPos3.getHeading(), avoidPos.getHeading(), 0.25);
         toPark.setPathEndTimeoutConstraint(2.5);
 
     }
@@ -168,6 +163,9 @@ public class SamplePlus2Auto extends OpMode{
 
     public void autonomousPathUpdate(){
 
+        follower.followPath(toBasket);
+        liftTarget = -2800;
+
         if (pathTimer.getElapsedTime() > 1550)
             leftV4BTarget = 0.85;
 
@@ -215,89 +213,89 @@ public class SamplePlus2Auto extends OpMode{
         if (pathTimer.getElapsedTime() > 9000)
             leftV4BTarget = 0.12;
 
-        if(pathTimer.getElapsedTime() > 9300) {
+        if(pathTimer.getElapsedTime() > 9700) {
             follower.followPath(toSample2);
             liftTarget = 0;
         }
         
-        if(pathTimer.getElapsedTime() > 4250+6050){
+        if(pathTimer.getElapsedTime() > 11250){
             intakePower = INTAKE_IN;
             doorTarget = DOOR_CLOSED;
             lExtTarget = EXTENDO_EXTENDED;
             wristTarget = WRIST_INTAKING;
         }
 
-        if(pathTimer.getElapsedTime() > 6000+6050) {
+        if(pathTimer.getElapsedTime() > 12050) {
             wristTarget = WRIST_UP;
             intakePower = INTAKE_OFF;
             lExtTarget = EXTENDO_RETRACTED;
             doorTarget = DOOR_OPEN;
         }
 
-        if(pathTimer.getElapsedTime() > 6750+6050)
+        if(pathTimer.getElapsedTime() > 12800)
             transferTarget = 0.52;
 
-        if(pathTimer.getElapsedTime() > 7050+6050) {
+        if(pathTimer.getElapsedTime() > 13200) {
             follower.followPath(score2);
             liftTarget = LIFT_HIGH_BASKET;
         }
 
-        if (pathTimer.getElapsedTime() > 8600+6050) {
+        if (pathTimer.getElapsedTime() > 14650) {
 //            follower.breakFollowing();
             leftV4BTarget = 0.85;
         }
 
-        if(pathTimer.getElapsedTime() > 9600+6050)
+        if(pathTimer.getElapsedTime() > 16600)
             transferTarget = 0.17;
 
-        if (pathTimer.getElapsedTime() > 10000+6050)
+        if (pathTimer.getElapsedTime() > 17000)
             leftV4BTarget = 0.12;
 
-//        if(pathTimer.getElapsedTime() > 16350) {
-//            follower.followPath(toSample3);
+        if(pathTimer.getElapsedTime() > 18000) {
+            follower.followPath(toSample3);
+            liftTarget = 0;
+        }
+//
+//        if (pathTimer.getElapsedTime() > 16500) {
 //            liftTarget = 0;
+//            follower.breakFollowing();
+////            follower.setPose(basketPos2);
+////            follower.followPath(toPark);
 //        }
 
-        if (pathTimer.getElapsedTime() > 16500) {
-            liftTarget = 0;
-            follower.breakFollowing();
-//            follower.setPose(basketPos2);
-//            follower.followPath(toPark);
+        if(pathTimer.getElapsedTime() > 19000){
+            intakePower = INTAKE_IN;
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_INTAKING;
         }
 
-//        if(pathTimer.getElapsedTime() > 17500){
-//            intakePower = INTAKE_IN;
-//            lExtTarget = EXTENDO_EXTENDED;
-//            wristTarget = WRIST_INTAKING;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 18700) {
-//            wristTarget = WRIST_UP;
-//            intakePower = INTAKE_OFF;
-//            lExtTarget = EXTENDO_RETRACTED;
-//            doorTarget = DOOR_OPEN;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 19200)
-//            transferTarget = 0.52;
-//
-//        if(pathTimer.getElapsedTime() > 19500) {
-//            follower.followPath(score3);
-//            liftTarget = LIFT_HIGH_BASKET;
-//        }
-//
-//        if (pathTimer.getElapsedTime() > 21500) {
-////            follower.breakFollowing();
-//            leftV4BTarget = 0.85;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 21800)
-//            transferTarget = 0.17;
-//
-//        if (pathTimer.getElapsedTime() > 22100)
-//            leftV4BTarget = 0.12;
+        if(pathTimer.getElapsedTime() > 20000) {
+            wristTarget = WRIST_UP;
+            intakePower = INTAKE_OFF;
+            lExtTarget = EXTENDO_RETRACTED;
+            doorTarget = DOOR_OPEN;
+        }
 
-        if (pathTimer.getElapsedTime() > 29500) {
+        if(pathTimer.getElapsedTime() > 20500)
+            transferTarget = 0.52;
+
+        if(pathTimer.getElapsedTime() > 21000) {
+            follower.followPath(score3);
+            liftTarget = LIFT_HIGH_BASKET;
+        }
+
+        if (pathTimer.getElapsedTime() > 23000) {
+//            follower.breakFollowing();
+            leftV4BTarget = 0.85;
+        }
+
+        if(pathTimer.getElapsedTime() > 24200)
+            transferTarget = 0.17;
+
+        if (pathTimer.getElapsedTime() > 25000)
+            leftV4BTarget = 0.12;
+
+        if (pathTimer.getElapsedTime() > 26500) {
             liftTarget = 0;
             follower.followPath(toPark);
         }
@@ -307,8 +305,7 @@ public class SamplePlus2Auto extends OpMode{
     public void start() {
         super.start();
         setPathState(0);
-        follower.followPath(toBasket);
-        liftTarget = -2800;
+
     }
 
     @Override
