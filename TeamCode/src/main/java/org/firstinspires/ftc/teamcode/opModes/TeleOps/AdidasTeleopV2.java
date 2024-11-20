@@ -14,6 +14,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 
 @TeleOp(name = "Adidas Teleop V2", group = "Competition")
 public class AdidasTeleopV2 extends OpMode {
@@ -42,6 +43,8 @@ public class AdidasTeleopV2 extends OpMode {
     private double wristTarget = WRIST_UP;
     private double doorTarget = DOOR_OPEN;
     private double intakePower = INTAKE_OFF;
+
+    private boolean locSet = false;
 
     @Override
     public void init() {
@@ -121,11 +124,13 @@ public class AdidasTeleopV2 extends OpMode {
             leftV4BTarget = V4B_OUT;
         }
 
-        if(gamepad2.a)
+        if(gamepad2.a) {
             basketLoc = follower.getPose();
+            locSet = true;
+        }
 
-        if(gamepad2.b)
-            follower.setTeleOpMovementVectors(basketLoc.getX()-follower.getPose().getX(), basketLoc.getY()-follower.getPose().getY(), basketLoc.getHeading()-follower.getPose().getHeading());
+        if(gamepad2.b && locSet)
+            follower.holdPoint(basketLoc);
         else
             follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
 
