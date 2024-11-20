@@ -81,20 +81,21 @@ public class AdidasTeleop extends OpMode {
     @Override
     public void loop() {
 
-        if(gamepad1.right_bumper){
-            intakePower = INTAKE_IN;
+        if (gamepad1.left_bumper) {
             lExtTarget = EXTENDO_EXTENDED;
-            wristTarget = WRIST_INTAKING;
             doorTarget = DOOR_CLOSED;
-        } else if (gamepad1.y) {
-            intakePower = INTAKE_OUT;
-            lExtTarget = EXTENDO_EXTENDED;
-            wristTarget = WRIST_INTAKING;
-            doorTarget = DOOR_CLOSED;
+            if (gamepad1.right_bumper) {
+                intakePower = INTAKE_IN;
+                wristTarget = WRIST_INTAKING;
+            } else if (gamepad1.y) {
+                intakePower = INTAKE_OUT;
+                wristTarget = WRIST_INTAKING;
+            } else {
+                intakePower = INTAKE_OFF;
+                wristTarget = WRIST_UP;
+            }
         } else {
-            intakePower = INTAKE_OFF;
             lExtTarget = EXTENDO_RETRACTED;
-            wristTarget = WRIST_UP;
             doorTarget = DOOR_OPEN;
         }
 

@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 
 @TeleOp(name = "Adidas Teleop V2", group = "Competition")
 public class AdidasTeleopV2 extends OpMode {
@@ -28,8 +29,10 @@ public class AdidasTeleopV2 extends OpMode {
     private DcMotorEx leftLift, intake;
     private DigitalChannel liftLimit;
 
+    private Pose basketLoc;
+
     private final double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 0.7, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
-    private final int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1700 ,LIFT_HIGH_BASKET = -2800;
+    private final int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1700 ,LIFT_HIGH_BASKET = -2950;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -81,20 +84,21 @@ public class AdidasTeleopV2 extends OpMode {
     @Override
     public void loop() {
 
-        if(gamepad1.right_bumper){
-            intakePower = INTAKE_IN;
+        if (gamepad1.left_bumper) {
             lExtTarget = EXTENDO_EXTENDED;
-            wristTarget = WRIST_INTAKING;
             doorTarget = DOOR_CLOSED;
-        } else if (gamepad1.y) {
-            intakePower = INTAKE_OUT;
-            lExtTarget = EXTENDO_EXTENDED;
-            wristTarget = WRIST_INTAKING;
-            doorTarget = DOOR_CLOSED;
+            if (gamepad1.right_bumper) {
+                intakePower = INTAKE_IN;
+                wristTarget = WRIST_INTAKING;
+            } else if (gamepad1.y) {
+                intakePower = INTAKE_OUT;
+                wristTarget = WRIST_INTAKING;
+            } else {
+                intakePower = INTAKE_OFF;
+                wristTarget = WRIST_UP;
+            }
         } else {
-            intakePower = INTAKE_OFF;
             lExtTarget = EXTENDO_RETRACTED;
-            wristTarget = WRIST_UP;
             doorTarget = DOOR_OPEN;
         }
 
@@ -117,7 +121,14 @@ public class AdidasTeleopV2 extends OpMode {
             leftV4BTarget = V4B_OUT;
         }
 
-        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+        if(gamepad2.a)
+            basketLoc = follower.getPose();
+
+        if(gamepad2.b)
+            follower.setTeleOpMovementVectors(basketLoc.getX()-follower.getPose().getX(), basketLoc.getY()-follower.getPose().getY(), basketLoc.getHeading()-follower.getPose().getHeading());
+        else
+            follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
+
         follower.update();
 
         pitch.setPosition(0.88);
