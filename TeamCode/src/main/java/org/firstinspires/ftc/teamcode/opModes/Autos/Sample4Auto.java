@@ -35,14 +35,14 @@ public class Sample4Auto extends OpMode{
     private double intakePower = INTAKE_OFF;
 
     private Follower follower;
-    private Point startPos = new Point(8.500, 112.000, Point.CARTESIAN);
-    private Point basketPos = new Point(16.000, 128.000, Point.CARTESIAN);
-    private Point sample1Pos = new Point(30.000, 131.000, Point.CARTESIAN);
-    private Point sample2Pos = new Point(30.00, 121.000, Point.CARTESIAN);
-    private Point sample3Pos = new Point(26.000, 133.000, Point.CARTESIAN);
+    private Pose startPos = new Pose(8.500, 112.000, Point.CARTESIAN);
+    private Pose basketPos = new Pose(16.000, 128.000, Point.CARTESIAN);
+    private Pose sample1Pos = new Pose(30.000, 131.000, Point.CARTESIAN);
+    private Pose sample2Pos = new Pose(30.00, 121.000, Point.CARTESIAN);
+    private Pose sample3Pos = new Pose(26.000, 133.000, Point.CARTESIAN);
 
-    private Point avoidPos = new Point(56.000, 124.000, Point.CARTESIAN);
-    private Point parkPos = new Point(60.000, 110.000, Point.CARTESIAN);
+    private Pose avoidPos = new Pose(56.000, 124.000, Point.CARTESIAN);
+    private Pose parkPos = new Pose(60.000, 110.000, Point.CARTESIAN);
 
     private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toAvoid, toPark;
     private Timer pathTimer;
@@ -50,28 +50,28 @@ public class Sample4Auto extends OpMode{
 
     public void buildPaths() {
 
-        toBasket = new Path(new BezierLine(startPos, basketPos));
+        toBasket = new Path(new BezierLine(new Point(startPos), new Point(basketPos)));
         toBasket.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45));
 
-        toSample1 = new Path(new BezierLine(basketPos, sample1Pos));
+        toSample1 = new Path(new BezierLine(new Point(basketPos), new Point(sample1Pos)));
         toSample1.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0), 0.3);
 
-        score1 = new Path(new BezierLine(sample1Pos, basketPos));
+        score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos)));
         score1.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45));
 
-        toSample2 = new Path(new BezierLine(basketPos, sample2Pos));
+        toSample2 = new Path(new BezierLine(new Point(basketPos), new Point(sample2Pos)));
         toSample2.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0), 0.3);
 
-        score2 = new Path(new BezierLine(sample2Pos, basketPos));
+        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos)));
         score2.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45));
 
-        toSample3 = new Path(new BezierLine(basketPos, sample3Pos));
+        toSample3 = new Path(new BezierLine(new Point(basketPos), new Point(sample3Pos)));
         toSample3.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(20), 0.3);
 
-        score3 = new Path(new BezierLine(sample3Pos, basketPos));
+        score3 = new Path(new BezierLine(new Point(sample3Pos), new Point(basketPos)));
         score3.setLinearHeadingInterpolation(Math.toRadians(20), Math.toRadians(-45));
 
-        toPark = new Path(new BezierCurve(basketPos, avoidPos, parkPos));
+        toPark = new Path(new BezierCurve(new Point(basketPos), new Point(avoidPos), new Point(parkPos)));
         toPark.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90), 0.5);
 
     }
@@ -80,7 +80,7 @@ public class Sample4Auto extends OpMode{
     public void init() {
 
         follower = new Follower(hardwareMap);
-        follower.setStartingPose(startPose);
+        follower.setStartingPose(startPos);
         buildPaths();
 
         pathTimer = new Timer();
