@@ -35,48 +35,44 @@ public class Sample4Auto extends OpMode{
     private double intakePower = INTAKE_OFF;
 
     private Follower follower;
-    private Pose startPose = new Pose(0,0, Math.toRadians(0));
-    private Pose sample1Pos = new Pose(20,19, Math.toRadians(0));
-    private Pose sample2Pos = new Pose(20,10.25, Math.toRadians(0));
-    private Pose sample3Pos = new Pose(20,15, Math.toRadians(25));
-    private Pose basketPos = new Pose(8.3,17, Math.toRadians(-45));
-    private Pose basketPos1 = new Pose(8.3,17, Math.toRadians(-45));
-    private Pose basketPos2 = new Pose(8.3,17, Math.toRadians(-45));
-    private Pose basketPos3 = new Pose(8.3,17, Math.toRadians(-45));
-    private Pose avoidPos = new Pose(55, 5, Math.toRadians(-90));
-    private Pose parkPos = new Pose(55, -5, Math.toRadians(-90));
+    private Point startPos = new Point(8.500, 112.000, Point.CARTESIAN);
+    private Point basketPos = new Point(16.000, 128.000, Point.CARTESIAN);
+    private Point sample1Pos = new Point(30.000, 131.000, Point.CARTESIAN);
+    private Point sample2Pos = new Point(30.00, 121.000, Point.CARTESIAN);
+    private Point sample3Pos = new Point(26.000, 133.000, Point.CARTESIAN);
+
+    private Point avoidPos = new Point(56.000, 124.000, Point.CARTESIAN);
+    private Point parkPos = new Point(60.000, 110.000, Point.CARTESIAN);
 
     private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toAvoid, toPark;
     private Timer pathTimer;
 //    private int pathState;
 
     public void buildPaths() {
-        toBasket = new Path(new BezierLine(new Point(startPose), new Point(basketPos)));
-        toBasket.setLinearHeadingInterpolation(startPose.getHeading(), basketPos.getHeading());
 
-        toSample1 = new Path(new BezierLine(new Point(basketPos), new Point(sample1Pos)));
-        toSample1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading(), 0.5);
+        toBasket = new Path(new BezierLine(startPos, basketPos));
+        toBasket.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45));
 
-        score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos)));
-        score1.setLinearHeadingInterpolation(sample1Pos.getHeading(), basketPos.getHeading());
+        toSample1 = new Path(new BezierLine(basketPos, sample1Pos));
+        toSample1.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0), 0.3);
 
-        toSample2 = new Path(new BezierLine(new Point(basketPos), new Point(sample2Pos)));
-        toSample2.setLinearHeadingInterpolation(basketPos.getHeading(), sample2Pos.getHeading(), 0.25);
+        score1 = new Path(new BezierLine(sample1Pos, basketPos));
+        score1.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45));
 
-        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos)));
-        score2.setLinearHeadingInterpolation(sample2Pos.getHeading(), basketPos.getHeading());
+        toSample2 = new Path(new BezierLine(basketPos, sample2Pos));
+        toSample2.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(0), 0.3);
 
-        toSample3 = new Path(new BezierLine(new Point(basketPos), new Point(sample3Pos)));
-        toSample3.setLinearHeadingInterpolation(basketPos.getHeading(), sample3Pos.getHeading(), 0.25);
-        toSample3.setPathEndTimeoutConstraint(3);
+        score2 = new Path(new BezierLine(sample2Pos, basketPos));
+        score2.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45));
 
-        score3 = new Path(new BezierLine(new Point(sample3Pos), new Point(basketPos)));
-        score3.setLinearHeadingInterpolation(sample3Pos.getHeading(), basketPos.getHeading());
-        score3.setPathEndTimeoutConstraint(5);
+        toSample3 = new Path(new BezierLine(basketPos, sample3Pos));
+        toSample3.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(20), 0.3);
 
-        toPark = new Path(new BezierCurve(new Point(basketPos3), new Point(avoidPos), new Point(parkPos)));
-        toPark.setLinearHeadingInterpolation(basketPos3.getHeading(), avoidPos.getHeading(), 0.25);
-        toPark.setPathEndTimeoutConstraint(2.5);
+        score3 = new Path(new BezierLine(sample3Pos, basketPos));
+        score3.setLinearHeadingInterpolation(Math.toRadians(20), Math.toRadians(-45));
+
+        toPark = new Path(new BezierCurve(basketPos, avoidPos, parkPos));
+        toPark.setLinearHeadingInterpolation(Math.toRadians(-45), Math.toRadians(-90), 0.5);
 
     }
 
