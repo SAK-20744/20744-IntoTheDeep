@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.Foll
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,6 +17,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 
+@Config
 @TeleOp(name = "Adidas Teleop V2", group = "Competition")
 public class AdidasTeleopV2 extends OpMode {
 
@@ -32,8 +34,8 @@ public class AdidasTeleopV2 extends OpMode {
 
     private Pose basketLoc;
 
-    private final double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 0.7, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
-    private final int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1700 ,LIFT_HIGH_BASKET = -2950;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.775, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 0.7, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
+    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2850;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -124,16 +126,16 @@ public class AdidasTeleopV2 extends OpMode {
             leftV4BTarget = V4B_OUT;
         }
 
-        if(gamepad2.a) {
-            basketLoc = follower.getPose();
-            locSet = true;
-        }
+//        if(gamepad2.a) {
+//            basketLoc = follower.getPose();
+//            locSet = true;
+//        }
+//
+//        if(gamepad2.b && locSet)
+//            follower.holdPoint(basketLoc);
+//        else
 
-        if(gamepad2.b && locSet)
-            follower.holdPoint(basketLoc);
-        else
-            follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
-
+        follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
         follower.update();
 
         pitch.setPosition(0.88);
