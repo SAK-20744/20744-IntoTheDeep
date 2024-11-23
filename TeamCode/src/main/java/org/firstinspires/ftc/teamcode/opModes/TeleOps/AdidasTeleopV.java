@@ -5,6 +5,8 @@ import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.Foll
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 
+import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,9 +15,13 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 
-@TeleOp(name = "Adidas Teleop", group = "Competition")
-public class AdidasTeleop extends OpMode {
+@Disabled
+@Config
+@TeleOp(name = "Adidas Teleop new", group = "Competition")
+public class AdidasTeleopV extends OpMode {
 
     private Follower follower;
 
@@ -28,8 +34,10 @@ public class AdidasTeleop extends OpMode {
     private DcMotorEx leftLift, intake;
     private DigitalChannel liftLimit;
 
-    private final double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.85, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 0.7, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
-    private final int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1700 ,LIFT_HIGH_BASKET = -2800;
+    private Pose basketLoc;
+
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.12, V4B_OUT = 0.775, TRANSFER_CLOSED = 0.52, TRANSFER_OPEN = 0.17, EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 0.7, WRIST_UP = 0.4, WRIST_INTAKING = 1, DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
+    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2850;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -39,6 +47,8 @@ public class AdidasTeleop extends OpMode {
     private double wristTarget = WRIST_UP;
     private double doorTarget = DOOR_OPEN;
     private double intakePower = INTAKE_OFF;
+
+    private boolean locSet = false;
 
     @Override
     public void init() {
@@ -99,25 +109,35 @@ public class AdidasTeleop extends OpMode {
             doorTarget = DOOR_OPEN;
         }
 
-        if(gamepad2.left_bumper)
-            leftV4BTarget = V4B_OUT;
-        else
-            leftV4BTarget = V4B_IN;
-
-        if(gamepad2.right_bumper)
-            transferTarget = TRANSFER_CLOSED;
-        else
-            transferTarget = TRANSFER_OPEN;
+//        if(gamepad2.right_bumper)
+//            transferTarget = TRANSFER_CLOSED;
+//        else
+//            transferTarget = TRANSFER_OPEN;
 
         if(gamepad2.dpad_down || gamepad1.dpad_down)
             liftLiftedTarget = LIFT_MID_BASKET;
         if(gamepad2.dpad_up || gamepad1.dpad_up)
             liftLiftedTarget = LIFT_HIGH_BASKET;
 
-        if(gamepad1.a)
+        if(gamepad1.a) {
+            transferTarget = TRANSFER_OPEN;
             liftTarget = LIFT_RETRACTED;
-        if(gamepad1.b)
+            leftV4BTarget = V4B_IN;
+        }
+        if(gamepad1.b) {
+            transferTarget = TRANSFER_CLOSED;
             liftTarget = liftLiftedTarget;
+            leftV4BTarget = V4B_OUT;
+        }
+
+//        if(gamepad2.a) {
+//            basketLoc = follower.getPose();
+//            locSet = true;
+//        }
+//
+//        if(gamepad2.b && locSet)
+//            follower.holdPoint(basketLoc);
+//        else
 
         follower.setTeleOpMovementVectors(-gamepad1.left_stick_y, -gamepad1.left_stick_x, -gamepad1.right_stick_x);
         follower.update();

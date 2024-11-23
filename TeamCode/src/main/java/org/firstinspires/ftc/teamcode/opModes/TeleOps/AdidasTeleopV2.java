@@ -15,10 +15,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 
 @Config
-@TeleOp(name = "Adidas Teleop V2", group = "Competition")
+@TeleOp(name = "Adidas Teleop V2 ", group = "Competition")
 public class AdidasTeleopV2 extends OpMode {
 
     private Follower follower;

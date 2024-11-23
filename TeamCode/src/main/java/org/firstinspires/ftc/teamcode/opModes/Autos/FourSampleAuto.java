@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Autonomous(name = "0+3")
-public class SamplePlus2Auto extends OpMode{
+@Autonomous(name = "0+4")
+public class FourSampleAuto extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, intake;
@@ -41,8 +41,7 @@ public class SamplePlus2Auto extends OpMode{
     private Pose sample3Pos = new Pose(20,15, Math.toRadians(25));
     private Pose basketPos = new Pose(8.3,17, Math.toRadians(-45));
     private Pose basketPos1 = new Pose(8.3,17, Math.toRadians(-45));
-    private Pose basketPos2 = new Pose(8.3,17, Math.toRadians(-45));
-//    private Pose basketPos2 = new Pose(10.5,21.5, Math.toRadians(0));
+    private Pose basketPos2 = new Pose(10.5,21.5, Math.toRadians(0));
     private Pose basketPos3 = new Pose(8.3,17, Math.toRadians(-45));
     private Pose avoidPos = new Pose(55, 5, Math.toRadians(-90));
     private Pose parkPos = new Pose(55, -5, Math.toRadians(-90));
@@ -264,6 +263,43 @@ public class SamplePlus2Auto extends OpMode{
             follower.breakFollowing();
 //            follower.setPose(basketPos2);
 //            follower.followPath(toPark);
+        }
+
+        if(pathTimer.getElapsedTime() > 19000){
+            intakePower = INTAKE_IN;
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_INTAKING;
+        }
+
+        if(pathTimer.getElapsedTime() > 20000) {
+            wristTarget = WRIST_UP;
+            intakePower = INTAKE_OFF;
+            lExtTarget = EXTENDO_RETRACTED;
+            doorTarget = DOOR_OPEN;
+        }
+
+        if(pathTimer.getElapsedTime() > 20500)
+            transferTarget = 0.52;
+
+        if(pathTimer.getElapsedTime() > 21000) {
+            follower.followPath(score3);
+            liftTarget = LIFT_HIGH_BASKET;
+        }
+
+        if (pathTimer.getElapsedTime() > 23000) {
+//            follower.breakFollowing();
+            leftV4BTarget = 0.85;
+        }
+
+        if(pathTimer.getElapsedTime() > 24200)
+            transferTarget = 0.17;
+
+        if (pathTimer.getElapsedTime() > 25000)
+            leftV4BTarget = 0.12;
+
+        if (pathTimer.getElapsedTime() > 26500) {
+            liftTarget = 0;
+            follower.followPath(toPark);
         }
 
 //        if(pathTimer.getElapsedTime() > 17500){
