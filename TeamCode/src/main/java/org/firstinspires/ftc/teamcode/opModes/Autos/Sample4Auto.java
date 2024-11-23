@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Autonomous(name = "0+4")
+@Autonomous(name = "0+4new")
 public class Sample4Auto extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
@@ -35,14 +35,14 @@ public class Sample4Auto extends OpMode{
     private double intakePower = INTAKE_OFF;
 
     private Follower follower;
-    private Pose startPos = new Pose(8.500, 112.000, Point.CARTESIAN);
-    private Pose basketPos = new Pose(16.000, 128.000, Point.CARTESIAN);
-    private Pose sample1Pos = new Pose(30.000, 131.000, Point.CARTESIAN);
-    private Pose sample2Pos = new Pose(30.00, 121.000, Point.CARTESIAN);
-    private Pose sample3Pos = new Pose(26.000, 133.000, Point.CARTESIAN);
+    private Pose startPos = new Pose(8.500, 112.000, Math.toRadians(0));
+    private Pose basketPos = new Pose(16.000, 128.000, Math.toRadians(-45));
+    private Pose sample1Pos = new Pose(30.000, 131.000, Math.toRadians(0));
+    private Pose sample2Pos = new Pose(30.00, 121.000, Math.toRadians(0));
+    private Pose sample3Pos = new Pose(26.000, 133.000, Math.toRadians(20));
 
     private Pose avoidPos = new Pose(56.000, 124.000, Point.CARTESIAN);
-    private Pose parkPos = new Pose(60.000, 110.000, Point.CARTESIAN);
+    private Pose parkPos = new Pose(60.000, 110.000, Math.toRadians(-90));
 
     private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toAvoid, toPark;
     private Timer pathTimer;
@@ -50,6 +50,7 @@ public class Sample4Auto extends OpMode{
 
     public void buildPaths() {
 
+        follower.setHeadingOffset(-90);
         toBasket = new Path(new BezierLine(new Point(startPos), new Point(basketPos)));
         toBasket.setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(-45));
 

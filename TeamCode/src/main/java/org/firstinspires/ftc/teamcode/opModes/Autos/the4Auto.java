@@ -15,8 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Autonomous(name = "0+4")
-public class SamplePlus3Auto extends OpMode{
+@Autonomous(name = "0+4working")
+public class the4Auto extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, intake;
@@ -41,7 +41,7 @@ public class SamplePlus3Auto extends OpMode{
     private Pose sample3Pos = new Pose(20,15, Math.toRadians(25));
     private Pose basketPos = new Pose(9,15.7, Math.toRadians(-45));
 //    private Pose basketPos1 = new Pose(8.3,17, Math.toRadians(-45));
-//    private Pose basketPos2 = new Pose(8.3,17, Math.toRadians(-45));
+    private Pose basketPos2 = new Pose(10,17, Math.toRadians(0));
 //    private Pose basketPos3 = new Pose(8.3,17, Math.toRadians(-45));
     private Pose avoidPos = new Pose(55, 5, Math.toRadians(-90));
     private Pose parkPos = new Pose(55, -5, Math.toRadians(-90));
@@ -63,8 +63,8 @@ public class SamplePlus3Auto extends OpMode{
         toSample2 = new Path(new BezierLine(new Point(basketPos), new Point(sample2Pos)));
         toSample2.setLinearHeadingInterpolation(basketPos.getHeading(), sample2Pos.getHeading(), 0.45);
 
-        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos)));
-        score2.setLinearHeadingInterpolation(sample2Pos.getHeading(), basketPos.getHeading());
+        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos2)));
+        score2.setLinearHeadingInterpolation(sample2Pos.getHeading(), basketPos2.getHeading());
 
         toSample3 = new Path(new BezierLine(new Point(basketPos), new Point(sample3Pos)));
         toSample3.setLinearHeadingInterpolation(basketPos.getHeading(), sample3Pos.getHeading(), 0.45);
@@ -254,7 +254,7 @@ public class SamplePlus3Auto extends OpMode{
             leftV4BTarget = 0.12;
 
         if(pathTimer.getElapsedTime() > 18000) {
-            follower.followPath(toSample3);
+//            follower.followPath(toSample3);
             liftTarget = 0;
         }
 //
@@ -282,7 +282,7 @@ public class SamplePlus3Auto extends OpMode{
             transferTarget = 0.52;
 
         if(pathTimer.getElapsedTime() > 21000) {
-            follower.followPath(score3);
+//            follower.followPath(score3);
             liftTarget = LIFT_HIGH_BASKET;
         }
 
@@ -299,7 +299,7 @@ public class SamplePlus3Auto extends OpMode{
 
         if (pathTimer.getElapsedTime() > 26500) {
             liftTarget = 0;
-            follower.followPath(toPark);
+//            follower.followPath(toPark);
         }
     }
 

@@ -37,9 +37,9 @@ public class MovementTesting extends OpMode{
     private Follower follower;
 
     private Pose corner1 = new Pose(0,0, Math.toRadians(0));
-    private Pose corner2 = new Pose(15,0, Math.toRadians(90));
-    private Pose corner3 = new Pose(15,15, Math.toRadians(180));
-    private Pose corner4 = new Pose(0,15, Math.toRadians(270));
+    private Pose corner2 = new Pose(15,0, Math.toRadians(-90));
+    private Pose corner3 = new Pose(15,15, Math.toRadians(-180));
+    private Pose corner4 = new Pose(0,15, Math.toRadians(-270));
 
 
     private Path move1, move2, move3, move4;
