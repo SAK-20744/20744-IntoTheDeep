@@ -12,6 +12,7 @@ public class RobotConstants {
     public static double intakePivotTransferPos= 0.965;
     public static double intakePivotGroundPos = 0.4;
     public static double EXTENDO_RETRACTED = 0.05, EXTENDO_EXTENDED = 0.7;
+    public static double DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
     public static double boxTransferPos= 0.95;
     public static double boxScoringPos = 0.5;
     public static int liftZeroPos = 0;

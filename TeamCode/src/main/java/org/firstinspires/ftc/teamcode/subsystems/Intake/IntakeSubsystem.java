@@ -22,24 +22,32 @@ public class IntakeSubsystem {
         TRANSFER, GROUND
     }
 
-    public DcMotorEx spin;
+    public enum DoorState {
+        CLOSED, OPEN
+    }
+
+    private DcMotorEx spin;
     private IntakeSpinState spinState;
-
-    private Servo lPivot, rPivot;
+    private Servo lPivot, rPivot, door;
     private IntakePivotState pivotState;
+    private DoorState doorState;
 
-    public RunAction spinIn, spinOut, spinStop, pivotTransfer, pivotGround;
+    public RunAction spinIn, spinOut, spinStop, pivotTransfer, pivotGround, openDoor, closeDoor;
 
-    public IntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState) {
+    public IntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState, DoorState doorState) {
         spin = hardwareMap.get(DcMotorEx.class, "intake");
         lPivot = hardwareMap.get(Servo.class, "lPivot");
         rPivot = hardwareMap.get(Servo.class, "rPivot");
+        door = hardwareMap.get(Servo.class, "door");
         this.spinState = spinState;
         this.pivotState = pivotState;
+        this.doorState = doorState;
 
         spinIn = new RunAction(this::spinIn);
         spinOut = new RunAction(this::spinOut);
         spinStop = new RunAction(this::spinStop);
+        openDoor = new RunAction(this::doorOpen);
+        closeDoor = new RunAction(this::doorClosed);
         pivotTransfer = new RunAction(this::pivotTransfer);
         pivotGround = new RunAction(this::pivotGround);
 
@@ -108,6 +116,15 @@ public class IntakeSubsystem {
         this.pivotState = IntakePivotState.GROUND;
     }
 
+    public void doorOpen() {
+        door.setPosition(DOOR_OPEN);
+        this.doorState = DoorState.OPEN;
+    }
+
+    public void doorClosed() {
+        door.setPosition(DOOR_CLOSED);
+        this.doorState = DoorState.CLOSED;
+    }
 
     public void init() {
         Actions.runBlocking(new ParallelAction(pivotTransfer, spinStop));
