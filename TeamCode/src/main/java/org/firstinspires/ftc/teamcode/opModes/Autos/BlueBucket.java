@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.subsystems.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.SequentialAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 
 

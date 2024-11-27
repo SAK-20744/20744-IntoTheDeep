@@ -1,6 +1,8 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -20,17 +22,18 @@ public class IntakeSubsystem {
         TRANSFER, GROUND
     }
 
-    public CRServo spin;
+    public DcMotorEx spin;
     private IntakeSpinState spinState;
 
-    private Servo pivot;
+    private Servo lPivot, rPivot;
     private IntakePivotState pivotState;
 
     public RunAction spinIn, spinOut, spinStop, pivotTransfer, pivotGround;
 
     public IntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState) {
-        spin = hardwareMap.get(CRServo.class, "intakeSpin");
-        pivot = hardwareMap.get(Servo.class, "intakePivot");
+        spin = hardwareMap.get(DcMotorEx.class, "intake");
+        lPivot = hardwareMap.get(Servo.class, "lPivot");
+        rPivot = hardwareMap.get(Servo.class, "rPivot");
         this.spinState = spinState;
         this.pivotState = pivotState;
 
@@ -94,12 +97,14 @@ public class IntakeSubsystem {
     }
 
     public void pivotTransfer() {
-        pivot.setPosition(intakePivotTransferPos);
+        lPivot.setPosition(intakePivotTransferPos);
+        rPivot.setPosition(1-intakePivotTransferPos);
         this.pivotState = IntakePivotState.TRANSFER;
     }
 
     public void pivotGround() {
-        pivot.setPosition(intakePivotGroundPos);
+        lPivot.setPosition(intakePivotGroundPos);
+        rPivot.setPosition(1-intakePivotGroundPos);
         this.pivotState = IntakePivotState.GROUND;
     }
 

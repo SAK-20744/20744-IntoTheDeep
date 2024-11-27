@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.FieldConsta
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.Deposit.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Action;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.ParallelAction;
@@ -26,6 +27,7 @@ public class Auto {
     public ClawSubsystem.ClawState clawState;
     public LiftSubsystem lift;
     public ExtendSubsystem extend;
+    public ExtendSubsystem.ExtendoState extendoState;
     public IntakeSubsystem intake;
     public IntakeSubsystem.IntakeSpinState intakeSpinState;
     public IntakeSubsystem.IntakePivotState intakePivotState;
@@ -40,7 +42,7 @@ public class Auto {
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry);
-        extend = new ExtendSubsystem(hardwareMap, telemetry);
+        extend = new ExtendSubsystem(hardwareMap, extendoState);
         intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
 
         this.follower = follower;
@@ -73,7 +75,6 @@ public class Auto {
     public void update() {
         follower.update();
         //lift.updatePIDF();
-        //extend.updatePIDF();
     }
 
     public void createPoses() {
