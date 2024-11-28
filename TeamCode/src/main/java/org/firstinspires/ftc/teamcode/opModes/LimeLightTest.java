@@ -13,23 +13,29 @@ public class LimeLightTest extends OpMode {
 
     @Override
     public void init() {
-        LL = hardwareMap.get(Limelight3A.class, "Limelight");
+        LL = hardwareMap.get(Limelight3A.class, "ll3");
         LL.pipelineSwitch(0);
         LL.start();
     }
 
     @Override
     public void loop() {
+        LL.pipelineSwitch(0);
         LLResult result = LL.getLatestResult();
+        LL.pipelineSwitch(3);
+        LLResult aResult = LL.getLatestResult();
         if (result != null) {
             if (result.isValid()) {
                 Pose3D YellowSamplePose = result.getBotpose();
                 telemetry.addData("tx", result.getTx());
                 telemetry.addData("ty", result.getTy());
-                telemetry.addData("Sample:", YellowSamplePose.toString());
-                telemetry.addData("Image", result);
-                telemetry.update();
             }
         }
+        if (aResult != null) {
+            if (result.isValid()) {
+                telemetry.addData("ATPos", result.getBotpose_MT2());
+            }
+        }
+        telemetry.update();
     }
 }
