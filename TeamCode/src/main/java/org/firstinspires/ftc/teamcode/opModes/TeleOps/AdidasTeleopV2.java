@@ -143,7 +143,18 @@ public class AdidasTeleopV2 extends OpMode {
         } else {
             lExtTarget = EXTENDO_RETRACTED;
 //            doorTarget = DOOR_OPEN;
-            wristTarget = WRIST_TRANSFERING;
+//            wristTarget = WRIST_TRANSFERING;
+
+            if (gamepad1.right_bumper) {
+                intakePower = INTAKE_IN;
+                wristTarget = WRIST_INTAKING;
+            } else if (gamepad1.y) {
+                intakePower = INTAKE_OUT;
+                wristTarget = WRIST_UP;
+            } else {
+                intakePower = INTAKE_OFF;
+                wristTarget = WRIST_TRANSFERING;
+            }
 
         }
 
