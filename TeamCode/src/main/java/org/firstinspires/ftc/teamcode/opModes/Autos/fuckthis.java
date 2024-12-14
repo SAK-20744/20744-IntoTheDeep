@@ -7,7 +7,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.subsystems.Deposit.V4B;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierCurve;
@@ -16,8 +15,8 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Autonomous(name = "0+3")
-public class SamplePlus2Auto extends OpMode{
+@Autonomous(name = "holyshit")
+public class fuckthis extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, topLift, intake;
@@ -146,7 +145,6 @@ public class SamplePlus2Auto extends OpMode{
     @Override
     public void loop() {
 
-        autonomousPathUpdate();
         follower.update();
         leftV4B.setPosition(leftV4BTarget);
         pitch.setPosition(pitchTarget);
@@ -176,158 +174,32 @@ public class SamplePlus2Auto extends OpMode{
     public void setPathState(int state) {
 //        pathState = state;
         pathTimer.resetTimer();
-        autonomousPathUpdate();
-    }
 
-    public void autonomousPathUpdate(){
-
-        if (pathTimer.getElapsedTime() > 1550)
-            leftV4BTarget = V4B_OUT;
-
-        if(pathTimer.getElapsedTime() > 2400)
-            transferTarget = TRANSFER_OPEN;
-
-        if (pathTimer.getElapsedTime() > 2700) {
-            leftV4BTarget = V4B_IN;
-            pitchTarget = PITCH_TRANSFERING;
-        }
-
-        if(pathTimer.getElapsedTime() > 3200) {
-            follower.followPath(toSample1);
-            liftTarget = LIFT_RETRACTED;
-        }
-
-        if(pathTimer.getElapsedTime() > 3750){
-            intakePower = INTAKE_IN;
-            doorTarget = DOOR_CLOSED;
-            lExtTarget = EXTENDO_EXTENDED;
-            wristTarget = WRIST_INTAKING;
-        }
-
-        if(pathTimer.getElapsedTime() > 5250) {
-            wristTarget = WRIST_TRANSFERING;
-            intakePower = INTAKE_OFF;
-            lExtTarget = EXTENDO_RETRACTED;
-        }
-
-        if(pathTimer.getElapsedTime() > 6000) {
-            doorTarget = DOOR_OPEN;
-            transferTarget = TRANSFER_CLOSED;
-        }
-
-        if(pathTimer.getElapsedTime() > 6300) {
-            follower.followPath(score1);
-            liftTarget = LIFT_HIGH_BASKET;
-        }
-
-        if (pathTimer.getElapsedTime() > 7500) {
-//            follower.breakFollowing();
-            leftV4BTarget = V4B_OUT;
-        }
-
-        if(pathTimer.getElapsedTime() > 8600)
-            transferTarget = TRANSFER_OPEN;
-
-        if (pathTimer.getElapsedTime() > 9000)
-            leftV4BTarget = TRANSFER_CLOSED;
-
-//        if(pathTimer.getElapsedTime() > 9300) {
-//            follower.followPath(toSample2);
-//            liftTarget = 0;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 4250+6050){
-//            intakePower = INTAKE_IN;
-//            doorTarget = DOOR_CLOSED;
-//            lExtTarget = EXTENDO_EXTENDED;
-//            wristTarget = WRIST_INTAKING;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 6000+6050) {
-//            wristTarget = WRIST_UP;
-//            intakePower = INTAKE_OFF;
-//            lExtTarget = EXTENDO_RETRACTED;
-//            doorTarget = DOOR_OPEN;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 6750+6050)
-//            transferTarget = 0.52;
-//
-//        if(pathTimer.getElapsedTime() > 7050+6050) {
-//            follower.followPath(score2);
-//            liftTarget = LIFT_HIGH_BASKET;
-//        }
-//
-//        if (pathTimer.getElapsedTime() > 8600+6050) {
-////            follower.breakFollowing();
-//            leftV4BTarget = 0.85;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 9600+6050)
-//            transferTarget = 0.17;
-//
-//        if (pathTimer.getElapsedTime() > 10000+6050)
-//            leftV4BTarget = 0.12;
-//
-////        if(pathTimer.getElapsedTime() > 16350) {
-////            follower.followPath(toSample3);
-////            liftTarget = 0;
-////        }
-//
-//        if (pathTimer.getElapsedTime() > 16500) {
-//            liftTarget = 0;
-//            follower.breakFollowing();
-////            follower.setPose(basketPos2);
-////            follower.followPath(toPark);
-//        }
-//
-////        if(pathTimer.getElapsedTime() > 17500){
-////            intakePower = INTAKE_IN;
-////            lExtTarget = EXTENDO_EXTENDED;
-////            wristTarget = WRIST_INTAKING;
-////        }
-////
-////        if(pathTimer.getElapsedTime() > 18700) {
-////            wristTarget = WRIST_UP;
-////            intakePower = INTAKE_OFF;
-////            lExtTarget = EXTENDO_RETRACTED;
-////            doorTarget = DOOR_OPEN;
-////        }
-////
-////        if(pathTimer.getElapsedTime() > 19200)
-////            transferTarget = 0.52;
-////
-////        if(pathTimer.getElapsedTime() > 19500) {
-////            follower.followPath(score3);
-////            liftTarget = LIFT_HIGH_BASKET;
-////        }
-////
-////        if (pathTimer.getElapsedTime() > 21500) {
-//////            follower.breakFollowing();
-////            leftV4BTarget = 0.85;
-////        }
-////
-////        if(pathTimer.getElapsedTime() > 21800)
-////            transferTarget = 0.17;
-////
-////        if (pathTimer.getElapsedTime() > 22100)
-////            leftV4BTarget = 0.12;
-//
-//        if (pathTimer.getElapsedTime() > 29500) {
-//            liftTarget = 0;
-//            follower.followPath(toPark);
-//        }
     }
 
     @Override
     public void start() {
         super.start();
         setPathState(0);
-        transferTarget = TRANSFER_CLOSED;
-        leftV4BTarget = V4B_OUT;
         follower.followPath(toBasket);
+
+        transferTarget = TRANSFER_CLOSED;
+        leftV4BTarget = V4B_IN;
+        lExtTarget = EXTENDO_RETRACTED;
         liftTarget = LIFT_HIGH_BASKET;
         pitchTarget = PITCH_DEPO;
+        wristTarget = WRIST_TRANSFERING;
+        intakePower = INTAKE_OFF;
+        doorTarget = DOOR_OPEN;
+
+        if (pathTimer.getElapsedTime() > 2500) {
+            leftV4BTarget = V4B_OUT;
+            pitchTarget = PITCH_TRANSFERING;
+        }
+
+        if (pathTimer.getElapsedTime() > 3000) {
+            transferTarget = TRANSFER_OPEN;
+        }
     }
 
     @Override

@@ -8,6 +8,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.Foll
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -33,7 +34,9 @@ public class AdidasTeleopV2 extends OpMode {
 
     private Pose basketLoc;
 
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.34, V4B_OUT = 0.55, TRANSFER_CLOSED = 0.32, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0.09, EXTENDO_EXTENDED = 0.5, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.965, PITCH_DEPO = 0.3, PITCH_TRANSFERING = 0.905;
+    private boolean aPressed = true, bPressed = false;
+
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.34, V4B_OUT = 0.55, TRANSFER_CLOSED = 0.47, TRANSFER_OPEN = 0.2, EXTENDO_RETRACTED = 0.11, EXTENDO_EXTENDED = 0.5, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 1, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.905;
     public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2850;
 
     private int liftTarget = LIFT_RETRACTED;
@@ -45,6 +48,8 @@ public class AdidasTeleopV2 extends OpMode {
     private double doorTarget = DOOR_OPEN;
     private double intakePower = INTAKE_OFF;
     private double pitchTarget = PITCH_TRANSFERING;
+
+    AnalogInput clawInput = hardwareMap.get(AnalogInput.class, "clawPos");
 
     private boolean locSet = false;
 
@@ -172,11 +177,23 @@ public class AdidasTeleopV2 extends OpMode {
             liftLiftedTarget = LIFT_HIGH_BASKET;
 
         if(gamepad1.a) {
+            transferTarget = TRANSFER_OPEN;
+            aPressed = true;
+            bPressed = false;
+        }
+
+        if(gamepad1.b) {
+            transferTarget = TRANSFER_CLOSED;
+            aPressed = false;
+            bPressed = true;
+        }
+
+        if(aPressed && transferTarget == clawInput.getVoltage()/3.3){
             liftTarget = LIFT_RETRACTED;
             leftV4BTarget = V4B_IN;
             pitchTarget = PITCH_TRANSFERING;
         }
-        if(gamepad1.b) {
+        if(bPressed && transferTarget == clawInput.getVoltage()/3.3) {
             liftTarget = liftLiftedTarget;
             leftV4BTarget = V4B_OUT;
             pitchTarget = PITCH_DEPO;
