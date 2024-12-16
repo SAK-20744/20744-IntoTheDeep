@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -24,7 +25,7 @@ public class SamplePlus2Auto extends OpMode{
     private DigitalChannel liftLimit;
 
     //fix wristintaking, and dooropen
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.34, V4B_OUT = 0.55, TRANSFER_CLOSED = 0.47, TRANSFER_OPEN = 0.2, EXTENDO_RETRACTED = 0.11, EXTENDO_EXTENDED = 0.5, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 1, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.905;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.325, V4B_OUT = 0.58, TRANSFER_CLOSED = 0.47, TRANSFER_OPEN = 0.2, EXTENDO_RETRACTED = 0.11, EXTENDO_EXTENDED = 0.29, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 1, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.88;
     public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2850;
 
     private int liftTarget = LIFT_RETRACTED;
@@ -39,16 +40,16 @@ public class SamplePlus2Auto extends OpMode{
 
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
-    private Pose sample1Pos = new Pose(20,3, Math.toRadians(0));
-    private Pose sample2Pos = new Pose(20,-2, Math.toRadians(0));
-    private Pose sample3Pos = new Pose(20,-7, Math.toRadians(-25));
-    private Pose basketPos = new Pose(12,5, Math.toRadians(-45));
-    private Pose basketPos1 = new Pose(12,5, Math.toRadians(-45));
-    private Pose basketPos2 = new Pose(12,5, Math.toRadians(-45));
-//    private Pose basketPos2 = new Pose(10.5,21.5, Math.toRadians(0));
-    private Pose basketPos3 = new Pose(8.3,17, Math.toRadians(45));
-    private Pose avoidPos = new Pose(55, 5, Math.toRadians(90));
-    private Pose parkPos = new Pose(55, -5, Math.toRadians(90));
+    private Pose sample1Pos = new Pose(11,19.5, Math.toRadians(0));
+    private Pose sample2Pos = new Pose(10.885,11.3, Math.toRadians(0));
+    private Pose sample3Pos = new Pose(11,15, Math.toRadians(25));
+
+    private Pose basketPos = new Pose(6.65,13.25, Math.toRadians(-45));
+    private Pose basketPos1 = new Pose(7,17, Math.toRadians(-45));
+    private Pose basketPos2 = new Pose(7,17, Math.toRadians(-45));
+    private Pose basketPos3 = new Pose(7,17, Math.toRadians(-45));
+    private Pose avoidPos = new Pose(55, 5, Math.toRadians(-90));
+    private Pose parkPos = new Pose(55, -5, Math.toRadians(-90));
 
     private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toAvoid, toPark;
     private Timer pathTimer;
@@ -60,7 +61,7 @@ public class SamplePlus2Auto extends OpMode{
         toBasket.setPathEndTimeoutConstraint(2.5);
 
         toSample1 = new Path(new BezierLine(new Point(basketPos), new Point(sample1Pos)));
-        toSample1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading(), 0.5);
+        toSample1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading(), 0.35);
         toSample1.setPathEndTimeoutConstraint(3);
 
         score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos1)));
@@ -68,7 +69,7 @@ public class SamplePlus2Auto extends OpMode{
         score1.setPathEndTimeoutConstraint(5);
 
         toSample2 = new Path(new BezierLine(new Point(basketPos1), new Point(sample2Pos)));
-        toSample2.setLinearHeadingInterpolation(basketPos1.getHeading(), sample2Pos.getHeading(), 0.25);
+        toSample2.setLinearHeadingInterpolation(basketPos1.getHeading(), sample2Pos.getHeading(), 0.45);
         toSample2.setPathEndTimeoutConstraint(3);
 
         score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos2)));
@@ -181,7 +182,7 @@ public class SamplePlus2Auto extends OpMode{
 
     public void autonomousPathUpdate(){
 
-        if (pathTimer.getElapsedTime() > 1550)
+        if (pathTimer.getElapsedTime() > 2000)
             leftV4BTarget = V4B_OUT;
 
         if(pathTimer.getElapsedTime() > 2400)
@@ -223,6 +224,7 @@ public class SamplePlus2Auto extends OpMode{
         if (pathTimer.getElapsedTime() > 7500) {
 //            follower.breakFollowing();
             leftV4BTarget = V4B_OUT;
+            pitchTarget = PITCH_DEPO;
         }
 
         if(pathTimer.getElapsedTime() > 8600)
@@ -231,48 +233,55 @@ public class SamplePlus2Auto extends OpMode{
         if (pathTimer.getElapsedTime() > 9000)
             leftV4BTarget = TRANSFER_CLOSED;
 
-//        if(pathTimer.getElapsedTime() > 9300) {
-//            follower.followPath(toSample2);
-//            liftTarget = 0;
-//        }
+        if(pathTimer.getElapsedTime() > 9300) {
+            follower.followPath(toSample2);
+            liftTarget = 0;
+        }
 //
-//        if(pathTimer.getElapsedTime() > 4250+6050){
-//            intakePower = INTAKE_IN;
-//            doorTarget = DOOR_CLOSED;
-//            lExtTarget = EXTENDO_EXTENDED;
-//            wristTarget = WRIST_INTAKING;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 6000+6050) {
-//            wristTarget = WRIST_UP;
-//            intakePower = INTAKE_OFF;
-//            lExtTarget = EXTENDO_RETRACTED;
-//            doorTarget = DOOR_OPEN;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 6750+6050)
-//            transferTarget = 0.52;
-//
-//        if(pathTimer.getElapsedTime() > 7050+6050) {
-//            follower.followPath(score2);
-//            liftTarget = LIFT_HIGH_BASKET;
-//        }
-//
-//        if (pathTimer.getElapsedTime() > 8600+6050) {
-////            follower.breakFollowing();
-//            leftV4BTarget = 0.85;
-//        }
-//
-//        if(pathTimer.getElapsedTime() > 9600+6050)
-//            transferTarget = 0.17;
-//
-//        if (pathTimer.getElapsedTime() > 10000+6050)
-//            leftV4BTarget = 0.12;
-//
-////        if(pathTimer.getElapsedTime() > 16350) {
-////            follower.followPath(toSample3);
-////            liftTarget = 0;
-////        }
+        if(pathTimer.getElapsedTime() > 10500){
+            intakePower = INTAKE_IN;
+            doorTarget = DOOR_CLOSED;
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_INTAKING;
+        }
+
+        if(pathTimer.getElapsedTime() > 13250) {
+            wristTarget = WRIST_TRANSFERING;
+            intakePower = INTAKE_OFF;
+            lExtTarget = EXTENDO_RETRACTED;
+            leftV4BTarget = V4B_IN;
+            pitchTarget = PITCH_TRANSFERING;
+            transferTarget = TRANSFER_OPEN;
+        }
+
+        if(pathTimer.getElapsedTime() > 14500) {
+            doorTarget = DOOR_OPEN;
+            transferTarget = TRANSFER_CLOSED;
+        }
+
+        if(pathTimer.getElapsedTime() > 15000) {
+            follower.followPath(score2);
+            liftTarget = LIFT_HIGH_BASKET;
+        }
+
+        if (pathTimer.getElapsedTime() > 16000) {
+//            follower.breakFollowing();
+            leftV4BTarget = V4B_OUT;
+            pitchTarget = PITCH_DEPO;
+        }
+
+        if(pathTimer.getElapsedTime() > 17500)
+            transferTarget = TRANSFER_OPEN;
+
+        if (pathTimer.getElapsedTime() > 18500){
+            leftV4BTarget = V4B_IN;
+            pitchTarget = PITCH_TRANSFERING;
+            }
+
+        if(pathTimer.getElapsedTime() > 20000) {
+            follower.followPath(toSample3);
+            liftTarget = 0;
+        }
 //
 //        if (pathTimer.getElapsedTime() > 16500) {
 //            liftTarget = 0;

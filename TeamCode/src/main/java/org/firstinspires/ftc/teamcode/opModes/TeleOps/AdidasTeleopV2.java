@@ -31,12 +31,11 @@ public class AdidasTeleopV2 extends OpMode {
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, topLift, intake;
     private DigitalChannel liftLimit;
-
-    private Pose basketLoc;
+    private AnalogInput clawInput;
 
     private boolean aPressed = true, bPressed = false;
 
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.34, V4B_OUT = 0.55, TRANSFER_CLOSED = 0.47, TRANSFER_OPEN = 0.2, EXTENDO_RETRACTED = 0.11, EXTENDO_EXTENDED = 0.5, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 1, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.905;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.325, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.47, TRANSFER_OPEN = 0.2, EXTENDO_RETRACTED = 0.11, EXTENDO_EXTENDED = 0.5, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 1, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.88;
     public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2850;
 
     private int liftTarget = LIFT_RETRACTED;
@@ -48,8 +47,6 @@ public class AdidasTeleopV2 extends OpMode {
     private double doorTarget = DOOR_OPEN;
     private double intakePower = INTAKE_OFF;
     private double pitchTarget = PITCH_TRANSFERING;
-
-    AnalogInput clawInput = hardwareMap.get(AnalogInput.class, "clawPos");
 
     private boolean locSet = false;
 
@@ -81,6 +78,7 @@ public class AdidasTeleopV2 extends OpMode {
         door = hardwareMap.get(Servo.class, "door");
         transfer = hardwareMap.get(Servo.class, "trans");
         pitch = hardwareMap.get(Servo.class, "pitch");
+        clawInput = hardwareMap.get(AnalogInput.class, "clawPos");
 
         door.setPosition(doorTarget);
         leftV4B.setPosition(leftV4BTarget);
@@ -177,27 +175,33 @@ public class AdidasTeleopV2 extends OpMode {
             liftLiftedTarget = LIFT_HIGH_BASKET;
 
         if(gamepad1.a) {
-            transferTarget = TRANSFER_OPEN;
-            aPressed = true;
-            bPressed = false;
-        }
-
-        if(gamepad1.b) {
-            transferTarget = TRANSFER_CLOSED;
-            aPressed = false;
-            bPressed = true;
-        }
-
-        if(aPressed && transferTarget == clawInput.getVoltage()/3.3){
             liftTarget = LIFT_RETRACTED;
             leftV4BTarget = V4B_IN;
             pitchTarget = PITCH_TRANSFERING;
+//            transferTarget = TRANSFER_OPEN;
+//            aPressed = true;
+//            bPressed = false;
         }
-        if(bPressed && transferTarget == clawInput.getVoltage()/3.3) {
+
+        if(gamepad1.b) {
             liftTarget = liftLiftedTarget;
             leftV4BTarget = V4B_OUT;
             pitchTarget = PITCH_DEPO;
+//            transferTarget = TRANSFER_CLOSED;
+//            aPressed = false;
+//            bPressed = true;
         }
+
+//        if(aPressed && transferTarget == clawInput.getVoltage()/3.3){
+//            liftTarget = LIFT_RETRACTED;
+//            leftV4BTarget = V4B_IN;
+//            pitchTarget = PITCH_TRANSFERING;
+//        }
+//        if(bPressed && transferTarget == clawInput.getVoltage()/3.3) {
+//            liftTarget = liftLiftedTarget;
+//            leftV4BTarget = V4B_OUT;
+//            pitchTarget = PITCH_DEPO;
+//        }
 
 //        if(gamepad2.a) {
 //            basketLoc = follower.getPose();

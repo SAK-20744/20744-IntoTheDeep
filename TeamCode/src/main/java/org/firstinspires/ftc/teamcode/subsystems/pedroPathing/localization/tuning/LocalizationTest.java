@@ -80,6 +80,8 @@ public class LocalizationTest extends OpMode {
 
         Drawing.drawRobot(poseUpdater.getPose(), "#4CAF50");
         Drawing.sendPacket();
+
+
     }
 
     /**

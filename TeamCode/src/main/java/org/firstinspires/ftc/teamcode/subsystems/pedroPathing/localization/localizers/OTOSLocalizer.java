@@ -221,5 +221,6 @@ public class OTOSLocalizer extends Localizer {
      * This does nothing since this localizer does not use the IMU.
      */
     public void resetIMU() {
+        otos.resetTracking();
     }
 }
