@@ -15,16 +15,16 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Autonomous(name = "holyshit")
-public class fuckthis extends OpMode{
+@Autonomous(name = "0+4")
+public class NewAuto extends OpMode{
 
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, topLift, intake;
     private DigitalChannel liftLimit;
 
     //fix wristintaking, and dooropen
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.34, V4B_OUT = 0.55, TRANSFER_CLOSED = 0.47, TRANSFER_OPEN = 0.2, EXTENDO_RETRACTED = 0.11, EXTENDO_EXTENDED = 0.5, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 1, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.905;
-    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2850;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0.08, EXTENDO_EXTENDED = 0.7, WRIST_TRANSFERING = 0.18, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.865;
+    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2700;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -38,18 +38,13 @@ public class fuckthis extends OpMode{
 
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
-    private Pose sample1Pos = new Pose(20,3, Math.toRadians(0));
-    private Pose sample2Pos = new Pose(20,-2, Math.toRadians(0));
-    private Pose sample3Pos = new Pose(20,-7, Math.toRadians(-25));
-    private Pose basketPos = new Pose(12,5, Math.toRadians(-45));
-    private Pose basketPos1 = new Pose(12,5, Math.toRadians(-45));
-    private Pose basketPos2 = new Pose(12,5, Math.toRadians(-45));
-//    private Pose basketPos2 = new Pose(10.5,21.5, Math.toRadians(0));
-    private Pose basketPos3 = new Pose(8.3,17, Math.toRadians(45));
-    private Pose avoidPos = new Pose(55, 5, Math.toRadians(90));
-    private Pose parkPos = new Pose(55, -5, Math.toRadians(90));
+    private Pose basketPos = new Pose(8,19, Math.toRadians(-22.5));
 
-    private Path toBasket, toSample1, score1, toSample2, score2,toSample3, score3, toAvoid, toPark;
+    private Pose sample1Pos = new Pose(11,19.5, Math.toRadians(0));
+    private Pose sample2Pos = new Pose(10.885,11.3, Math.toRadians(0));
+    private Pose sample3Pos = new Pose(11,15, Math.toRadians(25));
+
+    private Path toBasket,toPark;
     private Timer pathTimer;
 //    private int pathState;
 
@@ -57,35 +52,6 @@ public class fuckthis extends OpMode{
         toBasket = new Path(new BezierLine(new Point(startPose), new Point(basketPos)));
         toBasket.setLinearHeadingInterpolation(startPose.getHeading(), basketPos.getHeading(), 0.5);
         toBasket.setPathEndTimeoutConstraint(2.5);
-
-        toSample1 = new Path(new BezierLine(new Point(basketPos), new Point(sample1Pos)));
-        toSample1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading(), 0.5);
-        toSample1.setPathEndTimeoutConstraint(3);
-
-        score1 = new Path(new BezierLine(new Point(sample1Pos), new Point(basketPos1)));
-        score1.setLinearHeadingInterpolation(sample1Pos.getHeading(), basketPos1.getHeading());
-        score1.setPathEndTimeoutConstraint(5);
-
-        toSample2 = new Path(new BezierLine(new Point(basketPos1), new Point(sample2Pos)));
-        toSample2.setLinearHeadingInterpolation(basketPos1.getHeading(), sample2Pos.getHeading(), 0.25);
-        toSample2.setPathEndTimeoutConstraint(3);
-
-        score2 = new Path(new BezierLine(new Point(sample2Pos), new Point(basketPos2)));
-        score2.setLinearHeadingInterpolation(sample2Pos.getHeading(), basketPos2.getHeading());
-        score2.setPathEndTimeoutConstraint(5);
-
-        toSample3 = new Path(new BezierLine(new Point(basketPos2), new Point(sample3Pos)));
-        toSample3.setLinearHeadingInterpolation(basketPos2.getHeading(), sample3Pos.getHeading(), 0.25);
-        toSample3.setPathEndTimeoutConstraint(3);
-
-        score3 = new Path(new BezierLine(new Point(sample3Pos), new Point(basketPos3)));
-        score3.setLinearHeadingInterpolation(sample3Pos.getHeading(), basketPos3.getHeading());
-        score3.setPathEndTimeoutConstraint(5);
-
-        toPark = new Path(new BezierCurve(new Point(basketPos2), new Point(avoidPos), new Point(parkPos)));
-        toPark.setLinearHeadingInterpolation(basketPos2.getHeading(), avoidPos.getHeading(), 0.25);
-        toPark.setPathEndTimeoutConstraint(2.5);
-
     }
 
     @Override
@@ -145,6 +111,7 @@ public class fuckthis extends OpMode{
     @Override
     public void loop() {
 
+        autonomousPathUpdate();
         follower.update();
         leftV4B.setPosition(leftV4BTarget);
         pitch.setPosition(pitchTarget);
@@ -174,32 +141,39 @@ public class fuckthis extends OpMode{
     public void setPathState(int state) {
 //        pathState = state;
         pathTimer.resetTimer();
+        autonomousPathUpdate();
+    }
 
+    public void autonomousPathUpdate(){
+
+        if (pathTimer.getElapsedTime() > 3000) {
+            leftV4BTarget = V4B_OUT;
+            pitchTarget = PITCH_DEPO;
+        }
+
+        if(pathTimer.getElapsedTime() > 4000)
+            transferTarget = TRANSFER_OPEN;
+
+        if (pathTimer.getElapsedTime() > 7000) {
+            leftV4BTarget = V4B_IN;
+            pitchTarget = PITCH_TRANSFERING;
+            liftTarget = LIFT_RETRACTED;
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_UP;
+        }
     }
 
     @Override
     public void start() {
         super.start();
         setPathState(0);
-        follower.followPath(toBasket);
-
         transferTarget = TRANSFER_CLOSED;
-        leftV4BTarget = V4B_IN;
-        lExtTarget = EXTENDO_RETRACTED;
-        liftTarget = LIFT_HIGH_BASKET;
-        pitchTarget = PITCH_DEPO;
-        wristTarget = WRIST_TRANSFERING;
-        intakePower = INTAKE_OFF;
         doorTarget = DOOR_OPEN;
-
-        if (pathTimer.getElapsedTime() > 2500) {
-            leftV4BTarget = V4B_OUT;
-            pitchTarget = PITCH_TRANSFERING;
-        }
-
-        if (pathTimer.getElapsedTime() > 3000) {
-            transferTarget = TRANSFER_OPEN;
-        }
+        leftV4BTarget = V4B_IN;
+        wristTarget = WRIST_TRANSFERING;
+        follower.followPath(toBasket);
+        liftTarget = LIFT_HIGH_BASKET;
+        pitchTarget = PITCH_TRANSFERING;
     }
 
     @Override

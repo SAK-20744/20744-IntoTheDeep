@@ -1,89 +1,112 @@
 package org.firstinspires.ftc.teamcode.subsystems.Deposit;
 
-import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap;
+import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.*;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.PIDFCoefficients;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 
 public class LiftSubsystem {
+    private Telemetry telemetry;
+    private DigitalChannel liftLimit;
+    public DcMotor lift2, leftLift;
+    public boolean manual = false;
+    public boolean hang = false;
+    public int pos, bottom;
+    public RunAction toZero, toHighBucket, toHighChamber, toHumanPlayer, toTransfer, toPark;
+    public PIDController liftPID;
+    public static int target;
+    public static double p = 0.015, i = 0, d = 0.0005;
 
-    public DcMotorEx leftLift, rightLift;
+    public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+        this.telemetry = telemetry;
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
-    public final PIDFCoefficients
-            LIFT_UP_VELOCITY_PIDF_COEFFICIENTS = new PIDFCoefficients(9,6,0,4),
-            LIFT_UP_POSITION_PIDF_COEFFICIENTS = new PIDFCoefficients(10,0,0,0),
-            LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS = new PIDFCoefficients(10,2,0,-4.5),
-            LIFT_DOWN_POSITION_PIDF_COEFFICIENTS = new PIDFCoefficients(5,0,0,0);
+        lift2 = hardwareMap.get(DcMotor.class, "lift2");
+        leftLift = hardwareMap.get(DcMotor.class, "lift");
+        liftLimit = hardwareMap.get(DigitalChannel.class, "liftLimit");
 
-    public static int
-            LIFT_TOLERANCE = 4,
-            LIFT_MAX = 520,
-            LIFT_VELOCITY_TOLERANCE = 28*4/6,
-            LIFT_VELOCITY = 1200;
-
-    public int leftLiftTargetPosition, rightLiftTargetPosition, leftLiftCurrentAdjust = 0, rightLiftCurrentAdjust = 0;
-
-    public void initialize() {
-
-//        rightLift = hardwareMap.get(DcMotorEx.class, "rightLift");
-        leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-//        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        leftLift.setTargetPositionTolerance(LIFT_TOLERANCE);
-//        rightLift.setTargetPositionTolerance(LIFT_TOLERANCE);
+        lift2.setDirection(DcMotor.Direction.REVERSE);
+        leftLift.setDirection(DcMotor.Direction.REVERSE);
         leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//        rightLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        leftLiftTargetPosition = 0;
-//        rightLiftTargetPosition = 0;
-        leftLift.setTargetPosition(leftLiftTargetPosition);
-        leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-//        rightLift.setTargetPosition(rightLiftTargetPosition);
-//        rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+        liftPID = new PIDController(p, i, d);
+
+        toZero = new RunAction(this::toZero);
+        toHighBucket = new RunAction(this::toHighBucket);
     }
 
-    public void setLiftTarget(int pos){
-        leftLiftTargetPosition = pos;
-    }
+    public void updatePIDF(){
+        if (!manual) {
+            liftPID.setPID(p,i,d);
+            
+            lift2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+            leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-    public void updateLiftMotors() {
-//        if (leftLiftTargetPosition < 0 && !presetInMotion && !liftGoing) leftLiftTargetPosition = 0;
-        if (leftLiftTargetPosition > LIFT_MAX) leftLiftTargetPosition = LIFT_MAX;
-        correctLiftError();
-        if (leftLiftTargetPosition >= leftLift.getCurrentPosition()-5) {
-            leftLift.setVelocityPIDFCoefficients(LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.p,LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.i,LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.d,LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.f);
-            rightLift.setVelocityPIDFCoefficients(LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.p,LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.i,LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.d,LIFT_UP_VELOCITY_PIDF_COEFFICIENTS.f);
-            leftLift.setPositionPIDFCoefficients(LIFT_UP_POSITION_PIDF_COEFFICIENTS.p);
-            rightLift.setPositionPIDFCoefficients(LIFT_UP_POSITION_PIDF_COEFFICIENTS.p);
-        } else {
-            leftLift.setVelocityPIDFCoefficients(LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.p,LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.i,LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.d,LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.f);
-            rightLift.setVelocityPIDFCoefficients(LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.p,LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.i,LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.d,LIFT_DOWN_VELOCITY_PIDF_COEFFICIENTS.f);
-            leftLift.setPositionPIDFCoefficients(LIFT_DOWN_POSITION_PIDF_COEFFICIENTS.p);
-            rightLift.setPositionPIDFCoefficients(LIFT_DOWN_POSITION_PIDF_COEFFICIENTS.p);
+            double pid = liftPID.calculate(getPos(), target);
+            double power = pid;
+
+            lift2.setPower(power);
+            leftLift.setPower(power);
+
+            if (!liftLimit.getState()){
+                leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                lift2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
+
+            telemetry.addData("lift pos", getPos());
+            telemetry.addData("Lift Limit", liftLimit.getState());
+            telemetry.addData("lift target", target);
         }
-        leftLift.setTargetPositionTolerance(LIFT_TOLERANCE);
-        rightLift.setTargetPositionTolerance(LIFT_TOLERANCE);
-        leftLift.setTargetPosition(leftLiftTargetPosition + leftLiftCurrentAdjust);
-        rightLift.setTargetPosition(rightLiftTargetPosition + rightLiftCurrentAdjust);
-        leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        leftLift.setTargetPosition(leftLiftTargetPosition + leftLiftCurrentAdjust);
-        rightLift.setTargetPosition(rightLiftTargetPosition + rightLiftCurrentAdjust);
-        leftLift.setTargetPositionTolerance(LIFT_TOLERANCE);
-        rightLift.setTargetPositionTolerance(LIFT_TOLERANCE);
-        leftLift.setVelocity(LIFT_VELOCITY);
-        rightLift.setVelocity(LIFT_VELOCITY);
-        leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        rightLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
-    public void correctLiftError() {
-        rightLiftTargetPosition = rightLift.getCurrentPosition()+ leftLiftTargetPosition -leftLift.getCurrentPosition();
+    public double getTarget() {
+        return target;
+    }
+
+    public boolean isAtTarget() {
+        return Math.abs(pos - target) < 10;
+    }
+
+    public void setTarget(int b) {
+        target = b;
+    }
+
+    public int getPos() {
+        pos = lift2.getCurrentPosition() - bottom;
+        return lift2.getCurrentPosition() - bottom;
+    }
+
+    // OpMode
+    public void init() {
+        liftPID.setPID(p,i,d);
+        bottom = getPos();
+    }
+
+    public void start() {
+        target = 0;
+    }
+
+    //Presets
+    public void toZero() {
+        manual = false;
+        setTarget(liftZeroPos);
+    }
+
+    public void toHighBucket() {
+        manual = false;
+        setTarget(liftToHighBucketPos);
     }
 
 }
-
-/**
- * 8=D
- */
