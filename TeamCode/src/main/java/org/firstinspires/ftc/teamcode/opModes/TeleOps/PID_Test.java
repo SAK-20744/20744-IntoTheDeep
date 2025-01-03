@@ -77,7 +77,7 @@ public class PID_Test extends OpMode {
     private int pos;
     private DigitalChannel liftLimit;
 
-    public static double p = 0, i = 0, d = 0;
+    public static double p = 0.015, i = 0, d = 0.0005;
     public static int target;
 
     @Override

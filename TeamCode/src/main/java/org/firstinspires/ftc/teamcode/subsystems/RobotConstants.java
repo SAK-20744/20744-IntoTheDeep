@@ -6,6 +6,8 @@ import com.acmerobotics.dashboard.config.Config;
 public class RobotConstants {
     public static double clawClose = 0.4;
     public static double clawOpen = 0;
+    public static double doorClose = 0.93;
+    public static double doorOpen = 0.5;
     public static double armInPos = 0.365;
     public static double armOutPos = 0.6;
     public static double pitchInPos = 0.865;
@@ -19,5 +21,7 @@ public class RobotConstants {
     public static double DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
     public static int liftZeroPos = 0;
     public static int liftToLowBucketPos = 500;
+    public static int liftToParkPos = 300;
     public static int liftToHighBucketPos = 1000;
+
 }

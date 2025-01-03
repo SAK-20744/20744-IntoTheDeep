@@ -42,6 +42,7 @@ public class LiftSubsystem {
         liftPID = new PIDController(p, i, d);
 
         toZero = new RunAction(this::toZero);
+        toPark = new RunAction(this::toPark);
         toHighBucket = new RunAction(this::toHighBucket);
     }
 
@@ -92,6 +93,14 @@ public class LiftSubsystem {
     public void init() {
         liftPID.setPID(p,i,d);
         bottom = getPos();
+
+        if (!liftLimit.getState()){
+            leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
     }
 
     public void start() {
@@ -104,9 +113,28 @@ public class LiftSubsystem {
         setTarget(liftZeroPos);
     }
 
+    public void toPark() {
+        manual = false;
+        setTarget(liftToParkPos);
+    }
+
     public void toHighBucket() {
         manual = false;
         setTarget(liftToHighBucketPos);
+    }
+
+    public void manual(double n){
+        manual = true;
+
+        lift2.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        leftLift.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        if(hang) {
+            n = -0.75;
+        }
+
+        lift2.setPower(n);
+        leftLift.setPower(n);
     }
 
 }

@@ -42,6 +42,8 @@ public class Auto {
 
     public Follower follower;
     public Telemetry telemetry;
+    public boolean liftPIDF = true;
+    public double liftManual = 0;
 
     public RunAction transfer;
     public Path preload, element1, score1, element2, score2, element3, score3, park;
@@ -88,7 +90,13 @@ public class Auto {
 
     public void update() {
         follower.update();
-        lift.updatePIDF();
+
+        if(!liftPIDF)
+            lift.manual(liftManual);
+        else
+            lift.updatePIDF();
+
+//        lift.updatePIDF();
     }
 
     public void createPoses() {
