@@ -24,7 +24,7 @@ public class NewAuto extends OpMode{
 
     //fix wristintaking, and dooropen
     public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0.08, EXTENDO_EXTENDED = 0.7, WRIST_TRANSFERING = 0.18, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.865;
-    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2700;
+    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -500 ,LIFT_HIGH_BASKET = -1100;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -38,13 +38,13 @@ public class NewAuto extends OpMode{
 
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
-    private Pose basketPos = new Pose(8,19, Math.toRadians(-22.5));
+    private Pose basketPos = new Pose(7,16, Math.toRadians(-22.5));
 
     private Pose sample1Pos = new Pose(11,19.5, Math.toRadians(0));
     private Pose sample2Pos = new Pose(10.885,11.3, Math.toRadians(0));
     private Pose sample3Pos = new Pose(11,15, Math.toRadians(25));
 
-    private Path toBasket,toPark;
+    private Path toBasket, intake1, toPark;
     private Timer pathTimer;
 //    private int pathState;
 
@@ -52,6 +52,11 @@ public class NewAuto extends OpMode{
         toBasket = new Path(new BezierLine(new Point(startPose), new Point(basketPos)));
         toBasket.setLinearHeadingInterpolation(startPose.getHeading(), basketPos.getHeading(), 0.5);
         toBasket.setPathEndTimeoutConstraint(2.5);
+
+        intake1 = new Path(new BezierLine(new Point(basketPos), new Point(sample1Pos)));
+        intake1.setLinearHeadingInterpolation(basketPos.getHeading(), sample1Pos.getHeading(), 0.5);
+        intake1.setPathEndTimeoutConstraint(2.5);
+
     }
 
     @Override
@@ -128,6 +133,15 @@ public class NewAuto extends OpMode{
         transfer.setPosition(transferTarget);
         intake.setPower(intakePower);
 
+        if(liftTarget == LIFT_RETRACTED) {
+            leftLift.setPower(0.6);
+            topLift.setPower(0.6);
+        }
+        else{
+            leftLift.setPower(1);
+            topLift.setPower(1);
+        }
+
         telemetry.addData("transfer Pos", transfer.getPosition());
         telemetry.addData("4Bar Pos", leftV4B.getPosition());
         telemetry.addData("Lift Current", leftLift.getCurrentPosition());
@@ -146,27 +160,6 @@ public class NewAuto extends OpMode{
 
     public void autonomousPathUpdate(){
 
-        if (pathTimer.getElapsedTime() > 3000) {
-            leftV4BTarget = V4B_OUT;
-            pitchTarget = PITCH_DEPO;
-        }
-
-        if(pathTimer.getElapsedTime() > 4000)
-            transferTarget = TRANSFER_OPEN;
-
-        if (pathTimer.getElapsedTime() > 7000) {
-            leftV4BTarget = V4B_IN;
-            pitchTarget = PITCH_TRANSFERING;
-            liftTarget = LIFT_RETRACTED;
-            lExtTarget = EXTENDO_EXTENDED;
-            wristTarget = WRIST_UP;
-        }
-    }
-
-    @Override
-    public void start() {
-        super.start();
-        setPathState(0);
         transferTarget = TRANSFER_CLOSED;
         doorTarget = DOOR_OPEN;
         leftV4BTarget = V4B_IN;
@@ -174,6 +167,79 @@ public class NewAuto extends OpMode{
         follower.followPath(toBasket);
         liftTarget = LIFT_HIGH_BASKET;
         pitchTarget = PITCH_TRANSFERING;
+
+        if (pathTimer.getElapsedTime() > 1500) {
+            leftV4BTarget = V4B_OUT;
+            pitchTarget = PITCH_DEPO;
+        }
+
+        if(pathTimer.getElapsedTime() > 2000)
+            transferTarget = TRANSFER_OPEN;
+
+        if (pathTimer.getElapsedTime() > 3000) {
+            leftV4BTarget = V4B_IN;
+            pitchTarget = PITCH_TRANSFERING;
+            liftTarget = LIFT_RETRACTED;
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_UP;
+            doorTarget = DOOR_CLOSED;
+        }
+
+        if (pathTimer.getElapsedTime() > 3500) {
+            intakePower = INTAKE_IN;
+            wristTarget = WRIST_INTAKING;
+        }
+
+        if (pathTimer.getElapsedTime() > 5000) {
+            leftV4BTarget = V4B_IN;
+            pitchTarget = PITCH_TRANSFERING;
+            liftTarget = LIFT_RETRACTED;
+            lExtTarget = EXTENDO_RETRACTED;
+            intakePower = INTAKE_OFF;
+            transferTarget = TRANSFER_OPEN;
+            wristTarget = WRIST_TRANSFERING;
+        }
+
+        if (pathTimer.getElapsedTime() > 5500) {
+            doorTarget = DOOR_OPEN;
+            transferTarget = TRANSFER_CLOSED;
+        }
+
+        if (pathTimer.getElapsedTime() > 6000) {
+            liftTarget = LIFT_HIGH_BASKET;
+        }
+
+        if (pathTimer.getElapsedTime() > 7000) {
+            leftV4BTarget = V4B_OUT;
+            pitchTarget = PITCH_DEPO;
+        }
+
+        if(pathTimer.getElapsedTime() > 7500)
+            transferTarget = TRANSFER_OPEN;
+
+        if (pathTimer.getElapsedTime() > 8500) {
+            leftV4BTarget = V4B_IN;
+            pitchTarget = PITCH_TRANSFERING;
+            liftTarget = LIFT_RETRACTED;
+            lExtTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_UP;
+            doorTarget = DOOR_CLOSED;
+            follower.followPath(intake1);
+        }
+
+        if (pathTimer.getElapsedTime() > 10000) {
+            intakePower = INTAKE_IN;
+            wristTarget = WRIST_INTAKING;
+        }
+
+        intakePower = INTAKE_OFF;
+
+    }
+
+    @Override
+    public void start() {
+        super.start();
+        setPathState(0);
     }
 
     @Override

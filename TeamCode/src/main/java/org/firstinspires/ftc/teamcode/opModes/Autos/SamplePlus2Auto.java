@@ -23,8 +23,8 @@ public class SamplePlus2Auto extends OpMode{
     private DigitalChannel liftLimit;
 
     //fix wristintaking, and dooropen
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.325, V4B_OUT = 0.58, TRANSFER_CLOSED = 0.47, TRANSFER_OPEN = 0.2, EXTENDO_RETRACTED = 0.11, EXTENDO_EXTENDED = 0.29, WRIST_TRANSFERING = 0.12, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 1, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.88;
-    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -1450 ,LIFT_HIGH_BASKET = -2850;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0.08, EXTENDO_EXTENDED = 0.63, WRIST_TRANSFERING = 0.18, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.865;
+    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -500 ,LIFT_HIGH_BASKET = -1250;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -39,7 +39,7 @@ public class SamplePlus2Auto extends OpMode{
     private Follower follower;
     private Pose startPose = new Pose(0,0, Math.toRadians(0));
     private Pose sample1Pos = new Pose(11,19.5, Math.toRadians(0));
-    private Pose sample2Pos = new Pose(10.885,11.3, Math.toRadians(0));
+    private Pose sample2Pos = new Pose(10.885,10.6, Math.toRadians(0));
     private Pose sample3Pos = new Pose(11,15, Math.toRadians(25));
 
     private Pose basketPos = new Pose(6.65,13.25, Math.toRadians(-45));
@@ -257,7 +257,7 @@ public class SamplePlus2Auto extends OpMode{
             transferTarget = TRANSFER_CLOSED;
         }
 
-        if(pathTimer.getElapsedTime() > 15000) {
+        if(pathTimer.getElapsedTime() > 15000 && !follower.isBusy()) {
             follower.followPath(score2);
             liftTarget = LIFT_HIGH_BASKET;
         }

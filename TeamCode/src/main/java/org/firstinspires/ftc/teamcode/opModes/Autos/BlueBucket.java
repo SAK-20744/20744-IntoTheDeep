@@ -15,18 +15,25 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 public class BlueBucket extends OpMode {
     public int pathState;
     public Auto auto;
-    public Timer intakeTimer = new Timer();
-    public Timer dropTimer = new Timer();
+    public Timer pathTimer = new Timer();
+
 
     @Override
     public void init() {
         auto = new Auto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
-        Actions.runBlocking(auto.claw.openClaw);
         Actions.runBlocking(auto.intake.openDoor);
         Actions.runBlocking(auto.depo.armIn);
         Actions.runBlocking(auto.pitch.pitchIn);
+    }
+
+    @Override
+    public void init_loop() {
+        if(gamepad2.right_bumper)
+            Actions.runBlocking(auto.claw.openClaw);
+        else
+            Actions.runBlocking(auto.claw.closeClaw);
     }
 
     @Override
@@ -40,144 +47,115 @@ public class BlueBucket extends OpMode {
         auto.update();
         pathUpdate();
 
-        telemetry.addData("state", pathState);
-        telemetry.addData("x", auto.follower.getPose().getX());
-        telemetry.addData("y", auto.follower.getPose().getY());
-        telemetry.addData("h", auto.follower.getPose().getHeading());
+//        telemetry.addData("state", pathState);
+//        telemetry.addData("x", auto.follower.getPose().getX());
+//        telemetry.addData("y", auto.follower.getPose().getY());
+//        telemetry.addData("h", auto.follower.getPose().getHeading());
     }
 
     public void pathUpdate() {
         switch (pathState) {
             case 0:
-                Actions.runBlocking(auto.extend.retractExtendo);
-                Actions.runBlocking(auto.intake.pivotTransfer);
-                Actions.runBlocking(auto.intake.openDoor);
-                Actions.runBlocking(auto.claw.closeClaw);
-                Actions.runBlocking(auto.lift.toHighBucket);
-                intakeTimer.resetTimer();
-                Actions.runBlocking(auto.depo.armOut);
-                Actions.runBlocking(auto.pitch.pitchOut);
-                auto.follower.followPath(auto.preload);
+                auto.startBucket();
+                auto.follower.followPath(auto.preload, true);
                 setPathState(1);
                 break;
             case 1:
-                if(!auto.follower.isBusy()) {
-
-                    if (auto.lift.isAtTarget() || intakeTimer.getElapsedTimeSeconds() > 1.5) {
-                        Actions.runBlocking(auto.claw.openClaw);
-                    }
-                    Actions.runBlocking(auto.depo.armIn);
-                    Actions.runBlocking(auto.pitch.pitchIn);
-                    Actions.runBlocking(auto.lift.toZero);
-                    auto.follower.followPath(auto.element1);
-                    Actions.runBlocking(auto.extend.extendExtendo);
-                    Actions.runBlocking(auto.intake.pivotGround);
-                    Actions.runBlocking(auto.intake.closeDoor);
-                    Actions.runBlocking(auto.intake.spinIn);
-                    intakeTimer.resetTimer();
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.element1, true);
                     setPathState(2);
                 }
                 break;
             case 2:
-                if(!auto.follower.isBusy() && intakeTimer.getElapsedTimeSeconds() > 2) {
-                    auto.follower.followPath(auto.score1);
-                    Actions.runBlocking(auto.intake.spinStop);
-                    Actions.runBlocking(auto.intake.pivotTransfer);
-                    Actions.runBlocking(auto.extend.retractExtendo);
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startIntake();
                     setPathState(3);
                 }
                 break;
             case 3:
-                if(!auto.follower.isBusy()) {
-                    Actions.runBlocking(auto.intake.openDoor);
-                    Actions.runBlocking(auto.claw.closeClaw);
-                    Actions.runBlocking(auto.depo.armOut);
-                    Actions.runBlocking(auto.pitch.pitchOut);
-                    Actions.runBlocking(auto.lift.toHighBucket);
-                    intakeTimer.resetTimer();
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.score1, true);
                     setPathState(4);
                 }
                 break;
             case 4:
-                if(!auto.follower.isBusy()) {
-
-                    if (auto.lift.isAtTarget() || intakeTimer.getElapsedTimeSeconds() > 1.5) {
-                        Actions.runBlocking(auto.claw.openClaw);
-                    }
-                    Actions.runBlocking(auto.depo.armIn);
-                    Actions.runBlocking(auto.pitch.pitchIn);
-                    Actions.runBlocking(auto.lift.toZero);
-                    auto.follower.followPath(auto.element2);
-                    Actions.runBlocking(auto.extend.extendExtendo);
-                    Actions.runBlocking(auto.intake.pivotGround);
-                    Actions.runBlocking(auto.intake.closeDoor);
-                    Actions.runBlocking(auto.intake.spinIn);
-                    intakeTimer.resetTimer();
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startBucket();
                     setPathState(5);
                 }
                 break;
             case 5:
-                if(!auto.follower.isBusy() && intakeTimer.getElapsedTimeSeconds() > 2) {
-                    auto.follower.followPath(auto.score2);
-                    Actions.runBlocking(auto.intake.spinStop);
-                    Actions.runBlocking(auto.intake.pivotTransfer);
-                    Actions.runBlocking(auto.extend.retractExtendo);
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.retract();
+                    auto.follower.followPath(auto.element2, true);
                     setPathState(6);
                 }
                 break;
             case 6:
-                if(!auto.follower.isBusy()) {
-                    Actions.runBlocking(auto.intake.openDoor);
-                    Actions.runBlocking(auto.claw.closeClaw);
-                    Actions.runBlocking(auto.depo.armOut);
-                    Actions.runBlocking(auto.pitch.pitchOut);
-                    Actions.runBlocking(auto.lift.toHighBucket);
-                    intakeTimer.resetTimer();
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startIntake();
                     setPathState(7);
                 }
                 break;
             case 7:
-                if(!auto.follower.isBusy()) {
-
-                    if (auto.lift.isAtTarget() || intakeTimer.getElapsedTimeSeconds() > 1.5) {
-                        Actions.runBlocking(auto.claw.openClaw);
-                    }
-                    Actions.runBlocking(auto.depo.armIn);
-                    Actions.runBlocking(auto.pitch.pitchIn);
-                    Actions.runBlocking(auto.lift.toZero);
-                    auto.follower.followPath(auto.element3);
-                    Actions.runBlocking(auto.extend.extendExtendo);
-                    Actions.runBlocking(auto.intake.pivotGround);
-                    Actions.runBlocking(auto.intake.closeDoor);
-                    Actions.runBlocking(auto.intake.spinIn);
-                    intakeTimer.resetTimer();
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.score2, true);
                     setPathState(8);
                 }
                 break;
             case 8:
-                if(!auto.follower.isBusy() && intakeTimer.getElapsedTimeSeconds() > 2) {
-                    auto.follower.followPath(auto.score3);
-                    Actions.runBlocking(auto.intake.spinStop);
-                    Actions.runBlocking(auto.intake.pivotTransfer);
-                    Actions.runBlocking(auto.extend.retractExtendo);
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startBucket();
                     setPathState(9);
                 }
                 break;
             case 9:
-                if(!auto.follower.isBusy()) {
-                    auto.follower.followPath(auto.park);
-                    Actions.runBlocking(auto.intake.openDoor);
-                    Actions.runBlocking(auto.claw.closeClaw);
-                    Actions.runBlocking(auto.depo.armOut);
-                    Actions.runBlocking(auto.pitch.pitchOut);
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.retract();
+                    auto.follower.followPath(auto.element3);
                     setPathState(10);
                 }
                 break;
             case 10:
-                if(!auto.follower.isBusy()) {
-                    Actions.runBlocking(auto.lift.toPark);
-                    auto.follower.breakFollowing();
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startIntake();
                     setPathState(11);
+                }
+                break;
+            case 11:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.score3, true);
+                    setPathState(12);
+                }
+                break;
+            case 12:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startBucket();
+                    setPathState(13);
+                }
+                break;
+            case 13:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.park, true);
+                    setPathState(14);
+                }
+                break;
+            case 14:
+                if(auto.actionNotBusy()) {
+                    auto.pitch.setPitchOut();
+                    auto.depo.setArmOut();
+                    Actions.runBlocking(auto.lift.toPark);
+                    setPathState(15);
+                }
+                break;
+            case 15:
+                if(!auto.follower.isBusy()) {
+                    setPathState(-1);
                 }
                 break;
         }
@@ -185,5 +163,6 @@ public class BlueBucket extends OpMode {
 
     public void setPathState(int x) {
         pathState = x;
+        pathTimer.resetTimer();
     }
 }

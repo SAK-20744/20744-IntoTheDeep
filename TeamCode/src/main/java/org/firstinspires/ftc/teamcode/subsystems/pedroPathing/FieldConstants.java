@@ -23,11 +23,11 @@ public class FieldConstants {
     public static final Pose blueBucketPreloadPose = new Pose(6.65,13.25, Math.toRadians(-45));
 
     // Blue Bucket Sample Poses
-    public static final Pose blueBucketLeftSamplePose = new Pose(11,15, Math.toRadians(25));
+    public static final Pose blueBucketLeftSamplePose = new Pose(10.8,15.3, Math.toRadians(25));
 //    public static final Pose blueBucketLeftSampleControlPose = new Pose(32, 108);
-    public static final Pose blueBucketMidSamplePose =  new Pose(11,14, Math.toRadians(0));
+    public static final Pose blueBucketMidSamplePose =  new Pose(10.55,15.85, Math.toRadians(0));
 //    public static final Pose blueBucketMidSampleControlPose = new Pose(11,15, Math.toRadians(25));
-    public static final Pose blueBucketRightSamplePose = new Pose(10.885,11.3, Math.toRadians(0));
+    public static final Pose blueBucketRightSamplePose = new Pose(10.3,13.15, Math.toRadians(0));
 //    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
     public static final Pose blueBucketScorePose = new Pose(8,13.5, Math.toRadians(-45));

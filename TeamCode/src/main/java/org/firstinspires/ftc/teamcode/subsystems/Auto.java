@@ -11,6 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Deposit.PitchSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Action;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.ParallelAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.SequentialAction;
@@ -21,6 +22,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Bez
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
 public class Auto {
 
@@ -40,10 +42,16 @@ public class Auto {
     public IntakeSubsystem.IntakePivotState intakePivotState;
     public IntakeSubsystem.DoorState doorState;
 
+    public boolean actionBusy = false;
+
     public Follower follower;
     public Telemetry telemetry;
     public boolean liftPIDF = true;
     public double liftManual = 0;
+
+    public int bucketState, intakeState, retractState = -1;
+
+    public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
     public RunAction transfer;
     public Path preload, element1, score1, element2, score2, element3, score3, park;
@@ -65,7 +73,6 @@ public class Auto {
         createPoses();
         buildPaths();
 
-        transfer = new RunAction(this::transfer);
     }
 
     public void init() {
@@ -96,8 +103,147 @@ public class Auto {
         else
             lift.updatePIDF();
 
-//        lift.updatePIDF();
+        intake();
+        bucket();
+        retract();
+        telemetryUpdate();
     }
+
+    public void setBucketState(int x) {
+        bucketState = x;
+    }
+
+    public void setRetractState(int x) {
+        retractState = x;
+    }
+
+    public void setIntakeState(int x) {
+        intakeState = x;
+    }
+
+    public void startBucket() {
+        if (actionNotBusy()) {
+            setBucketState(1);
+        }
+    }
+
+    public void startRetract() {
+        if (actionNotBusy()) {
+            setRetractState(1);
+        }
+    }
+
+    public void startIntake() {
+        if (actionNotBusy()) {
+            setIntakeState(1);
+        }
+    }
+
+
+    public boolean actionNotBusy() {
+        return !actionBusy;
+    }
+
+    public void intake() {
+        switch (intakeState) {
+            case 1:
+                actionBusy = true;
+                intake.pivotGround();
+                intake.doorClosed();
+                intake.spinIn();
+                claw.openClaw();
+                extend.extend();
+                intakeTimer.resetTimer();
+                setIntakeState(2);
+                break;
+            case 2:
+                if (intakeTimer.getElapsedTimeSeconds() > 1.5) {
+                    actionBusy = false;
+                    setIntakeState(-1);
+                }
+                break;
+
+        }
+    }
+
+    public void bucket() {
+        switch (bucketState) {
+            case 1:
+                actionBusy = true;
+                intake.pivotTransfer();
+                intake.spinStop();
+//                claw.openClaw();
+//                intake.doorClosed();
+                extend.retract();
+                bucketTimer.resetTimer();
+                setBucketState(2);
+                break;
+            case 2:
+                if (bucketTimer.getElapsedTimeSeconds() > 1.2) {
+                    claw.closeClaw();
+                    intake.doorOpen();
+                    bucketTimer.resetTimer();
+                    setBucketState(3);
+                }
+                break;
+            case 3:
+                if (bucketTimer.getElapsedTimeSeconds() > 0.7) {
+                    lift.toHighBucket();
+                    setBucketState(4);
+                }
+                break;
+            case 4:
+                if (lift.isAtTarget()) {
+//                    bucketTimer.resetTimer();
+                    depo.setArmOut();
+                    pitch.setPitchOut();
+                    setBucketState(5);
+                }
+            case 5:
+                if (bucketTimer.getElapsedTimeSeconds() > 1.75) {
+//                    bucketTimer.resetTimer();
+                    claw.openClaw();
+                    setBucketState(6);
+                }
+                break;
+            case 6:
+                if (bucketTimer.getElapsedTimeSeconds() > 2.25) {
+                    actionBusy = false;
+                    setBucketState(-1);
+                }
+                break;
+
+        }
+    }
+
+    public void retract() {
+        switch (retractState) {
+            case 1:
+                actionBusy = true;
+                intake.doorClosed();
+                extend.retract();
+                depo.setArmIn();
+                pitch.setPitchIn();
+                retractTimer.resetTimer();
+                setRetractState(2);
+                break;
+            case 2:
+                if (retractTimer.getElapsedTimeSeconds() > 1) {
+                    lift.toZero();
+                    claw.openClaw();
+                    retractTimer.resetTimer();
+                    setRetractState(3);
+                }
+                break;
+            case 3:
+                if (lift.isAtTarget()) {
+                    actionBusy = false;
+                    setRetractState(-1);
+                }
+                break;
+        }
+    }
+
 
     public void createPoses() {
         switch (startLocation) {
@@ -161,14 +307,19 @@ public class Auto {
         park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading(), 0.7);
     }
 
-    private Action transfer() {
-        return new SequentialAction(
-                intake.spinStop,
-                new ParallelAction(intake.pivotTransfer),
-                intake.spinOut,
-                new SleepAction(1),
-                intake.spinIn,
-                intake.spinStop
-        );
+    public boolean notBusy() {
+        return (!follower.isBusy() && actionNotBusy());
+    }
+
+    public void telemetryUpdate() {
+        telemetry.addData("X: ", follower.getPose().getX());
+        telemetry.addData("Y: ", follower.getPose().getY());
+        telemetry.addData("lift: ", lift.getPos());
+        telemetry.addData("liftAtTarget?: ", lift.isAtTarget());
+        telemetry.addData("Bucket State: ", bucketState);
+        telemetry.addData("Retract State: ", retractState);
+        telemetry.addData("Heading: ", follower.getPose().getHeading());
+        telemetry.addData("Action Busy?: ", actionBusy);
+        telemetry.update();
     }
 }

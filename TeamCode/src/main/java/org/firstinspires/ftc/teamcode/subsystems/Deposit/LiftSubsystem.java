@@ -55,6 +55,8 @@ public class LiftSubsystem {
 
             double pid = liftPID.calculate(getPos(), target);
             double power = pid;
+            if(target < getPos())
+                power*=0.6;
 
             lift2.setPower(power);
             leftLift.setPower(power);
@@ -77,7 +79,7 @@ public class LiftSubsystem {
     }
 
     public boolean isAtTarget() {
-        return Math.abs(pos - target) < 10;
+        return Math.abs(pos - target) < 50;
     }
 
     public void setTarget(int b) {
@@ -90,7 +92,7 @@ public class LiftSubsystem {
 //    }
 
     public int getPos() {
-        pos = lift2.getCurrentPosition();
+        pos = leftLift.getCurrentPosition();
         return pos;
     }
 
