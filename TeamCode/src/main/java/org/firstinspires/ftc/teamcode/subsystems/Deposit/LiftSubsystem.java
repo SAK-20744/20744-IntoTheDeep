@@ -77,7 +77,7 @@ public class LiftSubsystem {
     }
 
     public boolean isAtTarget() {
-        return Math.abs(lift2.getCurrentPosition() - target) < 10;
+        return Math.abs(pos - target) < 10;
     }
 
     public void setTarget(int b) {
@@ -88,6 +88,11 @@ public class LiftSubsystem {
 //        pos = lift2.getCurrentPosition() - bottom;
 //        return lift2.getCurrentPosition() - bottom;
 //    }
+
+    public int getPos() {
+        pos = lift2.getCurrentPosition();
+        return pos;
+    }
 
     // OpMode
     public void init() {
