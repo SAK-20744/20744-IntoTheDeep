@@ -77,22 +77,22 @@ public class LiftSubsystem {
     }
 
     public boolean isAtTarget() {
-        return Math.abs(pos - target) < 10;
+        return Math.abs(lift2.getCurrentPosition() - target) < 10;
     }
 
     public void setTarget(int b) {
         target = b;
     }
 
-    public int getPos() {
-        pos = lift2.getCurrentPosition() - bottom;
-        return lift2.getCurrentPosition() - bottom;
-    }
+//    public int getPos() {
+//        pos = lift2.getCurrentPosition() - bottom;
+//        return lift2.getCurrentPosition() - bottom;
+//    }
 
     // OpMode
     public void init() {
         liftPID.setPID(p,i,d);
-        bottom = getPos();
+//        bottom = getPos();
 
         if (!liftLimit.getState()){
             leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
