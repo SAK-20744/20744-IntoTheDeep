@@ -179,7 +179,7 @@ public class Auto {
                 setBucketState(2);
                 break;
             case 2:
-                if (bucketTimer.getElapsedTimeSeconds() > 1.2) {
+                if (bucketTimer.getElapsedTimeSeconds() > 1) {
                     claw.closeClaw();
                     intake.doorOpen();
                     bucketTimer.resetTimer();
@@ -187,7 +187,7 @@ public class Auto {
                 }
                 break;
             case 3:
-                if (bucketTimer.getElapsedTimeSeconds() > 0.7) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.4) {
                     lift.toHighBucket();
                     setBucketState(4);
                 }
@@ -200,14 +200,14 @@ public class Auto {
                     setBucketState(5);
                 }
             case 5:
-                if (bucketTimer.getElapsedTimeSeconds() > 1.75) {
+                if (bucketTimer.getElapsedTimeSeconds() > 2) {
 //                    bucketTimer.resetTimer();
                     claw.openClaw();
                     setBucketState(6);
                 }
                 break;
             case 6:
-                if (bucketTimer.getElapsedTimeSeconds() > 2.25) {
+                if (bucketTimer.getElapsedTimeSeconds() > 2.4) {
                     actionBusy = false;
                     setBucketState(-1);
                 }
@@ -228,7 +228,7 @@ public class Auto {
                 setRetractState(2);
                 break;
             case 2:
-                if (retractTimer.getElapsedTimeSeconds() > 1) {
+                if (retractTimer.getElapsedTimeSeconds() > 0.4) {
                     lift.toZero();
                     claw.openClaw();
                     retractTimer.resetTimer();
@@ -292,13 +292,13 @@ public class Auto {
         score1.setLinearHeadingInterpolation(element1Pose.getHeading(), elementScorePose.getHeading());
 
         element2 = new Path(new BezierCurve(new Point(element1Pose), new Point(element2Pose)));
-        element2.setLinearHeadingInterpolation(element1Pose.getHeading(), element2Pose.getHeading());
+        element2.setLinearHeadingInterpolation(element1Pose.getHeading(), element2Pose.getHeading(), 0.5);
 
         score2 = new Path(new BezierLine(new Point(element2Pose), new Point(elementScorePose)));
         score2.setLinearHeadingInterpolation(element2Pose.getHeading(), elementScorePose.getHeading());
 
         element3 = new Path(new BezierCurve(new Point(element2Pose), new Point(element3Pose)));
-        element3.setLinearHeadingInterpolation(element2Pose.getHeading(), element3Pose.getHeading());
+        element3.setLinearHeadingInterpolation(element2Pose.getHeading(), element3Pose.getHeading(), 0.5);
 
         score3 = new Path(new BezierLine(new Point(element3Pose), new Point(elementScorePose)));
         score3.setLinearHeadingInterpolation(element3Pose.getHeading(), elementScorePose.getHeading());

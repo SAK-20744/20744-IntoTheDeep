@@ -9,7 +9,7 @@ public class RobotConstants {
     public static double doorClose = 0.93;
     public static double doorOpen = 0.5;
     public static double armInPos = 0.365;
-    public static double armOutPos = 0.6;
+    public static double armOutPos = 0.67;
     public static double pitchInPos = 0.865;
     public static double pitchOutPos = 0.5;
     public static double intakeSpinInPwr = 1;
@@ -21,7 +21,7 @@ public class RobotConstants {
     public static double DOOR_OPEN = 0.5, DOOR_CLOSED = 1;
     public static int liftZeroPos = 0;
     public static int liftToLowBucketPos = 500;
-    public static int liftToParkPos = 150;
-    public static int liftToHighBucketPos = 420;
+    public static int liftToParkPos = 250;
+    public static int liftToHighBucketPos = 1100;
 
 }

@@ -88,7 +88,7 @@ public class BlueBucket extends OpMode {
                 break;
             case 5:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.retract();
+                    auto.startRetract();
                     auto.follower.followPath(auto.element2, true);
                     setPathState(6);
                 }
@@ -114,7 +114,7 @@ public class BlueBucket extends OpMode {
                 break;
             case 9:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.retract();
+                    auto.startRetract();
                     auto.follower.followPath(auto.element3);
                     setPathState(10);
                 }
@@ -147,7 +147,7 @@ public class BlueBucket extends OpMode {
                 break;
             case 14:
                 if(auto.actionNotBusy()) {
-                    auto.pitch.setPitchOut();
+                    auto.pitch.setPitchIn();
                     auto.depo.setArmOut();
                     Actions.runBlocking(auto.lift.toPark);
                     setPathState(15);
