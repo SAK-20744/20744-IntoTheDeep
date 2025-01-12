@@ -131,7 +131,7 @@ public class AdidasTeleopV2 extends OpMode {
         rightRear.setPower(backRightPower);
 
         if (gamepad1.left_trigger > 0) {
-            lExtTarget = gamepad1.left_trigger * (EXTENDO_EXTENDED-EXTENDO_RETRACTED);
+            lExtTarget = (gamepad1.left_trigger * (EXTENDO_EXTENDED-EXTENDO_RETRACTED)) + EXTENDO_RETRACTED;
 
             if (gamepad1.right_bumper) {
                 intakePower = INTAKE_IN;
