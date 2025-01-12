@@ -130,9 +130,9 @@ public class AdidasTeleopV2 extends OpMode {
         rightFront.setPower(frontRightPower);
         rightRear.setPower(backRightPower);
 
-        if (gamepad1.left_bumper) {
-            lExtTarget = EXTENDO_EXTENDED;
-//            doorTarget = DOOR_CLOSED;
+        if (gamepad1.left_trigger > 0) {
+            lExtTarget = gamepad1.left_trigger * (EXTENDO_EXTENDED-EXTENDO_RETRACTED);
+
             if (gamepad1.right_bumper) {
                 intakePower = INTAKE_IN;
                 wristTarget = WRIST_INTAKING;
@@ -145,8 +145,6 @@ public class AdidasTeleopV2 extends OpMode {
             }
         } else {
             lExtTarget = EXTENDO_RETRACTED;
-//            doorTarget = DOOR_OPEN;
-//            wristTarget = WRIST_TRANSFERING;
 
             if (gamepad1.right_bumper) {
                 intakePower = INTAKE_IN;
@@ -160,6 +158,37 @@ public class AdidasTeleopV2 extends OpMode {
             }
 
         }
+
+//        if (gamepad1.left_bumper) {
+//            lExtTarget = EXTENDO_EXTENDED;
+////            doorTarget = DOOR_CLOSED;
+//            if (gamepad1.right_bumper) {
+//                intakePower = INTAKE_IN;
+//                wristTarget = WRIST_INTAKING;
+//            } else if (gamepad1.y) {
+//                intakePower = INTAKE_OUT;
+//                wristTarget = WRIST_UP;
+//            } else {
+//                intakePower = INTAKE_OFF;
+//                wristTarget = WRIST_UP;
+//            }
+//        } else {
+//            lExtTarget = EXTENDO_RETRACTED;
+////            doorTarget = DOOR_OPEN;
+////            wristTarget = WRIST_TRANSFERING;
+//
+//            if (gamepad1.right_bumper) {
+//                intakePower = INTAKE_IN;
+//                wristTarget = WRIST_INTAKING;
+//            } else if (gamepad1.y) {
+//                intakePower = INTAKE_OUT;
+//                wristTarget = WRIST_UP;
+//            } else {
+//                intakePower = INTAKE_OFF;
+//                wristTarget = WRIST_TRANSFERING;
+//            }
+//
+//        }
 
         if(gamepad2.right_bumper && !gamepad1.left_bumper) {
             transferTarget = TRANSFER_CLOSED;
