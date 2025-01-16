@@ -56,7 +56,7 @@ public class LiftSubsystem {
             double pid = liftPID.calculate(getPos(), target);
             double power = pid;
             if(target < getPos())
-                power*=0.35;
+                power*=0.5;
 
             lift2.setPower(power);
             leftLift.setPower(power);

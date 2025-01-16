@@ -35,7 +35,7 @@ public class AdidasTeleopV2 extends OpMode {
 
     private boolean aPressed = true, bPressed = false;
 
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0.08, EXTENDO_EXTENDED = 0.7, WRIST_TRANSFERING = 0.18, WRIST_UP = 0.78, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.865;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0, EXTENDO_EXTENDED = 0.65, WRIST_TRANSFERING = 0, WRIST_UP = 0.7, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.89;
     public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -500 ,LIFT_HIGH_BASKET = -1100;
 
     private int liftTarget = LIFT_RETRACTED;
@@ -130,38 +130,9 @@ public class AdidasTeleopV2 extends OpMode {
         rightFront.setPower(frontRightPower);
         rightRear.setPower(backRightPower);
 
-        if (gamepad1.left_trigger > 0) {
-            lExtTarget = (gamepad1.left_trigger * (EXTENDO_EXTENDED-EXTENDO_RETRACTED)) + EXTENDO_RETRACTED;
-
-            if (gamepad1.right_bumper) {
-                intakePower = INTAKE_IN;
-                wristTarget = WRIST_INTAKING;
-            } else if (gamepad1.y) {
-                intakePower = INTAKE_OUT;
-                wristTarget = WRIST_UP;
-            } else {
-                intakePower = INTAKE_OFF;
-                wristTarget = WRIST_UP;
-            }
-        } else {
-            lExtTarget = EXTENDO_RETRACTED;
-
-            if (gamepad1.right_bumper) {
-                intakePower = INTAKE_IN;
-                wristTarget = WRIST_INTAKING;
-            } else if (gamepad1.y) {
-                intakePower = INTAKE_OUT;
-                wristTarget = WRIST_UP;
-            } else {
-                intakePower = INTAKE_OFF;
-                wristTarget = WRIST_TRANSFERING;
-            }
-
-        }
-
-//        if (gamepad1.left_bumper) {
-//            lExtTarget = EXTENDO_EXTENDED;
-////            doorTarget = DOOR_CLOSED;
+//        if (gamepad1.left_trigger > 0) {
+//            lExtTarget = (gamepad1.left_trigger * (EXTENDO_EXTENDED-EXTENDO_RETRACTED)) + EXTENDO_RETRACTED;
+//
 //            if (gamepad1.right_bumper) {
 //                intakePower = INTAKE_IN;
 //                wristTarget = WRIST_INTAKING;
@@ -174,8 +145,6 @@ public class AdidasTeleopV2 extends OpMode {
 //            }
 //        } else {
 //            lExtTarget = EXTENDO_RETRACTED;
-////            doorTarget = DOOR_OPEN;
-////            wristTarget = WRIST_TRANSFERING;
 //
 //            if (gamepad1.right_bumper) {
 //                intakePower = INTAKE_IN;
@@ -189,6 +158,37 @@ public class AdidasTeleopV2 extends OpMode {
 //            }
 //
 //        }
+
+        if (gamepad1.left_bumper) {
+            lExtTarget = EXTENDO_EXTENDED;
+//            doorTarget = DOOR_CLOSED;
+            if (gamepad1.right_bumper) {
+                intakePower = INTAKE_IN;
+                wristTarget = WRIST_INTAKING;
+            } else if (gamepad1.y) {
+                intakePower = INTAKE_OUT;
+                wristTarget = WRIST_UP;
+            } else {
+                intakePower = INTAKE_OFF;
+                wristTarget = WRIST_UP;
+            }
+        } else {
+            lExtTarget = EXTENDO_RETRACTED;
+//            doorTarget = DOOR_OPEN;
+//            wristTarget = WRIST_TRANSFERING;
+
+            if (gamepad1.right_bumper) {
+                intakePower = INTAKE_IN;
+                wristTarget = WRIST_INTAKING;
+            } else if (gamepad1.y) {
+                intakePower = INTAKE_OUT;
+                wristTarget = WRIST_UP;
+            } else {
+                intakePower = INTAKE_OFF;
+                wristTarget = WRIST_TRANSFERING;
+            }
+
+        }
 
         if(gamepad2.right_bumper && !gamepad1.left_bumper) {
             transferTarget = TRANSFER_CLOSED;
