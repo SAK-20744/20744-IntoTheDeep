@@ -5,12 +5,16 @@ import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.Foll
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
+import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -35,8 +39,11 @@ public class AdidasTeleopV2 extends OpMode {
 
     private boolean aPressed = true, bPressed = false;
 
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0, EXTENDO_EXTENDED = 0.65, WRIST_TRANSFERING = 0, WRIST_UP = 0.7, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.89;
-    public static int LIFT_RETRACTED = 0,LIFT_MID_BASKET = -500 ,LIFT_HIGH_BASKET = -1100;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.24, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0, EXTENDO_EXTENDED = 0.65, WRIST_TRANSFERING = 0, WRIST_UP = 0.7, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.73;
+    public static int LIFT_RETRACTED = 105, LIFT_MID_BASKET = 500 ,LIFT_HIGH_BASKET = 1100;
+
+    public static double SpecV4B_IN = 0.365, SpecV4B_OUT = 0.6, SpecPITCH_DEPO = 0.5, SpecPITCH_TRANSFERING = 0.89;
+    public static int SpecLIFT_RETRACTED = 0, SpecMid = -200 , SpecHigh = 450;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -49,6 +56,8 @@ public class AdidasTeleopV2 extends OpMode {
     private double pitchTarget = PITCH_TRANSFERING;
 
     private boolean locSet = false;
+    private PIDController liftPID;
+    public static double p = 0.015, i = 0, d = 0.0005;
 
     @Override
     public void init() {
@@ -67,6 +76,10 @@ public class AdidasTeleopV2 extends OpMode {
 
         follower.startTeleopDrive();
 
+        liftPID = new PIDController(p, i, d);
+
+        telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+        liftLimit = hardwareMap.get(DigitalChannel.class, "liftLimit");
         liftLimit = hardwareMap.get(DigitalChannel.class, "liftLimit");
         leftExtendo = hardwareMap.get(Servo.class, "leftExtendo");
         rightExtendo = hardwareMap.get(Servo.class, "rightExtendo");
@@ -79,6 +92,9 @@ public class AdidasTeleopV2 extends OpMode {
         transfer = hardwareMap.get(Servo.class, "trans");
         pitch = hardwareMap.get(Servo.class, "pitch");
         clawInput = hardwareMap.get(AnalogInput.class, "clawPos");
+
+        topLift.setDirection(DcMotorSimple.Direction.REVERSE);
+        leftLift.setDirection(DcMotorSimple.Direction.REVERSE);
 
         door.setPosition(doorTarget);
         leftV4B.setPosition(leftV4BTarget);
@@ -130,35 +146,6 @@ public class AdidasTeleopV2 extends OpMode {
         rightFront.setPower(frontRightPower);
         rightRear.setPower(backRightPower);
 
-//        if (gamepad1.left_trigger > 0) {
-//            lExtTarget = (gamepad1.left_trigger * (EXTENDO_EXTENDED-EXTENDO_RETRACTED)) + EXTENDO_RETRACTED;
-//
-//            if (gamepad1.right_bumper) {
-//                intakePower = INTAKE_IN;
-//                wristTarget = WRIST_INTAKING;
-//            } else if (gamepad1.y) {
-//                intakePower = INTAKE_OUT;
-//                wristTarget = WRIST_UP;
-//            } else {
-//                intakePower = INTAKE_OFF;
-//                wristTarget = WRIST_UP;
-//            }
-//        } else {
-//            lExtTarget = EXTENDO_RETRACTED;
-//
-//            if (gamepad1.right_bumper) {
-//                intakePower = INTAKE_IN;
-//                wristTarget = WRIST_INTAKING;
-//            } else if (gamepad1.y) {
-//                intakePower = INTAKE_OUT;
-//                wristTarget = WRIST_UP;
-//            } else {
-//                intakePower = INTAKE_OFF;
-//                wristTarget = WRIST_TRANSFERING;
-//            }
-//
-//        }
-
         if (gamepad1.left_bumper) {
             lExtTarget = EXTENDO_EXTENDED;
 //            doorTarget = DOOR_CLOSED;
@@ -207,68 +194,47 @@ public class AdidasTeleopV2 extends OpMode {
             liftTarget = LIFT_RETRACTED;
             leftV4BTarget = V4B_IN;
             pitchTarget = PITCH_TRANSFERING;
-//            transferTarget = TRANSFER_OPEN;
-//            aPressed = true;
-//            bPressed = false;
         }
 
         if(gamepad1.b) {
             liftTarget = liftLiftedTarget;
             leftV4BTarget = V4B_OUT;
             pitchTarget = PITCH_DEPO;
-//            transferTarget = TRANSFER_CLOSED;
-//            aPressed = false;
-//            bPressed = true;
         }
 
-//        if(aPressed && transferTarget == clawInput.getVoltage()/3.3){
-//            liftTarget = LIFT_RETRACTED;
-//            leftV4BTarget = V4B_IN;
-//            pitchTarget = PITCH_TRANSFERING;
-//        }
-//        if(bPressed && transferTarget == clawInput.getVoltage()/3.3) {
-//            liftTarget = liftLiftedTarget;
-//            leftV4BTarget = V4B_OUT;
-//            pitchTarget = PITCH_DEPO;
-//        }
-
-//        if(gamepad2.a) {
-//            basketLoc = follower.getPose();
-//            locSet = true;
-//        }e
-//
-//        if(gamepad2.b && locSet)
-//            follower.holdPoint(basketLoc);
-//        else
+        if(gamepad1.right_trigger > 0.5)
+            liftTarget -= 75;
 
         pitch.setPosition(pitchTarget);
         leftV4B.setPosition(leftV4BTarget);
         door.setPosition(doorTarget);
         wrist.setPosition(wristTarget);
 
-        if(liftTarget == LIFT_RETRACTED) {
-            leftLift.setPower(0.7);
-            topLift.setPower(0.7);
-        }
-        else{
-            leftLift.setPower(1);
-            topLift.setPower(1);
-        }
-
-        leftLift.setTargetPosition(liftTarget);
-        topLift.setTargetPosition(liftTarget);
-        leftLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        topLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
         leftExtendo.setPosition(lExtTarget);
         rightExtendo.setPosition(1-lExtTarget);
         transfer.setPosition(transferTarget);
         intake.setPower(intakePower);
 
+        liftPID.setPID(p,i,d);
+        int pos = leftLift.getCurrentPosition();
+        double power = liftPID.calculate(pos, liftTarget);
+
+        if (!liftLimit.getState()){
+            leftLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            leftLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            topLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            topLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        leftLift.setPower(power);
+        topLift.setPower(power);
+
         telemetry.addData("transfer Pos", transfer.getPosition());
         telemetry.addData("4Bar Pos", leftV4B.getPosition());
-        telemetry.addData("Lift Current", leftLift.getCurrentPosition());
+        telemetry.addData("lift pos", pos);
         telemetry.addData("Lift Limit", liftLimit.getState());
+        telemetry.addData("lift target", liftTarget);
+
         telemetry.addData("Intake", intake.getPower());
         telemetry.update();
     }
