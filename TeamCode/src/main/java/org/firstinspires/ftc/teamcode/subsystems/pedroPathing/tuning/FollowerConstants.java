@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning;
 
 import com.acmerobotics.dashboard.config.Config;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.MathFunctions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
@@ -29,6 +30,11 @@ public class FollowerConstants {
 
     public static String rightFrontMotorName = "fr";
     public static String rightRearMotorName = "br";
+
+    public static DcMotorSimple.Direction leftFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
+    public static DcMotorSimple.Direction rightFrontMotorDirection = DcMotorSimple.Direction.REVERSE;
+    public static DcMotorSimple.Direction leftRearMotorDirection = DcMotorSimple.Direction.FORWARD;
+    public static DcMotorSimple.Direction rightRearMotorDirection = DcMotorSimple.Direction.FORWARD;
 
     // This section is for setting the actual drive vector for the front left wheel, if the robot
     // is facing a heading of 0 radians with the wheel centered at (0,0)
