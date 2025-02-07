@@ -9,6 +9,9 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
+import com.arcrobotics.ftclib.controller.PIDFController;
+import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -18,6 +21,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.navigation.Pose3D;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 
@@ -32,14 +36,34 @@ public class AdidasTeleopV2 extends OpMode {
     private DcMotorEx rightFront;
     private DcMotorEx rightRear;
 
+    public static double pX = 0.05, iX = 0, dX = 0.05;
+    public static double pY = 0.055, iY = 0, dY = 0.35;
+    public static double pTurn = 0.045, iTurn = 0, dTurn = 0.05;
+
+    PIDFController speedController;
+    PIDFController strafeController;
+    PIDFController turnController;
+
+    double forwardsback = 0;        // Desired forward power/speed (-1 to +1)
+    double strafe = 0;        // Desired strafe power/speed (-1 to +1)
+    double turn = 0;
+
+    public static double targetStrafe = 0;
+    public static double targetDrive = 12;
+
+    private double looptime = 0;
     private Servo wrist, door, pitch, transfer, leftV4B, leftExtendo, rightExtendo;
     private DcMotorEx leftLift, topLift, intake;
     private DigitalChannel liftLimit;
     private AnalogInput clawInput;
 
+    public Limelight3A LL;
+
+    private boolean targetFound = false;
+
     private boolean aPressed = true, bPressed = false;
 
-    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.365, V4B_OUT = 0.24, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0, EXTENDO_EXTENDED = 0.65, WRIST_TRANSFERING = 0, WRIST_UP = 0.7, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.5, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.73;
+    public static double INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0, V4B_IN = 0.25, V4B_OUT = 0.6, TRANSFER_CLOSED = 0.35, TRANSFER_OPEN = 0, EXTENDO_RETRACTED = 0, EXTENDO_EXTENDED = 0.65, WRIST_TRANSFERING = 0, WRIST_UP = 0.7, WRIST_INTAKING = 0.882, DOOR_OPEN = 0.6, DOOR_CLOSED = 0.93, PITCH_DEPO = 0.5, PITCH_TRANSFERING = 0.75;
     public static int LIFT_RETRACTED = 105, LIFT_MID_BASKET = 500 ,LIFT_HIGH_BASKET = 1100;
 
     public static double SpecV4B_IN = 0.365, SpecV4B_OUT = 0.6, SpecPITCH_DEPO = 0.5, SpecPITCH_TRANSFERING = 0.89;
@@ -105,6 +129,14 @@ public class AdidasTeleopV2 extends OpMode {
         leftLift.setTargetPosition(liftTarget);
         topLift.setTargetPosition(liftTarget);
         pitch.setPosition(pitchTarget);
+
+        speedController = new PIDFController(pX, iX, dX, 0);
+        strafeController = new PIDFController(pY, iY, dY, 0);
+        turnController = new PIDFController(pTurn, iTurn, dTurn, 0);
+
+        LL = hardwareMap.get(Limelight3A.class, "ll3");
+        LL.pipelineSwitch(0);
+        LL.start();
     }
 
     public void init_loop(){
@@ -141,10 +173,44 @@ public class AdidasTeleopV2 extends OpMode {
         double frontRightPower = (y - x - rx) / denominator;
         double backRightPower = (y + x - rx) / denominator;
 
+        targetFound = false;
+        LL.pipelineSwitch(0);
+        LLResult yel = LL.getLatestResult();
+//        LL.pipelineSwitch(3);
+//        LLResult blu = LL.getLatestResult();
+        if (yel != null) {
+            if (yel.isValid()) {
+                double detectedX = yel.getTx();
+                double detectedY = yel.getTy();
+
+                telemetry.addData("yel x", detectedX);
+                telemetry.addData("yel y", detectedY);
+                targetFound = true;
+            }
+        }
+//        if (blu != null) {
+//            if (blu.isValid()) {
+//                telemetry.addData("blu x", blu.getTx());
+//                telemetry.addData("blu y", blu.getTy());
+//                targetFound = true;
+//            }
+//        }
+
+        // If Left Bumper is being pressed, AND we have found the desired target, Drive to target Automatically .
+            if (gamepad2.left_bumper && targetFound) {
+//                turn = turnController.calculate(targetTurn, desiredTag.ftcPose.pitch);
+                strafe = (strafeController.calculate(targetStrafe, -1*yel.getTx()));
+                forwardsback = speedController.calculate(targetDrive, yel.getTy());
+
+                telemetry.addData("Auto", "Drive %5.2f, Strafe %5.2f, Turn %5.2f ", forwardsback, strafe, gamepad1.right_stick_x);
+                moveRobot(forwardsback, strafe, 0);
+            }
+            else{
         leftFront.setPower(frontLeftPower);
         leftRear.setPower(backLeftPower);
         rightFront.setPower(frontRightPower);
         rightRear.setPower(backRightPower);
+        }
 
         if (gamepad1.left_bumper) {
             lExtTarget = EXTENDO_EXTENDED;
@@ -236,6 +302,9 @@ public class AdidasTeleopV2 extends OpMode {
         telemetry.addData("lift target", liftTarget);
 
         telemetry.addData("Intake", intake.getPower());
+        double loop = System.nanoTime();
+        telemetry.addData("hz ", 1000000000 / (loop - looptime));
+        looptime = loop;
         telemetry.update();
     }
 
@@ -246,5 +315,31 @@ public class AdidasTeleopV2 extends OpMode {
 
     @Override
     public void stop() { super.stop(); }
+
+    public void moveRobot(double x, double y, double pitch) {
+        // Calculate wheel powers.
+        double leftFrontPower    =  x - y - pitch;
+        double rightFrontPower   =  x + y + pitch;
+        double leftBackPower     =  x + y - pitch;
+        double rightBackPower    =  x - y + pitch;
+
+        // Normalize wheel powers to be less than 1.0
+        double max = Math.max(Math.abs(leftFrontPower), Math.abs(rightFrontPower));
+        max = Math.max(max, Math.abs(leftBackPower));
+        max = Math.max(max, Math.abs(rightBackPower));
+
+        if (max > 1.0) {
+            leftFrontPower /= max;
+            rightFrontPower /= max;
+            leftBackPower /= max;
+            rightBackPower /= max;
+        }
+
+        // Send powers to the wheels.
+        leftFront.setPower(leftFrontPower);
+        rightFront.setPower(rightFrontPower);
+        leftRear.setPower(leftBackPower);
+        rightRear.setPower(rightBackPower);
+    }
 
 }

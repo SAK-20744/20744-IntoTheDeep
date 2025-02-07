@@ -27,8 +27,10 @@ public class LimeLightTest extends OpMode {
         if (result != null) {
             if (result.isValid()) {
                 Pose3D YellowSamplePose = result.getBotpose();
-                telemetry.addData("tx", result.getTx());
-                telemetry.addData("ty", result.getTy());
+                double detectedX = result.getTx();
+                double detectedY = result.getTy();
+                telemetry.addData("tx", detectedX);
+                telemetry.addData("ty", detectedY);
             }
         }
         if (aResult != null) {
