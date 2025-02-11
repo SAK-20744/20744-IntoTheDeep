@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization;
 
+import com.qualcomm.robotcore.hardware.IMU;
+
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Vector;
 
 /**
@@ -91,4 +93,8 @@ public abstract class Localizer {
      * This resets the IMU of the localizer, if applicable.
      */
     public abstract void resetIMU();
+
+    public IMU getIMU() {
+        return null;
+    }
 }

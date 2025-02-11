@@ -38,6 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.PIDFController;
 
@@ -71,43 +72,46 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.PIDFControlle
 @Config
 @TeleOp(name="PID_Test", group="z")
 public class PID_Test extends OpMode {
-    private PIDController liftPID;
+    private PIDController extendoPID;
 
-    private DcMotor lift, lift2;
+    private DcMotor extendo;
+    private Servo wrist;
     private int pos;
-    private DigitalChannel liftLimit;
+    private DigitalChannel extendoLimit;
 
-    public static double p = 0.015, i = 0, d = 0.0005;
+    public static double p = 0.05, i = 0, d = 0.000001;
     public static int target;
 
     @Override
     public void init() {
-        liftPID = new PIDController(p, i, d);
+        extendoPID = new PIDController(p, i, d);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
-        lift = hardwareMap.get(DcMotor.class, "lift");
-        lift2 = hardwareMap.get(DcMotor.class, "lift2");
-        liftLimit = hardwareMap.get(DigitalChannel.class, "liftLimit");
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift2.setDirection(DcMotorSimple.Direction.REVERSE);
+        extendo = hardwareMap.get(DcMotor.class, "extendo");
+//        lift2 = hardwareMap.get(DcMotor.class, "lift2");
+        extendoLimit = hardwareMap.get(DigitalChannel.class, "extendoLimit");
+        wrist = hardwareMap.get(Servo.class, "wrist");
+        extendo.setDirection(DcMotorSimple.Direction.REVERSE);
+//        lift2.setDirection(DcMotorSimple.Direction.REVERSE);
     }
 
     @Override
     public void loop() {
-        liftPID.setPID(p,i,d);
-        int pos = lift.getCurrentPosition();
-        double power = liftPID.calculate(pos, target);
+        extendoPID.setPID(p,i,d);
+        int pos = extendo.getCurrentPosition();
+        double power = extendoPID.calculate(pos, target);
 
-        if (!liftLimit.getState()){
-            lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        if (!extendoLimit.getState()){
+            extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+//            lift2.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            lift2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-        lift.setPower(power);
-        lift2.setPower(power);
-        telemetry.addData("lift pos", pos);
-        telemetry.addData("Lift Limit", liftLimit.getState());
+        wrist.setPosition(1);
+        extendo.setPower(power);
+//        lift2.setPower(power);
+        telemetry.addData("lift pos", extendo.getCurrentPosition());
+        telemetry.addData("Lift Limit", extendoLimit.getState());
         telemetry.addData("lift target", target);
     }
 }
