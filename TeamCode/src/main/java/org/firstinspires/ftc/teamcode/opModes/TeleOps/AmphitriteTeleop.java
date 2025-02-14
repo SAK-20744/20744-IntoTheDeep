@@ -12,6 +12,7 @@ import com.arcrobotics.ftclib.controller.PIDController;
 import com.arcrobotics.ftclib.controller.PIDFController;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
+import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -19,6 +20,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
@@ -38,19 +40,21 @@ public class AmphitriteTeleop extends OpMode {
     private DcMotorEx lLift, rLift, intake, extendo;
     private DigitalChannel liftLimit, extendoLimit;
 
+//    RevColorSensorV3 sensor = hardwareMap.get(RevColorSensorV3.class, "Color");
+
     public static double
-            INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0,
-            LDIFFY_TRANSFERING = 0.21, LDIFFY_CLIPPING = 0.45, LDIFFY_SCORING = 0.73, LDIFFY_WALL = 1,
-            RDIFFY_TRANSFERING = 0.38, RDIFFY_CLIPPING = 0.15, RDIFFY_SCORING = 0.73, RDIFFY_WALL = 1,
-            CLAW_CLOSED = 0.55, CLAW_OPEN = 0.3,
-            WRIST_TRANSFERING = 1, WRIST_UP = 0.5, WRIST_INTAKING = 0.35,
-            DOOR_OPEN = 0.47, DOOR_CLOSED = 0.05,
+            INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0.26,
+            LDIFFY_TRANSFERING = 0.21, LDIFFY_CLIPPING = 0.45, LDIFFY_SCORING = 0.64, LDIFFY_WALL = 1,
+            RDIFFY_TRANSFERING = 0.38, RDIFFY_CLIPPING = 0.15, RDIFFY_SCORING = 0.7, RDIFFY_WALL = 1,
+            CLAW_CLOSED = 0.55, CLAW_OPEN = 0.0,
+            WRIST_TRANSFERING = 1, WRIST_UP = 0.65, WRIST_INTAKING = 0.325,
+            DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
             ROLL_DEPO = 0.7, ROLL_TRANSFERING = 0,
-            RAIL_TRANSFERING = .65, RAIL_WALL= .8, RAIL_SCORING = 1;
+            RAIL_TRANSFERING = .5, RAIL_WALL= .8, RAIL_SCORING = 1;
 
     public static int
-            LIFT_RETRACTED = 0, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1150,
-            EXTENDO_RETRACTED = 0, EXTENDO_EXTENDED = 500;
+            LIFT_RETRACTED = -10, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1250,
+            EXTENDO_RETRACTED = 5, EXTENDO_EXTENDED = 500;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -68,10 +72,10 @@ public class AmphitriteTeleop extends OpMode {
     private double railTarget = RAIL_TRANSFERING;
 
     private PIDController liftPID;
-    public static double lp = -0.015, li = 0, ld = 0;
+    public static double lp = -0.0073, li = 0, ld = 0.0000028;
 
     private PIDController extendoPID;
-    public static double ep = 0.05, ei = 0, ed = 0;
+    public static double ep = 0.045, ei = 0, ed = 0.00005;
 
     @Override
     public void init() {
@@ -118,9 +122,9 @@ public class AmphitriteTeleop extends OpMode {
         roll.setPosition(rollTarget);
         rail.setPosition(railTarget);
         wrist.setPosition(wristTarget);
-        extendo.setTargetPosition(extendoTarget);
-        lLift.setTargetPosition(liftTarget);
-        rLift.setTargetPosition(liftTarget);
+//        extendo.setTargetPosition(extendoTarget);
+//        lLift.setTargetPosition(liftTarget);
+//        rLift.setTargetPosition(liftTarget);
         claw.setPosition(clawTarget);
         lDiffy.setPosition(lDiffyTarget);
         rDiffy.setPosition(rDiffyTarget);
@@ -133,9 +137,9 @@ public class AmphitriteTeleop extends OpMode {
 
         if (liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            rLift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
         if (!extendoLimit.getState()){
@@ -261,6 +265,10 @@ public class AmphitriteTeleop extends OpMode {
             extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
         extendo.setPower(expower);
+
+
+//        NormalizedRGBA colors = sensor.getNormalizedColors();
+//        telemetry.addData("rgb: ", colors.red + " " + colors.blue + " " + colors.green);
 
         telemetry.addData("Claw Pos", claw.getPosition());
         telemetry.addData("Wrist Pos", wrist.getPosition());
