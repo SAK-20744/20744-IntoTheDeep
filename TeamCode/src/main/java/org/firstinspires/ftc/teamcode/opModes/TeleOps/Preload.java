@@ -9,25 +9,21 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
-import com.arcrobotics.ftclib.controller.PIDFController;
-import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
 @Config
-@TeleOp(name = "Ampy", group = "Competition")
-public class AmphitriteTeleop extends OpMode {
+@Autonomous(name = "Preload", group = "Competition")
+public class Preload extends OpMode {
 
     private Follower follower;
     private DcMotorEx leftFront;
@@ -38,6 +34,7 @@ public class AmphitriteTeleop extends OpMode {
     private boolean specimenmode = false;
 
     private double looptime = 0;
+    private Timer pathTimer;
     private Servo wrist, door, roll, claw, rail, lDiffy, rDiffy;
     private DcMotorEx lLift, rLift, intake, extendo;
     private DigitalChannel liftLimit, extendoLimit;
@@ -81,6 +78,8 @@ public class AmphitriteTeleop extends OpMode {
 
     @Override
     public void init() {
+
+        pathTimer = new Timer();
 
         follower = new Follower(hardwareMap);
 
@@ -153,6 +152,24 @@ public class AmphitriteTeleop extends OpMode {
 
         intake.setPower(0);
 
+        if (!gamepad2.right_bumper) {
+            claw.setPosition(CLAW_CLOSED);
+            door.setPosition(DOOR_CLOSED);
+        } else {
+            claw.setPosition(CLAW_OPEN);
+            door.setPosition(DOOR_OPEN);
+        }
+
+        extendoTarget = EXTENDO_RETRACTED;
+        intakePower = INTAKE_OFF;
+        wristTarget = WRIST_UP;
+        doorTarget = DOOR_CLOSED;
+        clawTarget = CLAW_CLOSED;
+        lDiffyTarget = LDIFFY_TRANSFERING;
+        rDiffyTarget = RDIFFY_TRANSFERING;
+        rollTarget = ROLL_TRANSFERING;
+        railTarget = RAIL_TRANSFERING;
+
         telemetry.addData("lLift Current", lLift.getCurrentPosition());
         telemetry.addData("rLift Current", rLift.getCurrentPosition());
         telemetry.addData("Extendo Current", extendo.getCurrentPosition());
@@ -161,148 +178,106 @@ public class AmphitriteTeleop extends OpMode {
         telemetry.update();
     }
 
+    public void autonomousPathUpdate() {
+
+        extendoTarget = EXTENDO_RETRACTED;
+        intakePower = INTAKE_OFF;
+        wristTarget = WRIST_UP;
+        doorTarget = DOOR_OPEN;
+        clawTarget = CLAW_CLOSED;
+        lDiffyTarget = LDIFFY_TRANSFERING;
+        rDiffyTarget = RDIFFY_TRANSFERING;
+        rollTarget = ROLL_TRANSFERING;
+        railTarget = RAIL_TRANSFERING;
+
+        leftFront.setPower(0.35);
+        leftRear.setPower(0.35);
+        rightFront.setPower(0.35);
+        rightRear.setPower(0.35);
+
+        if(pathTimer.getElapsedTime() > 10){
+            leftFront.setPower(-0.6);
+            leftRear.setPower(0.6);
+            rightFront.setPower(0.6);
+            rightRear.setPower(-0.6);
+        }
+        if(pathTimer.getElapsedTime() > 800){
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightFront.setPower(0);
+            rightRear.setPower(0);
+        }
+        if(pathTimer.getElapsedTime() > 1400){
+            leftFront.setPower(0.5);
+            leftRear.setPower(0.5);
+            rightFront.setPower(-0.5);
+            rightRear.setPower(-0.5);
+        }
+        if(pathTimer.getElapsedTime() > 1800){
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightFront.setPower(-0);
+            rightRear.setPower(-0);
+        }
+        if (pathTimer.getElapsedTime() > 2200)
+        liftTarget = LIFT_HIGH_BASKET;
+        if(pathTimer.getElapsedTime() > 2800){
+            lDiffyTarget = LDIFFY_SCORING;
+            rDiffyTarget = RDIFFY_SCORING;
+            railTarget = RAIL_SCORING;
+        }
+        if(pathTimer.getElapsedTime() > 3200){
+            leftFront.setPower(-0.5);
+            leftRear.setPower(-0.5);
+            rightFront.setPower(-0.5);
+            rightRear.setPower(-0.5);
+        }
+        if(pathTimer.getElapsedTime() > 3400){
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightFront.setPower(0);
+            rightRear.setPower(0);
+        }
+        if(pathTimer.getElapsedTime() > 3500){
+            clawTarget = CLAW_OPEN;
+        }
+        if(pathTimer.getElapsedTime() > 3800)
+            liftTarget = LIFT_RETRACTED;
+        if(pathTimer.getElapsedTime() > 4300) {
+            lDiffyTarget = LDIFFY_TRANSFERING;
+            rDiffyTarget = RDIFFY_TRANSFERING;
+            railTarget = RAIL_TRANSFERING;
+            clawTarget = CLAW_OPEN;
+            doorTarget = DOOR_CLOSED;
+        }
+        if(pathTimer.getElapsedTime() > 4700){
+            leftFront.setPower(-0.5);
+            leftRear.setPower(-0.5);
+            rightFront.setPower(0.5);
+            rightRear.setPower(0.5);
+        }
+        if(pathTimer.getElapsedTime() > 5200){
+            leftFront.setPower(0);
+            leftRear.setPower(0);
+            rightFront.setPower(-0);
+            rightRear.setPower(-0);
+        }
+        if(pathTimer.getElapsedTime()>5500){
+            extendoTarget = EXTENDO_EXTENDED;
+            wristTarget = WRIST_INTAKING;
+            intakePower = INTAKE_IN;
+        }
+        if(pathTimer.getElapsedTime()>6500){
+            extendoTarget = EXTENDO_RETRACTED;
+            wristTarget = WRIST_TRANSFERING;
+            intakePower = INTAKE_OFF;
+        }
+    }
+
     @Override
     public void loop() {
 
-        double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
-        double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
-        double rx = gamepad1.right_stick_x * 0.7;
-
-        double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
-        double frontLeftPower = (y + x + rx) / denominator;
-        double backLeftPower = (y - x + rx) / denominator;
-        double frontRightPower = (y - x - rx) / denominator;
-        double backRightPower = (y + x - rx) / denominator;
-
-        leftFront.setPower(frontLeftPower);
-        leftRear.setPower(backLeftPower);
-        rightFront.setPower(frontRightPower);
-        rightRear.setPower(backRightPower);
-
-        if(gamepad2.dpad_left || gamepad1.dpad_left)
-            specimenmode = true;
-        if(gamepad2.dpad_right || gamepad1.dpad_right)
-            specimenmode = false;
-
-        if(specimenmode){
-
-            if (gamepad1.left_bumper) {
-                extendoTarget = EXTENDO_EXTENDED;
-
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            } else {
-                extendoTarget = EXTENDO_RETRACTED;
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            }
-
-            liftLiftedTarget = LIFT_HIGH_RUNG;
-
-            if (gamepad1.a) {
-                liftTarget = LIFT_RETRACTED;
-                lDiffyTarget = LDIFFY_WALL;
-                rDiffyTarget = RDIFFY_WALL;
-                rollTarget = ROLL_DEPO;
-                railTarget = RAIL_WALL;
-            }
-
-            if (gamepad1.b) {
-                liftTarget = liftLiftedTarget;
-                lDiffyTarget = LDIFFY_CLIPPING;
-                rDiffyTarget = RDIFFY_CLIPPING;
-                rollTarget = ROLL_TRANSFERING;
-                railTarget = RAIL_CLIPPING;
-            }
-
-            if (gamepad1.right_trigger > 0.5)
-                liftTarget = liftLiftedTarget - clipRange;
-            else if (gamepad1.left_trigger > 0.5)
-                liftTarget = liftLiftedTarget;
-
-            if(gamepad2.right_bumper && !gamepad1.left_bumper)
-                clawTarget = CLAW_CLOSED;
-            else
-                clawTarget = CLAW_OPEN;
-
-            doorTarget = DOOR_CLOSED;
-
-        }
-        else {
-
-            if (gamepad1.left_bumper) {
-                extendoTarget = EXTENDO_EXTENDED;
-
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            } else {
-                extendoTarget = EXTENDO_RETRACTED;
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_TRANSFERING;
-                }
-            }
-
-            if (gamepad2.dpad_down || gamepad1.dpad_down)
-                liftLiftedTarget = LIFT_MID_BASKET;
-            if (gamepad2.dpad_up || gamepad1.dpad_up)
-                liftLiftedTarget = LIFT_HIGH_BASKET;
-
-            if (gamepad1.a) {
-                liftTarget = LIFT_RETRACTED;
-                lDiffyTarget = LDIFFY_TRANSFERING;
-                rDiffyTarget = RDIFFY_TRANSFERING;
-                rollTarget = ROLL_TRANSFERING;
-                railTarget = RAIL_TRANSFERING;
-            }
-
-            if (gamepad1.b) {
-                liftTarget = liftLiftedTarget;
-                lDiffyTarget = LDIFFY_SCORING;
-                rDiffyTarget = RDIFFY_SCORING;
-                rollTarget = ROLL_DEPO;
-                railTarget = RAIL_SCORING;
-            }
-
-            if(gamepad2.right_bumper && !gamepad1.left_bumper) {
-                clawTarget = CLAW_CLOSED;
-                doorTarget = DOOR_OPEN;
-            } else {
-                clawTarget = CLAW_OPEN;
-                doorTarget = DOOR_CLOSED;
-            }
-
-        }
+        autonomousPathUpdate();
 
         door.setPosition(doorTarget);
         roll.setPosition(rollTarget);
@@ -339,10 +314,6 @@ public class AmphitriteTeleop extends OpMode {
         }
         extendo.setPower(expower);
 
-
-//        NormalizedRGBA colors = sensor.getNormalizedColors();
-//        telemetry.addData("rgb: ", colors.red + " " + colors.blue + " " + colors.green);
-
         telemetry.addData("Claw Pos", claw.getPosition());
         telemetry.addData("Wrist Pos", wrist.getPosition());
         telemetry.addData("lLift Current", lLift.getCurrentPosition());
@@ -362,6 +333,7 @@ public class AmphitriteTeleop extends OpMode {
     @Override
     public void start() {
         super.start();
+        pathTimer.resetTimer();
     }
 
     @Override
