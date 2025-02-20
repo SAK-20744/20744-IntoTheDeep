@@ -46,17 +46,18 @@ public class AmphitriteTeleop extends OpMode {
 
     public static double
             INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0.3,
-            LDIFFY_TRANSFERING = 0.18, LDIFFY_CLIPPING = 0.3, LDIFFY_SCORING = 0.65, LDIFFY_WALL = 1,
-            RDIFFY_TRANSFERING = 0.18, RDIFFY_CLIPPING = 0.3, RDIFFY_SCORING = 0.65, RDIFFY_WALL = 0.8,
+            LDIFFY_TRANSFERING = 0.18, LDIFFY_CLIPPING = 0.4, LDIFFY_SCORING = 0.65, LDIFFY_WALL = 1,
+            RDIFFY_TRANSFERING = 0.18, RDIFFY_CLIPPING = 0, RDIFFY_SCORING = 0.5, RDIFFY_WALL = 0.73,
             CLAW_CLOSED = 0.55, CLAW_OPEN = 0.25,
             WRIST_TRANSFERING = 0.82, WRIST_UP = 0.4, WRIST_INTAKING = 0.13,
             DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
             ROLL_DEPO = 0.55, ROLL_TRANSFERING = 0,
-            RAIL_TRANSFERING = 0, RAIL_WALL= 0.2, RAIL_SCORING = 0, RAIL_CLIPPING = 0.6;
+            RAIL_TRANSFERING = 0, RAIL_WALL= 0.075, RAIL_SCORING = 0, RAIL_CLIPPING = 0.85,
+            E_RETRACT_POWER = -0;
 
     public static int
-            LIFT_RETRACTED = -25, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1250, LIFT_HIGH_RUNG = 700, LIFT_MID_RUNG = 300, clipRange = 200,
-            EXTENDO_RETRACTED = 5, EXTENDO_EXTENDED = 450;
+            LIFT_RETRACTED = -25, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1250, LIFT_HIGH_RUNG = 443, LIFT_MID_RUNG = 300, clipRange = 250,
+            EXTENDO_RETRACTED = -10, EXTENDO_EXTENDED = 450;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -74,7 +75,7 @@ public class AmphitriteTeleop extends OpMode {
     private double railTarget = RAIL_TRANSFERING;
 
     private PIDController liftPID;
-    public static double lp = -0.0073, li = 0, ld = 0.0000028;
+    public static double lp = -0.007, li = 0, ld = 0.000003;
 
     private PIDController extendoPID;
     public static double ep = 0.038, ei = 0, ed = 0.000005;
@@ -231,10 +232,10 @@ public class AmphitriteTeleop extends OpMode {
                 railTarget = RAIL_CLIPPING;
             }
 
-            if (gamepad1.right_trigger > 0.5)
-                liftTarget = liftLiftedTarget - clipRange;
-            else if (gamepad1.left_trigger > 0.5)
-                liftTarget = liftLiftedTarget;
+//            if (gamepad1.right_trigger > 0.5)
+//                liftTarget = liftLiftedTarget - clipRange;
+//            else if (gamepad1.left_trigger > 0.5)
+//                liftTarget = liftLiftedTarget;
 
             if(gamepad2.right_bumper && !gamepad1.left_bumper)
                 clawTarget = CLAW_CLOSED;
@@ -275,7 +276,7 @@ public class AmphitriteTeleop extends OpMode {
 
             if (gamepad2.dpad_down || gamepad1.dpad_down)
                 liftLiftedTarget = LIFT_MID_BASKET;
-            if (gamepad2.dpad_up || gamepad1.dpad_up)
+            if (gamepad2.dpad_up || gamepad1.dpad_up || gamepad1.dpad_right || gamepad2.dpad_right)
                 liftLiftedTarget = LIFT_HIGH_BASKET;
 
             if (gamepad1.a) {
@@ -327,6 +328,9 @@ public class AmphitriteTeleop extends OpMode {
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             rLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+
+
+
         lLift.setPower(power);
         rLift.setPower(power);
 
@@ -336,7 +340,10 @@ public class AmphitriteTeleop extends OpMode {
         if (!extendoLimit.getState()){
             extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if(expower < 0)
+                expower = E_RETRACT_POWER;
         }
+        telemetry.addData("exPower", expower);
         extendo.setPower(expower);
 
 
