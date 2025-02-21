@@ -18,7 +18,7 @@ public class ClawSubsystem {
     public RunAction openClaw, closeClaw;
 
     public ClawSubsystem(HardwareMap hardwareMap, ClawState clawState) {
-        claw = hardwareMap.get(Servo.class, "trans");
+        claw = hardwareMap.get(Servo.class, "claw");
         this.state = clawState;
 
         openClaw = new RunAction(this::openClaw);
@@ -31,10 +31,10 @@ public class ClawSubsystem {
 
     public void setState(ClawState clawState) {
         if (clawState == ClawState.CLOSED) {
-            claw.setPosition(clawClose);
+            claw.setPosition(CLAW_CLOSED);
             this.state = ClawState.CLOSED;
         } else if (clawState == ClawState.OPEN) {
-            claw.setPosition(clawOpen);
+            claw.setPosition(CLAW_OPEN);
             this.state = ClawState.OPEN;
         }
     }

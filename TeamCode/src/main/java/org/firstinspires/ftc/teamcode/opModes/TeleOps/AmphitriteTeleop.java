@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.Foll
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
+import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -44,20 +45,20 @@ public class AmphitriteTeleop extends OpMode {
 
 //    RevColorSensorV3 sensor = hardwareMap.get(RevColorSensorV3.class, "Color");
 
-    public static double
-            INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0.3,
-            LDIFFY_TRANSFERING = 0.18, LDIFFY_CLIPPING = 0.4, LDIFFY_SCORING = 0.65, LDIFFY_WALL = 1,
-            RDIFFY_TRANSFERING = 0.18, RDIFFY_CLIPPING = 0, RDIFFY_SCORING = 0.5, RDIFFY_WALL = 0.73,
-            CLAW_CLOSED = 0.55, CLAW_OPEN = 0.25,
-            WRIST_TRANSFERING = 0.82, WRIST_UP = 0.4, WRIST_INTAKING = 0.13,
-            DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
-            ROLL_DEPO = 0.55, ROLL_TRANSFERING = 0,
-            RAIL_TRANSFERING = 0, RAIL_WALL= 0.075, RAIL_SCORING = 0, RAIL_CLIPPING = 0.85,
-            E_RETRACT_POWER = -0;
-
-    public static int
-            LIFT_RETRACTED = -25, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1250, LIFT_HIGH_RUNG = 443, LIFT_MID_RUNG = 300, clipRange = 250,
-            EXTENDO_RETRACTED = -10, EXTENDO_EXTENDED = 450;
+//    public static double
+//            INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0.3,
+//            LDIFFY_TRANSFERING = 0.18, LDIFFY_CLIPPING = 0.4, LDIFFY_SCORING = 0.65, LDIFFY_WALL = 1,
+//            RDIFFY_TRANSFERING = 0.18, RDIFFY_CLIPPING = 0, RDIFFY_SCORING = 0.5, RDIFFY_WALL = 0.73,
+//            CLAW_CLOSED = 0.55, CLAW_OPEN = 0.25,
+//            WRIST_TRANSFERING = 0.82, WRIST_UP = 0.4, WRIST_INTAKING = 0.13,
+//            DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
+//            ROLL_DEPO = 0.55, ROLL_TRANSFERING = 0,
+//            RAIL_TRANSFERING = 0, RAIL_WALL= 0.075, RAIL_SCORING = 0, RAIL_CLIPPING = 0.85,
+//            E_RETRACT_POWER = -0;
+//
+//    public static int
+//            LIFT_RETRACTED = -25, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1250, LIFT_HIGH_RUNG = 443, LIFT_MID_RUNG = 300, clipRange = 250,
+//            EXTENDO_RETRACTED = -10, EXTENDO_EXTENDED = 450;
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
@@ -75,10 +76,10 @@ public class AmphitriteTeleop extends OpMode {
     private double railTarget = RAIL_TRANSFERING;
 
     private PIDController liftPID;
-    public static double lp = -0.007, li = 0, ld = 0.000003;
+//    public static double lp = -0.007, li = 0, ld = 0.000003;
 
     private PIDController extendoPID;
-    public static double ep = 0.038, ei = 0, ed = 0.000005;
+//    public static double ep = 0.038, ei = 0, ed = 0.000005;
 
     @Override
     public void init() {

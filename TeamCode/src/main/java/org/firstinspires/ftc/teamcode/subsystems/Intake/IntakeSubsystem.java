@@ -28,7 +28,7 @@ public class IntakeSubsystem {
 
     private DcMotorEx spin;
     private IntakeSpinState spinState;
-    private Servo lPivot, door;
+    private Servo wrist, door;
     private IntakePivotState pivotState;
     private DoorState doorState;
 
@@ -36,7 +36,7 @@ public class IntakeSubsystem {
 
     public IntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState, DoorState doorState) {
         spin = hardwareMap.get(DcMotorEx.class, "intake");
-        lPivot = hardwareMap.get(Servo.class, "wrist");
+        wrist = hardwareMap.get(Servo.class, "wrist");
         door = hardwareMap.get(Servo.class, "door");
         this.spinState = spinState;
         this.pivotState = pivotState;
@@ -69,17 +69,17 @@ public class IntakeSubsystem {
     }
 
     public void spinIn() {
-        spin.setPower(intakeSpinInPwr);
+        spin.setPower(INTAKE_IN);
         this.spinState = IntakeSpinState.IN;
     }
 
     public void spinOut() {
-        spin.setPower(intakeSpinOutPwr);
+        spin.setPower(INTAKE_OUT);
         this.spinState = IntakeSpinState.OUT;
     }
 
     public void spinStop() {
-        spin.setPower(intakeSpinStopPwr);
+        spin.setPower(INTAKE_OFF);
         this.spinState = IntakeSpinState.STOP;
     }
 
@@ -104,12 +104,12 @@ public class IntakeSubsystem {
     }
 
     public void pivotTransfer() {
-        lPivot.setPosition(intakePivotTransferPos);
+        wrist.setPosition(WRIST_TRANSFERING);
         this.pivotState = IntakePivotState.TRANSFER;
     }
 
     public void pivotGround() {
-        lPivot.setPosition(intakePivotGroundPos);
+        wrist.setPosition(WRIST_INTAKING);
         this.pivotState = IntakePivotState.GROUND;
     }
 
