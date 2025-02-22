@@ -1,9 +1,9 @@
 //package org.firstinspires.ftc.teamcode.subsystems.Deposit;
 //
-//import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.armInPos;
-//import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.armOutPos;
-//import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.clawClose;
-//import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.clawOpen;
+//import static org.firstinspires.ftc.teamcode.config.RobotConstants.armInPos;
+//import static org.firstinspires.ftc.teamcode.config.RobotConstants.armOutPos;
+//import static org.firstinspires.ftc.teamcode.config.RobotConstants.clawClose;
+//import static org.firstinspires.ftc.teamcode.config.RobotConstants.clawOpen;
 //
 //import com.qualcomm.robotcore.hardware.DcMotorEx;
 //import com.qualcomm.robotcore.hardware.HardwareMap;

@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
-import com.qualcomm.robotcore.hardware.CRServo;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.*;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.ParallelAction;

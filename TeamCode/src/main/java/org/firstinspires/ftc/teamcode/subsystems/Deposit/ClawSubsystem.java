@@ -1,5 +1,5 @@
 package org.firstinspires.ftc.teamcode.subsystems.Deposit;
-import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.*;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;

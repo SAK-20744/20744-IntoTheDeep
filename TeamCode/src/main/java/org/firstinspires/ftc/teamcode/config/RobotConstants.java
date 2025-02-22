@@ -1,7 +1,6 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.config;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.controller.PIDController;
 
 @Config
 public class RobotConstants {
@@ -24,7 +23,13 @@ public class RobotConstants {
     public static double lp = -0.007, li = 0, ld = 0.000003;
     public static double ep = 0.038, ei = 0, ed = 0.000005;
 
-//    public static double clawClose = 0.375;
+}
+
+
+
+
+
+//public static double clawClose = 0.375;
 //    public static double clawOpen = 0;
 //    public static double doorClose = 0.93;
 //    public static double doorOpen = 0.5;
@@ -43,5 +48,3 @@ public class RobotConstants {
 //    public static int liftToLowBucketPos = 500;
 //    public static int liftToParkPos = 250;
 //    public static int liftToHighBucketPos = 1100;
-
-}

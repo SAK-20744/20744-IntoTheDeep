@@ -1,6 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.Deposit;
 
-import static org.firstinspires.ftc.teamcode.subsystems.RobotConstants.*;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;

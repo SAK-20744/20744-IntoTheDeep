@@ -1,12 +1,10 @@
 package org.firstinspires.ftc.teamcode.opModes.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.subsystems.Auto;
+import org.firstinspires.ftc.teamcode.config.Auto;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.SequentialAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 

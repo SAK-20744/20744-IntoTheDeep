@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.subsystems;
+package org.firstinspires.ftc.teamcode.config;
 
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.FieldConstants.*;
 
@@ -8,12 +8,7 @@ import org.firstinspires.ftc.teamcode.subsystems.Deposit.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Deposit.LiftSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Action;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.ParallelAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.SequentialAction;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.SleepAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierCurve;
