@@ -30,7 +30,6 @@ public class Auto {
     public ClawSubsystem.ClawState clawState;
     public LiftSubsystem lift;
     public ExtendSubsystem extend;
-    public ExtendSubsystem.ExtendoState extendoState;
     public IntakeSubsystem intake;
     public IntakeSubsystem.IntakeSpinState intakeSpinState;
     public IntakeSubsystem.IntakePivotState intakePivotState;
@@ -54,7 +53,7 @@ public class Auto {
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry);
-        extend = new ExtendSubsystem(hardwareMap, extendoState);
+        extend = new ExtendSubsystem(hardwareMap, telemetry);
         intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState, doorState);
 
         this.follower = follower;

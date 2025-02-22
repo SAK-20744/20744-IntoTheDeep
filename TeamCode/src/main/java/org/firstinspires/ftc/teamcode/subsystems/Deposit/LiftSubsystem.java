@@ -48,27 +48,25 @@ public class LiftSubsystem {
         toHighRung = new RunAction(this::toHighRung);
     }
 
-    public void updatePIDF(){
-        if (!manual) {
+    public void updatePIDF() {
 
-            liftPID.setPID(lp,li,ld);
-            int pos = rLift.getCurrentPosition();
-            double power = liftPID.calculate(pos, target);
-
-            if (liftLimit.getState()){
-                lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-                rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                rLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-
-            lLift.setPower(power);
-            rLift.setPower(power);
-
-            telemetry.addData("lift pos", getPos());
-            telemetry.addData("Lift Limit", liftLimit.getState());
-            telemetry.addData("lift target", target);
+        liftPID.setPID(lp,li,ld);
+        int pos = rLift.getCurrentPosition();
+        double power = liftPID.calculate(pos, target);
+        if (liftLimit.getState()){
+            lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
+
+        lLift.setPower(power);
+        rLift.setPower(power);
+
+        telemetry.addData("lift pos", getPos());
+        telemetry.addData("Lift Limit", liftLimit.getState());
+        telemetry.addData("lift target", target);
+
     }
 
     public double getTarget() {
@@ -76,7 +74,7 @@ public class LiftSubsystem {
     }
 
     public boolean isAtTarget() {
-        return Math.abs(pos - target) < 50;
+        return Math.abs(pos - target) < 25;
     }
 
     public void setTarget(int b) {
