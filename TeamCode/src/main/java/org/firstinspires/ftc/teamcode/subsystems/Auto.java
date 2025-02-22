@@ -6,8 +6,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.Deposit.ClawSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Deposit.LiftSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Deposit.DepoArmSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.Deposit.PitchSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Action;
@@ -31,10 +29,6 @@ public class Auto {
     public ClawSubsystem claw;
     public ClawSubsystem.ClawState clawState;
     public LiftSubsystem lift;
-    public PitchSubsystem pitch;
-    public PitchSubsystem.PitchState pitchState;
-    public DepoArmSubsystem depo;
-    public DepoArmSubsystem.DepoState depoState;
     public ExtendSubsystem extend;
     public ExtendSubsystem.ExtendoState extendoState;
     public IntakeSubsystem intake;
@@ -60,8 +54,6 @@ public class Auto {
     public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry);
-        pitch = new PitchSubsystem(hardwareMap, pitchState);
-        depo = new DepoArmSubsystem(hardwareMap, depoState);
         extend = new ExtendSubsystem(hardwareMap, extendoState);
         intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState, doorState);
 
@@ -78,8 +70,6 @@ public class Auto {
     public void init() {
         claw.init();
         lift.init();
-        pitch.init();
-        depo.init();
         extend.init();
         intake.init();
     }
@@ -89,8 +79,6 @@ public class Auto {
     public void start() {
         claw.start();
         lift.start();
-        pitch.start();
-        depo.start();
         extend.start();
         intake.start();
     }
@@ -98,10 +86,7 @@ public class Auto {
     public void update() {
         follower.update();
 
-        if(!liftPIDF)
-            lift.manual(liftManual);
-        else
-            lift.updatePIDF();
+        lift.updatePIDF();
 
         intake();
         bucket();
@@ -195,8 +180,8 @@ public class Auto {
             case 4:
                 if (lift.isAtTarget()) {
 //                    bucketTimer.resetTimer();
-                    depo.setArmOut();
-                    pitch.setPitchOut();
+//                    depo.setArmOut();
+//                    pitch.setPitchOut();
                     setBucketState(5);
                 }
             case 5:
@@ -222,8 +207,8 @@ public class Auto {
                 actionBusy = true;
                 intake.doorClosed();
                 extend.retract();
-                depo.setArmIn();
-                pitch.setPitchIn();
+//                depo.setArmIn();
+//                pitch.setPitchIn();
                 retractTimer.resetTimer();
                 setRetractState(2);
                 break;

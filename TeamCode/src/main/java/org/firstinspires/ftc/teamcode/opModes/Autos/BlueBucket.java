@@ -24,8 +24,8 @@ public class BlueBucket extends OpMode {
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
         Actions.runBlocking(auto.intake.openDoor);
-        Actions.runBlocking(auto.depo.armIn);
-        Actions.runBlocking(auto.pitch.pitchIn);
+//        Actions.runBlocking(auto.depo.armIn);
+//        Actions.runBlocking(auto.pitch.pitchIn);
     }
 
     @Override
@@ -147,8 +147,8 @@ public class BlueBucket extends OpMode {
                 break;
             case 14:
                 if(auto.actionNotBusy()) {
-                    auto.pitch.setPitchIn();
-                    auto.depo.setArmOut();
+//                    auto.pitch.setPitchIn();
+//                    auto.depo.setArmOut();
                     Actions.runBlocking(auto.lift.toPark);
                     setPathState(15);
                 }

@@ -330,8 +330,6 @@ public class AmphitriteTeleop extends OpMode {
             rLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
 
-
-
         lLift.setPower(power);
         rLift.setPower(power);
 
