@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opModes.Autos;
+package org.firstinspires.ftc.teamcode.opModes.Autos.Ampy;
 
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
