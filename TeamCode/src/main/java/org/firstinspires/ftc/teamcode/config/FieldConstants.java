@@ -22,7 +22,7 @@ public class FieldConstants {
 
     // Preload Poses
     public static final Pose blueBucketPreloadPose = new Pose(29.25, 78.375, Math.toRadians(0));
-    public static final Pose blueObservationPreloadPose = new Pose(38.5, 60, Math.toRadians(0));
+    public static final Pose blueObservationPreloadPose = new Pose(38.5, 72, Math.toRadians(0));
     public static final Pose redBucketPreloadPose = new Pose(144-blueBucketPreloadPose.getX(), blueBucketPreloadPose.getY(), 0);
     public static final Pose redObservationPreloadPose = new Pose(144-blueObservationPreloadPose.getX(), blueObservationPreloadPose.getY(), 0);
 
@@ -37,7 +37,7 @@ public class FieldConstants {
 
     // Blue Observation Specimen Poses
     public static final Pose blueObservationSpecimenSetPose = new Pose(12, 35, Math.toRadians(0));
-    public static final Pose blueObservationSpecimenPickupPose = new Pose(6.5, 10, Math.toRadians(0));
+    public static final Pose blueObservationSpecimenPickupPose = new Pose(6.5, 35, Math.toRadians(0));
     public static final Pose blueObservationSpecimenPickup2Pose = new Pose(6.5, 35, Math.toRadians(0));
     public static final Pose blueObservationSpecimenPickup3Pose = new Pose(6.5, 35, Math.toRadians(0));
     public static final Pose blueObservationSpecimenPickup4Pose = new Pose(6.5, 35, Math.toRadians(0));

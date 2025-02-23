@@ -21,7 +21,7 @@ public class BlueObservation extends OpMode {
         auto = new ObservationAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, false);
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
-        Actions.runBlocking(auto.diffy.diffyMoveTransfering);
+        Actions.runBlocking(auto.diffy.diffyMoveClipping);
         Actions.runBlocking(auto.roll.transferRoll);
         Actions.runBlocking(auto.rail.railMoveTransfering);
     }
@@ -31,6 +31,7 @@ public class BlueObservation extends OpMode {
             Actions.runBlocking(auto.claw.openClaw);
         else
             Actions.runBlocking(auto.claw.closeClaw);
+        auto.init_loop();
     }
 
     @Override
@@ -52,33 +53,40 @@ public class BlueObservation extends OpMode {
     public void pathUpdate() {
         switch (pathState) {
             case 0: //Runs to the position of the preload and holds it's point at 0.5 power
+                auto.startChamber();
                 auto.follower.followPath(auto.preload, true);
                 setPathState(1);
                 break;
-            case 1: //Once Chamber State Machine finishes, begins Pathchain to push elements to the submersible
+            case 1: //Runs to the position of the preload and holds it's point at 0.5 power
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.follower.followPath(auto.pushSamples, false);
-//                    auto.diffy.walldiffy();
-//                    auto.claw.openClaw();
+                    auto.startRelease();
                     setPathState(2);
                 }
                 break;
-            case 2: //Once the Pathchain finishes, begins the Specimen State Machine
+            case 2: //Once Chamber State Machine finishes, begins Pathchain to push elements to the submersible
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.follower.followPath(auto.grab1, true);
+                    auto.startWall();
+                    auto.follower.followPath(auto.pushSamples, false);
                     setPathState(3);
                 }
                 break;
-            case 3:
+            case 3: //Once the Pathchain finishes, begins the Specimen State Machine
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-//                    auto.claw.closeClaw();
+                    auto.follower.followPath(auto.grab1, true);
                     setPathState(4);
                 }
                 break;
-            case 4: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
-                    auto.follower.followPath(auto.specimen1, true);
+            case 4:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startGrab();
                     setPathState(5);
+                }
+                break;
+            case 5: //Once the Specimen State Machine finishes, begins the grab path
+                if(auto.actionNotBusy()) {
+                    auto.startChamber();
+                    auto.follower.followPath(auto.specimen1, true);
+                    setPathState(6);
                 }
                 break;
 

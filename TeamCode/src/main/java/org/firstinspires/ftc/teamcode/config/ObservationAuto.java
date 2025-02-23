@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.config;
 
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.*;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.blueObservationStartPose;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -47,7 +48,8 @@ public class ObservationAuto {
     public PathChain pushSamples, preload,specimen1, specimen2, specimen3, specimen4, grab1, grab2, grab3, grab4, park;
     public Pose startPose, preloadPose, sample1Pose, sample1ControlPose, sample2Pose, sample2ControlPose, sample3Pose, sample3ControlPose, sampleScorePose, parkControlPose, parkPose, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
 
-    public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
+    public int grabState, releaseState, chamberState, wallState = -1;
+    public Timer grabTimer = new Timer(), releaseTimer = new Timer();
 
     public ObservationAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
@@ -69,6 +71,7 @@ public class ObservationAuto {
     }
 
     public void init() {
+
         claw.init();
         lift.init();
         extend.init();
@@ -77,6 +80,7 @@ public class ObservationAuto {
         rail.init();
         diffy.init();
         telemetryUpdate();
+
 
         follower.setStartingPose(startPose);
     }
@@ -101,11 +105,127 @@ public class ObservationAuto {
         lift.updatePIDF();
         extend.updatePIDF();
 
-//        chamber();
+        grab();
+        chamber();
+        release();
+        wall();
 
         telemetryUpdate();
     }
 
+    public void setGrabState(int x) {
+        grabState = x;
+    }
+
+    public void setReleaseState(int x) {
+        releaseState = x;
+    }
+
+    public void setChamberState(int x) {
+        chamberState = x;
+    }
+
+    public void setWallState(int x) {
+        wallState = x;
+    }
+
+    public void startGrab() {
+        if (actionNotBusy()) {
+            setGrabState(1);
+        }
+    }
+
+    public void startRelease() {
+        if (actionNotBusy()) {
+            setReleaseState(1);
+        }
+    }
+
+    public void startWall() {
+        if (actionNotBusy()) {
+            setWallState(1);
+        }
+    }
+
+    public void startChamber() {
+        if (actionNotBusy()) {
+            setChamberState(1);
+        }
+    }
+
+
+    public void grab() {
+        switch (grabState) {
+            case 1:
+                actionBusy = true;
+                claw.closeClaw();
+                setGrabState(2);
+                break;
+            case 2:
+                if(grabTimer.getElapsedTime() > .5)
+                {
+                    actionBusy = false;
+                    setGrabState(-1);
+                }
+                break;
+            }
+    }
+
+    public void release() {
+        switch (releaseState) {
+
+            case 1:
+                actionBusy = true;
+                claw.openClaw();
+                setReleaseState(2);
+                break;
+            case 2:
+                if(releaseTimer.getElapsedTime() > .5)
+                {
+                    actionBusy = false;
+                    setReleaseState(-1);
+                }
+                break;
+        }
+    }
+
+    public void chamber() {
+        switch (chamberState) {
+            case 1:
+                actionBusy = true;
+                lift.toHighRung();
+                rail.clipRail();
+                diffy.clipdiffy();
+                roll.transferRoll();
+                setChamberState(2);
+                break;
+            case 2:
+                if(lift.isAtTarget()) {
+                    actionBusy = false;
+                    setChamberState(-1);
+                }
+                break;
+        }
+    }
+
+    public void wall() {
+        switch (wallState) {
+            case 1:
+                actionBusy = true;
+                lift.toZero();
+                rail.wallRail();
+                diffy.walldiffy();
+                roll.depoRoll();
+                setWallState(2);
+                break;
+            case 2:
+                if(lift.isAtTarget()) {
+                    actionBusy = false;
+                    setWallState(-1);
+                }
+                break;
+        }
+    }
 
     public boolean actionNotBusy() {
         return !actionBusy;
@@ -139,21 +259,27 @@ public class ObservationAuto {
         pushSamples = follower.pathBuilder()
                 .addPath(new BezierCurve(new Point(preloadPose), new Point(15, 36, Point.CARTESIAN), new Point(61, 36.25, Point.CARTESIAN), new Point(59, 26.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(preloadPose.getHeading(), Math.toRadians(0))
-                .addPath(new BezierLine(new Point(59.000, 26.000, Point.CARTESIAN), new Point(28, 26.000, Point.CARTESIAN)))
+                .setZeroPowerAccelerationMultiplier(0.1)
+                .addPath(new BezierCurve(new Point(59.000, 26.000, Point.CARTESIAN), new Point(26, 26.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .addPath(new BezierCurve(new Point(28, 26.000, Point.CARTESIAN), new Point(52.000, 30.000, Point.CARTESIAN), new Point(58.000, 16.000, Point.CARTESIAN)))
+                .setZeroPowerAccelerationMultiplier(4)
+                .addPath(new BezierCurve(new Point(26, 26.000, Point.CARTESIAN), new Point(52.000, 30.000, Point.CARTESIAN), new Point(58.000, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .addPath(new BezierLine(new Point(58.000, 16.000, Point.CARTESIAN),new Point(28, 16.000, Point.CARTESIAN)))
+                .setZeroPowerAccelerationMultiplier(0.1)
+                .addPath(new BezierCurve(new Point(58.000, 16.000, Point.CARTESIAN),new Point(26, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .addPath(new BezierCurve(new Point(28, 16.000, Point.CARTESIAN), new Point(56.000, 16.000, Point.CARTESIAN), new Point(56.000, 10, Point.CARTESIAN)))
+                .setZeroPowerAccelerationMultiplier(4)
+                .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(56.000, 16.000, Point.CARTESIAN), new Point(56.000, 10, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .addPath(new BezierLine(new Point(56.000, 10, Point.CARTESIAN), new Point(28, 10, Point.CARTESIAN)))
+                .setZeroPowerAccelerationMultiplier(0.1)
+                .addPath(new BezierCurve(new Point(56.000, 10, Point.CARTESIAN), new Point(26, 10, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
+                .setZeroPowerAccelerationMultiplier(4)
                 //.setZeroPowerAccelerationMultiplier(0.5)
                 .build();
 
         grab1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(28,10,Point.CARTESIAN), new Point(grab1Pose)))
+                .addPath(new BezierLine(new Point(26,10,Point.CARTESIAN), new Point(grab1Pose)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), grab1Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .build();

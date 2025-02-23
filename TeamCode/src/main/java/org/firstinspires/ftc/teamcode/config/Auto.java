@@ -38,7 +38,6 @@ public class Auto {
     public double liftManual = 0;
 
     public int bucketState, intakeState, retractState = -1;
-
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
     public RunAction transfer;

@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes.TeleOps;
 
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
+
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
@@ -15,7 +17,7 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 public class Lifttest extends OpMode {
     private PIDController liftPID;
     private DigitalChannel liftLimit;
-    public static double p = -0.015, i = 0, d = 0.000005;
+//    public static double p = -0.015, i = 0, d = 0.000005;
     public static int target;
     private DcMotor lLift, rLift;
     public int pos;
@@ -23,7 +25,7 @@ public class Lifttest extends OpMode {
 
     @Override
     public void init() {
-        liftPID = new PIDController(p, i, d);
+        liftPID = new PIDController(lp, li, ld);
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         lLift = hardwareMap.get(DcMotor.class, "lLift");
         rLift = hardwareMap.get(DcMotor.class, "rLift");
@@ -34,7 +36,7 @@ public class Lifttest extends OpMode {
     @Override
     public void loop() {
 
-        liftPID.setPID(p,i,d);
+        liftPID.setPID(lp,li,ld);
         pos = rLift.getCurrentPosition();
         power = liftPID.calculate(pos, target);
 
