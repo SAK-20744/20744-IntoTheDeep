@@ -58,8 +58,8 @@ public class BlueObservation extends OpMode {
             case 1: //Once Chamber State Machine finishes, begins Pathchain to push elements to the submersible
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.follower.followPath(auto.pushSamples, false);
-                    auto.diffy.walldiffy();
-                    auto.claw.openClaw();
+//                    auto.diffy.walldiffy();
+//                    auto.claw.openClaw();
                     setPathState(2);
                 }
                 break;
@@ -71,7 +71,7 @@ public class BlueObservation extends OpMode {
                 break;
             case 3:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.claw.closeClaw();
+//                    auto.claw.closeClaw();
                     setPathState(4);
                 }
                 break;

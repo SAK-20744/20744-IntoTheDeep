@@ -22,7 +22,7 @@ public class LiftSubsystem {
     public int pos, bottom;
     public RunAction toZero, toHighBucket, toHighRung, toPark;
     public PIDController liftPID;
-    public static int target;
+    public static int target = 0, range = 10;
 //    public static double p = 0.015, i = 0, d = 0.0005;
 
     public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
@@ -74,7 +74,7 @@ public class LiftSubsystem {
     }
 
     public boolean isAtTarget() {
-        return Math.abs(pos - target) < 25;
+        return Math.abs(pos - target) < range;
     }
 
     public void setTarget(int b) {
