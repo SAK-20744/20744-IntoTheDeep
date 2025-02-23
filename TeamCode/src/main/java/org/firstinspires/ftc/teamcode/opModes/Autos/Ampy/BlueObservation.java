@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.config.*;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
@@ -11,13 +12,25 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 @Autonomous(name="Observation", group="A")
 public class BlueObservation extends OpMode {
     public int pathState;
-    public AmpyAuto auto;
+    public ObservationAuto auto;
 
     public Timer pathTimer = new Timer();
 
     @Override
     public void init() {
-        auto = new AmpyAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, false);
+        auto = new ObservationAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, false);
+        Actions.runBlocking(auto.extend.retractExtendo);
+        Actions.runBlocking(auto.intake.pivotTransfer);
+        Actions.runBlocking(auto.diffy.diffyMoveTransfering);
+        Actions.runBlocking(auto.roll.transferRoll);
+        Actions.runBlocking(auto.rail.railMoveTransfering);
+    }
+
+    public void init_loop() {
+        if(gamepad2.right_bumper)
+            Actions.runBlocking(auto.claw.openClaw);
+        else
+            Actions.runBlocking(auto.claw.closeClaw);
     }
 
     @Override

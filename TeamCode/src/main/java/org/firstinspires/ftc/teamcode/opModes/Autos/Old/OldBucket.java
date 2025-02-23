@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.opModes.Autos.Old;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.config.Auto;
@@ -8,9 +9,9 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-//@Disabled
-@Autonomous(name="BlueBucket", group="B")
-public class BlueBucket extends OpMode {
+@Disabled
+@Autonomous(name="old Bucket", group="B")
+public class OldBucket extends OpMode {
     public int pathState;
     public Auto auto;
     public Timer pathTimer = new Timer();

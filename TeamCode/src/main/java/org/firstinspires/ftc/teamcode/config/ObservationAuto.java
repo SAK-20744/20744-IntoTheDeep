@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode.config;
 
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.*;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.blueObservationStartPose;
-import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.FieldConstants.RobotStart;
-import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.FieldConstants.*;
-
 
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -17,17 +14,15 @@ import org.firstinspires.ftc.teamcode.subsystems.Deposit.RailSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Deposit.RollSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierLine;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Path;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-public class AmpyAuto {
+public class ObservationAuto {
 //
 //    private RobotStart startLocation;
 
@@ -54,7 +49,7 @@ public class AmpyAuto {
 
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
-    public AmpyAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
+    public ObservationAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
