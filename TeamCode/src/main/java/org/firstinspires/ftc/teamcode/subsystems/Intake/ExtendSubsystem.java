@@ -21,7 +21,6 @@ public class ExtendSubsystem {
     private DcMotorEx extendo;
 
     public int pos;
-    public RunAction toZero, toHighBucket, toHighRung, toPark;
     public PIDController extendoPID;
     public static int target;
     public RunAction extendExtendo, retractExtendo, autoExtendo;
@@ -37,7 +36,7 @@ public class ExtendSubsystem {
         extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        extendoPID.setPID(ep,ei,ed);
+        extendoPID = new PIDController(ep, ei, ed);
 
         extendExtendo = new RunAction(this::extend);
         retractExtendo = new RunAction(this::retract);
@@ -86,6 +85,15 @@ public class ExtendSubsystem {
     // OpMode
     public void init() {
         extendoPID.setPID(ep,ei,ed);
+
+        if (!extendoLimit.getState()){
+            extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            extendo.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+    }
+
+    public void init_loop() {
 
         if (!extendoLimit.getState()){
             extendo.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

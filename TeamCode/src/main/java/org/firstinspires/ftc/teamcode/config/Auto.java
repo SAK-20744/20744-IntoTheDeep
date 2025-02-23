@@ -49,7 +49,7 @@ public class Auto {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
-        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState, doorState);
+//        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState, doorState);
 
         this.follower = follower;
         this.telemetry = telemetry;

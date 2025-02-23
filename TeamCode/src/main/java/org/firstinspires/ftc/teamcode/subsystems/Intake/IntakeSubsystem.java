@@ -32,13 +32,13 @@ public class IntakeSubsystem {
 
     public RunAction spinIn, spinOut, spinStop, pivotTransfer, pivotGround, openDoor, closeDoor;
 
-    public IntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState, DoorState doorState) {
+    public IntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState) {
         spin = hardwareMap.get(DcMotorEx.class, "intake");
         wrist = hardwareMap.get(Servo.class, "wrist");
         door = hardwareMap.get(Servo.class, "door");
         this.spinState = spinState;
         this.pivotState = pivotState;
-        this.doorState = doorState;
+//        this.doorState = doorState;
 
         spinIn = new RunAction(this::spinIn);
         spinOut = new RunAction(this::spinOut);
