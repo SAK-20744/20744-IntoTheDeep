@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.config.*;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
@@ -67,6 +68,9 @@ public class BlueObservation extends OpMode {
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startWall();
                     auto.follower.followPath(auto.pushSamples, false);
+                    while(pathTimer.getElapsedTimeSeconds() < 1)
+                        Actions.runBlocking(auto.extend.retractExtendo);
+                    Actions.runBlocking(auto.extend.autoExtendo);
                     setPathState(3);
                 }
                 break;
