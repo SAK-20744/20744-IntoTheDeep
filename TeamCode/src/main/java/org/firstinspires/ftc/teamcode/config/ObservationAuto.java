@@ -262,19 +262,19 @@ public class ObservationAuto {
                 .setZeroPowerAccelerationMultiplier(0.1)
                 .addPath(new BezierCurve(new Point(59.000, 26.000, Point.CARTESIAN), new Point(26, 26.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(4)
+                .setZeroPowerAccelerationMultiplier(2)
                 .addPath(new BezierCurve(new Point(26, 26.000, Point.CARTESIAN), new Point(52.000, 30.000, Point.CARTESIAN), new Point(58.000, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(0.1)
                 .addPath(new BezierCurve(new Point(58.000, 16.000, Point.CARTESIAN),new Point(26, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(4)
+                .setZeroPowerAccelerationMultiplier(2)
                 .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(56.000, 16.000, Point.CARTESIAN), new Point(56.000, 10, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(0.1)
-                .addPath(new BezierCurve(new Point(56.000, 10, Point.CARTESIAN), new Point(26, 10, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(57.700, 11, Point.CARTESIAN), new Point(26, 11, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(4)
+                .setZeroPowerAccelerationMultiplier(2)
                 //.setZeroPowerAccelerationMultiplier(0.5)
                 .build();
 
@@ -282,6 +282,7 @@ public class ObservationAuto {
                 .addPath(new BezierLine(new Point(26,10,Point.CARTESIAN), new Point(grab1Pose)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), grab1Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
+                .setPathEndTimeoutConstraint(350)
                 .build();
 
         specimen1 = follower.pathBuilder()
@@ -294,6 +295,7 @@ public class ObservationAuto {
                 .addPath(new BezierLine(new Point(specimen1Pose), new Point(grab2Pose)))
                 .setLinearHeadingInterpolation(specimen1Pose.getHeading(), grab2Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
+                .setPathEndTimeoutConstraint(350)
                 .build();
 
         specimen2 = follower.pathBuilder()
@@ -306,6 +308,7 @@ public class ObservationAuto {
                 .addPath(new BezierLine(new Point(specimen2Pose), new Point(grab3Pose)))
                 .setLinearHeadingInterpolation(specimen2Pose.getHeading(), grab3Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
+                .setPathEndTimeoutConstraint(350)
                 .build();
 
         specimen3 = follower.pathBuilder()
@@ -318,6 +321,7 @@ public class ObservationAuto {
                 .addPath(new BezierLine(new Point(specimen3Pose), new Point(grab4Pose)))
                 .setLinearHeadingInterpolation(specimen3Pose.getHeading(), grab4Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
+                .setPathEndTimeoutConstraint(350)
                 .build();
 
         specimen4 = follower.pathBuilder()

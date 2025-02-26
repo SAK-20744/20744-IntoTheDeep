@@ -13,12 +13,14 @@ public class RobotConstants {
             WRIST_TRANSFERING = 0.9, WRIST_UP = 0.5, WRIST_INTAKING = 0.2,
             DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
             ROLL_DEPO = 0.55, ROLL_TRANSFERING = 0,
-            RAIL_TRANSFERING = 0.2, RAIL_WALL= 0, RAIL_SCORING = 0, RAIL_CLIPPING = 1,
+            RAIL_TRANSFERING = 0.2, RAIL_WALL= 0.5, RAIL_SCORING = 0, RAIL_CLIPPING = 1,
             E_RETRACT_POWER = -0;
 
     public static int
             LIFT_RETRACTED = -5, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1250, LIFT_HIGH_RUNG = 450, LIFT_MID_RUNG = 300, clipRange = 250,
-            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 220;
+            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 250;
+
+    public static double WALLDIST = 13.25;
 
     public static double lp = -0.0088, li = 0.07, ld = 0.000000012;
     public static double ep = 0.038, ei = 0, ed = 0.000005;
