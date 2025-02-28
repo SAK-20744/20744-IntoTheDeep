@@ -162,7 +162,7 @@ public class ObservationAuto {
                 setGrabState(2);
                 break;
             case 2:
-                if(grabTimer.getElapsedTime() > .5)
+                if(grabTimer.getElapsedTime() > .7)
                 {
                     actionBusy = false;
                     setGrabState(-1);
@@ -180,7 +180,7 @@ public class ObservationAuto {
                 setReleaseState(2);
                 break;
             case 2:
-                if(releaseTimer.getElapsedTime() > .5)
+                if(releaseTimer.getElapsedTime() > .3)
                 {
                     actionBusy = false;
                     setReleaseState(-1);
@@ -257,10 +257,10 @@ public class ObservationAuto {
                 .build();
 
         pushSamples = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(preloadPose), new Point(15, 36, Point.CARTESIAN), new Point(61, 36.25, Point.CARTESIAN), new Point(59, 26.000, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(preloadPose), new Point(15, 36, Point.CARTESIAN), new Point(59, 30, Point.CARTESIAN), new Point(59, 26.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(preloadPose.getHeading(), Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(0.1)
-                .addPath(new BezierCurve(new Point(59.000, 26.000, Point.CARTESIAN), new Point(26, 26.000, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(57.700, 26.000, Point.CARTESIAN), new Point(26, 26.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
                 .addPath(new BezierCurve(new Point(26, 26.000, Point.CARTESIAN), new Point(52.000, 30.000, Point.CARTESIAN), new Point(58.000, 16.000, Point.CARTESIAN)))
@@ -269,10 +269,10 @@ public class ObservationAuto {
                 .addPath(new BezierCurve(new Point(58.000, 16.000, Point.CARTESIAN),new Point(26, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
-                .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(56.000, 16.000, Point.CARTESIAN), new Point(56.000, 10, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(55.000, 16.000, Point.CARTESIAN), new Point(57.000, 9.5, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(0.1)
-                .addPath(new BezierCurve(new Point(57.700, 11, Point.CARTESIAN), new Point(26, 11, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(57.000, 9.75, Point.CARTESIAN), new Point(26, 10, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
                 //.setZeroPowerAccelerationMultiplier(0.5)

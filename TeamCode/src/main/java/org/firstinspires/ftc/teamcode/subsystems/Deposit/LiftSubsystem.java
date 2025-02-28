@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.Deposit;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 
+@Config
 public class LiftSubsystem {
     private Telemetry telemetry;
     private DigitalChannel liftLimit;
@@ -22,7 +24,7 @@ public class LiftSubsystem {
     public int pos, bottom;
     public RunAction toZero, toHighBucket, toHighRung, toPark;
     public PIDController liftPID;
-    public static int target = 0, range = 20;
+    public static int target = 0, range = 10;
 //    public static double p = 0.015, i = 0, d = 0.0005;
 
     public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {

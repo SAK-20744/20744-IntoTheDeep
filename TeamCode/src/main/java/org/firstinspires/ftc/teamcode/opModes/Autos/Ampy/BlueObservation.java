@@ -72,7 +72,7 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 3: //Once the Pathchain finishes, begins the Specimen State Machine
-                if(pathTimer.getElapsedTimeSeconds() > 2) {
+                if(pathTimer.getElapsedTimeSeconds() > 2.5) {
                     auto.extend.toAuto();
                     setPathState(4);
                 }
@@ -92,7 +92,7 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 6: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy() || pathTimer.getElapsedTimeSeconds() > 1.5) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen1, true);
                     setPathState(7);
@@ -118,7 +118,7 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 10: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen2, true);
                     setPathState(11);
@@ -144,7 +144,7 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 14: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen3, true);
                     setPathState(15);
@@ -170,7 +170,7 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 18: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen4, true);
                     setPathState(19);
