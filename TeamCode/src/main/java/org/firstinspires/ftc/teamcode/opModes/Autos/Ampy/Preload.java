@@ -219,7 +219,7 @@ public class Preload extends OpMode {
             rightRear.setPower(-0);
         }
         if (pathTimer.getElapsedTime() > 2200)
-        liftTarget = LIFT_HIGH_BASKET;
+            liftTarget = LIFT_HIGH_BASKET;
         if(pathTimer.getElapsedTime() > 2800){
             lDiffyTarget = LDIFFY_SCORING;
             rDiffyTarget = RDIFFY_SCORING;

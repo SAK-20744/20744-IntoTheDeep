@@ -53,7 +53,7 @@ public class ObservationAuto {
 
     public ObservationAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
-        lift = new LiftSubsystem(hardwareMap, telemetry);
+        lift = new LiftSubsystem(hardwareMap, telemetry, true);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
         intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
         diffy = new DiffySubsystem(hardwareMap, diffyState);
@@ -102,7 +102,7 @@ public class ObservationAuto {
 
     public void update() {
         follower.update();
-        lift.updatePIDF();
+        lift.updatePIDFSpecAuto();
         extend.updatePIDF();
 
         grab();
@@ -193,7 +193,7 @@ public class ObservationAuto {
         switch (chamberState) {
             case 1:
                 actionBusy = true;
-                lift.toHighRung();
+                lift.toSpecAuto();
                 rail.clipRail();
                 diffy.clipdiffy();
                 roll.transferRoll();
@@ -269,17 +269,17 @@ public class ObservationAuto {
                 .addPath(new BezierCurve(new Point(58.000, 16.000, Point.CARTESIAN),new Point(26, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
-                .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(55.000, 16.000, Point.CARTESIAN), new Point(57.000, 9.5, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(55.000, 16.000, Point.CARTESIAN), new Point(57.000, 9.25, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(0.1)
-                .addPath(new BezierCurve(new Point(57.000, 9.75, Point.CARTESIAN), new Point(26, 10, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(57.000, 8.9, Point.CARTESIAN), new Point(22.5, 10, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
                 //.setZeroPowerAccelerationMultiplier(0.5)
                 .build();
 
         grab1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(26,10,Point.CARTESIAN), new Point(grab1Pose)))
+                .addPath(new BezierLine(new Point(22.5,10,Point.CARTESIAN), new Point(grab1Pose)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), grab1Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)

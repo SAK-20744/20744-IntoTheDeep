@@ -199,7 +199,7 @@ public class AmphitriteTeleop extends OpMode {
                 extendoTarget = EXTENDO_RETRACTED;
                 if (gamepad1.right_bumper) {
                     intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
+                    wristTarget = WRIST_CLOSE_INTAKING;
                 } else if (gamepad1.y) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
@@ -259,7 +259,7 @@ public class AmphitriteTeleop extends OpMode {
                 extendoTarget = EXTENDO_RETRACTED;
                 if (gamepad1.right_bumper) {
                     intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
+                    wristTarget = WRIST_CLOSE_INTAKING;
                 } else if (gamepad1.y) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
