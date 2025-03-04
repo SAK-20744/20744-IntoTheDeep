@@ -12,7 +12,7 @@ public class RobotConstants {
             CLAW_CLOSED = 0.55, CLAW_OPEN = 0.17,
             WRIST_TRANSFERING = 0.9, WRIST_UP = 0.5785, WRIST_INTAKING = 0.2, WRIST_CLOSE_INTAKING = 0.16,
             DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
-            ROLL_DEPO = 0.55, ROLL_TRANSFERING = 0,
+            ROLL_DEPO = 0.7, ROLL_TRANSFERING = 0.15,
             RAIL_TRANSFERING = 0.1, RAIL_WALL= 0.5, RAIL_SCORING = 0, RAIL_CLIPPING = 1,
             E_RETRACT_POWER = -0.15;
 
