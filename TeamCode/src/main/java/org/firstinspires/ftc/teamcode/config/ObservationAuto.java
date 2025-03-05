@@ -272,14 +272,14 @@ public class ObservationAuto {
                 .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(55.000, 16.000, Point.CARTESIAN), new Point(57.000, 9.25, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(0.1)
-                .addPath(new BezierCurve(new Point(57.000, 8.9, Point.CARTESIAN), new Point(22.5, 10, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(57.000, 8.9, Point.CARTESIAN), new Point(19, 10, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
                 //.setZeroPowerAccelerationMultiplier(0.5)
                 .build();
 
         grab1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(22.5,10,Point.CARTESIAN), new Point(grab1Pose)))
+                .addPath(new BezierLine(new Point(19,10,Point.CARTESIAN), new Point(grab1Pose)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), grab1Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
