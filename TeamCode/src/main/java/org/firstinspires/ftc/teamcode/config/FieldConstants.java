@@ -21,7 +21,7 @@ public class FieldConstants {
     public static final Pose blueObservationStartPose = new Pose(7.5, 65.25, Math.toRadians(0));
 
     // Preload Poses
-    public static final Pose blueBucketPreloadPose = new Pose(5.3,17.7, Math.toRadians(-45));
+    public static final Pose blueBucketPreloadPose = new Pose(5.5,17.5, Math.toRadians(-45));
     public static final Pose blueObservationPreloadPose = new Pose(39.5, 75, Math.toRadians(0));
 
     // Blue Bucket Sample Poses
@@ -32,7 +32,7 @@ public class FieldConstants {
     public static final Pose blueBucketRightSamplePose = new Pose(9.35,12.75, Math.toRadians(5));
     //    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
-    public static final Pose blueBucketScorePose = new Pose(5.3,17.7, Math.toRadians(-45));
+    public static final Pose blueBucketScorePose = new Pose(5.5,17.5, Math.toRadians(-45));
 
 //    public static final Pose blueObservationPushingEndPose = new Pose(22.5, 68.0, Math.toRadians(0));
 

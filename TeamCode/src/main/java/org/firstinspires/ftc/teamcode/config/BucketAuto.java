@@ -202,14 +202,14 @@ public class BucketAuto {
                     setBucketState(5);
                 }
             case 5:
-                if (bucketTimer.getElapsedTimeSeconds() > 1.5) {
+                if (bucketTimer.getElapsedTimeSeconds() > 1.7) {
                     bucketTimer.resetTimer();
                     claw.openClaw();
                     setBucketState(6);
                 }
                 break;
             case 6:
-                if (bucketTimer.getElapsedTimeSeconds() > 0.6) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.4) {
                     actionBusy = false;
                     setBucketState(-1);
                 }
