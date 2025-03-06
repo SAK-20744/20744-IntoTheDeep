@@ -1,9 +1,5 @@
 package org.firstinspires.ftc.teamcode.config;
 
-import static org.firstinspires.ftc.teamcode.config.RobotConstants.BARDIST;
-import static org.firstinspires.ftc.teamcode.config.RobotConstants.BARDIST2;
-import static org.firstinspires.ftc.teamcode.config.RobotConstants.WALLDIST;
-
 import com.acmerobotics.dashboard.config.Config;
 
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
@@ -11,6 +7,9 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 
 @Config
 public class FieldConstants {
+
+
+//    public static double WALLDIST = 12.3, BARDIST = 39.5, BARDIST2 = 40;
 
     public enum RobotStart {
         BLUE_BUCKET,
@@ -41,14 +40,14 @@ public class FieldConstants {
 
     // Blue Observation Specimen Poses
     public static final Pose blueObservationSpecimenSetPose = new Pose(12, 35, Math.toRadians(0));
-    public static final Pose blueObservationSpecimenPickupPose = new Pose(10.8, 12, Math.toRadians(0));
-    public static final Pose blueObservationSpecimenPickup2Pose = new Pose(WALLDIST, 36, Math.toRadians(0));
-    public static final Pose blueObservationSpecimenPickup3Pose = new Pose(WALLDIST, 36, Math.toRadians(0));
-    public static final Pose blueObservationSpecimenPickup4Pose = new Pose(WALLDIST, 36, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen1Pose = new Pose(BARDIST, 70.1, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen2Pose = new Pose(BARDIST, 69.4, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen3Pose = new Pose(BARDIST2, 68.7, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen4Pose = new Pose(BARDIST2, 68.0, Math.toRadians(0));
+    public static final Pose blueObservationSpecimenPickupPose = new Pose(10.5, 12, Math.toRadians(0));
+    public static final Pose blueObservationSpecimenPickup2Pose = new Pose(10.5, 36, Math.toRadians(0));
+    public static final Pose blueObservationSpecimenPickup3Pose = new Pose(10.75, 36, Math.toRadians(0));
+    public static final Pose blueObservationSpecimenPickup4Pose = new Pose(10.75, 36, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen1Pose = new Pose(43.5, 70.1, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen2Pose = new Pose(43.5, 69.4, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen3Pose = new Pose(44, 68.7, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen4Pose = new Pose(44, 68.0, Math.toRadians(0));
 
 
     // Park Poses
