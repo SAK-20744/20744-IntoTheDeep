@@ -27,7 +27,7 @@ public class FieldConstants {
     // Blue Bucket Sample Poses
     public static final Pose blueBucketLeftSamplePose = new Pose(11.4,12, Math.toRadians(32));
     //    public static final Pose blueBucketLeftSampleControlPose = new Pose(32, 108);
-    public static final Pose blueBucketMidSamplePose =  new Pose(9.8,18, Math.toRadians(1));
+    public static final Pose blueBucketMidSamplePose =  new Pose(9.8,17.5, Math.toRadians(1));
     //    public static final Pose blueBucketMidSampleControlPose = new Pose(11,15, Math.toRadians(25));
     public static final Pose blueBucketRightSamplePose = new Pose(9.35,12.75, Math.toRadians(5));
     //    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
