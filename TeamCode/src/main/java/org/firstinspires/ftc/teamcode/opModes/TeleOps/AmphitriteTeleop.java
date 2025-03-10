@@ -227,10 +227,10 @@ public class AmphitriteTeleop extends OpMode {
                 railTarget = RAIL_CLIPPING;
             }
 
-//            if (gamepad1.right_trigger > 0.5)
-//                liftTarget = liftLiftedTarget - clipRange;
-//            else if (gamepad1.left_trigger > 0.5)
-//                liftTarget = liftLiftedTarget;
+            if (gamepad2.right_trigger > 0.5)
+                liftTarget = liftLiftedTarget + clipRange;
+            else if (gamepad2.left_trigger > 0.5)
+                liftTarget = liftLiftedTarget;
 
             if(gamepad2.right_bumper && !gamepad1.left_bumper)
                 clawTarget = CLAW_CLOSED;

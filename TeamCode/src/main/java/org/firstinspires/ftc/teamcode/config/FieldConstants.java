@@ -22,7 +22,7 @@ public class FieldConstants {
 
     // Preload Poses
     public static final Pose blueBucketPreloadPose = new Pose(5.5,17.5, Math.toRadians(-45));
-    public static final Pose blueObservationPreloadPose = new Pose(39.5, 75, Math.toRadians(0));
+    public static final Pose blueObservationPreloadPose = new Pose(40.5, 75, Math.toRadians(0));
 
     // Blue Bucket Sample Poses
     public static final Pose blueBucketLeftSamplePose = new Pose(11.4,12, Math.toRadians(32));
@@ -40,14 +40,14 @@ public class FieldConstants {
 
     // Blue Observation Specimen Poses
     public static final Pose blueObservationSpecimenSetPose = new Pose(12, 35, Math.toRadians(0));
-    public static final Pose blueObservationSpecimenPickupPose = new Pose(10.5, 12, Math.toRadians(0));
-    public static final Pose blueObservationSpecimenPickup2Pose = new Pose(10.5, 36, Math.toRadians(0));
+    public static final Pose blueObservationSpecimenPickupPose = new Pose(10.25, 12, Math.toRadians(0));
+    public static final Pose blueObservationSpecimenPickup2Pose = new Pose(10.25, 36, Math.toRadians(0));
     public static final Pose blueObservationSpecimenPickup3Pose = new Pose(10.75, 36, Math.toRadians(0));
     public static final Pose blueObservationSpecimenPickup4Pose = new Pose(10.75, 36, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen1Pose = new Pose(43.5, 70.1, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen2Pose = new Pose(43.5, 69.4, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen3Pose = new Pose(44, 68.7, Math.toRadians(0));
-    public static final Pose blueObservationSpecimen4Pose = new Pose(44, 68.0, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen1Pose = new Pose(42.25, 70.1, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen2Pose = new Pose(42.25, 69.4, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen3Pose = new Pose(42.5, 68.7, Math.toRadians(0));
+    public static final Pose blueObservationSpecimen4Pose = new Pose(42.5, 68.0, Math.toRadians(0));
 
 
     // Park Poses
