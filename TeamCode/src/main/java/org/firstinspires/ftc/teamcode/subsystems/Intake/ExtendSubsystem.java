@@ -74,7 +74,12 @@ public class ExtendSubsystem {
 
 
     public void setTarget(int b) {
-        target = b;
+        if(b<EXTENDO_RETRACTED)
+            target = EXTENDO_RETRACTED;
+        else if(b>EXTENDO_EXTENDED)
+            target = EXTENDO_EXTENDED;
+        else
+            target = b;
     }
 
     public int getPos() {
