@@ -2,15 +2,11 @@ package org.firstinspires.ftc.teamcode.subsystems;
 
 import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.limelightvision.LLResult;
-import com.qualcomm.hardware.limelightvision.LLResultTypes;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
-
-import java.util.List;
 
 @Config
 public class VisionSubsystem {
@@ -35,8 +31,6 @@ public class VisionSubsystem {
     private int pipeline = 0;
     private double x = 0;
     private double y = 0;
-
-    public static double extendMultipler = 0.0045;
 
     private DcMotor lf,rf,lb,rb;
 
@@ -80,9 +74,6 @@ public class VisionSubsystem {
             limelight.stop();
         }
     }
-
-
-
 
     public void updateColor() {
         update();

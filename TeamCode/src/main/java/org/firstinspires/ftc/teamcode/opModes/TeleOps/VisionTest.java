@@ -36,22 +36,22 @@ public class VisionTest extends OpMode {
     public void loop() {
         vision.updateColor();
 
-        if(gamepad1.a && pressed == false) {
+        if(gamepad1.left_bumper && pressed == false) {
             vision.extendAlign(vision.getTxError());
             vision.driveAlign(vision.getTyError());
             pressed = true;
         }
 
-        if(gamepad1.dpad_down) {
+        if(gamepad1.a) {
             extend.toAuto();
             pressed = false;
         }
 
-        if(gamepad1.b) {
+        if(gamepad1.right_bumper) {
             intake.spinIn();
-        } else if(gamepad1.x) {
+        } else if(gamepad1.y) {
             intake.spinOut();
-        } else if (gamepad1.y) {
+        } else if (gamepad1.x) {
             intake.spinStop();
         }
     }
