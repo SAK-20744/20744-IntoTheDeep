@@ -279,7 +279,7 @@ public class ObservationAuto {
                 .build();
 
         grab1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(19,10,Point.CARTESIAN), new Point(grab1Pose)))
+                .addPath(new BezierCurve(new Point(19,10,Point.CARTESIAN), new Point(grab1Pose.getX() + 3, grab1Pose.getY()),  new Point(grab1Pose)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), grab1Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
@@ -292,7 +292,7 @@ public class ObservationAuto {
                 .build();
 
         grab2 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specimen1Pose), new Point(grab2Pose)))
+                .addPath(new BezierCurve(new Point(specimen1Pose), new Point(grab2Pose.getX() + 10, grab2Pose.getY()), new Point(grab2Pose)))
                 .setLinearHeadingInterpolation(specimen1Pose.getHeading(), grab2Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
@@ -305,7 +305,7 @@ public class ObservationAuto {
                 .build();
 
         grab3 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specimen2Pose), new Point(grab3Pose)))
+                .addPath(new BezierCurve(new Point(specimen2Pose), new Point(grab3Pose.getX() + 10, grab3Pose.getY()), new Point(grab3Pose)))
                 .setLinearHeadingInterpolation(specimen2Pose.getHeading(), grab3Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
@@ -318,7 +318,7 @@ public class ObservationAuto {
                 .build();
 
         grab4 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specimen3Pose), new Point(grab4Pose)))
+                .addPath(new BezierCurve(new Point(specimen3Pose), new Point(grab4Pose.getX() + 10, grab4Pose.getY()), new Point(grab4Pose)))
                 .setLinearHeadingInterpolation(specimen3Pose.getHeading(), grab4Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
