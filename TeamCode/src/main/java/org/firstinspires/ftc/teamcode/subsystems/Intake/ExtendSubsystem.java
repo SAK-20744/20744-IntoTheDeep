@@ -72,7 +72,6 @@ public class ExtendSubsystem {
         return Math.abs(pos - target) < 25;
     }
 
-
     public void setTarget(int b) {
         if(b<EXTENDO_RETRACTED)
             target = EXTENDO_RETRACTED;

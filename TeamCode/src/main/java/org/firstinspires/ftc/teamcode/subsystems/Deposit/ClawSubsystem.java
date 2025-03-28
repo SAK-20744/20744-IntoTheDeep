@@ -29,6 +29,7 @@ public class ClawSubsystem {
         claw.setPosition(clawPos);
     }
 
+
     public void setState(ClawState clawState) {
         if (clawState == ClawState.CLOSED) {
             claw.setPosition(CLAW_CLOSED);

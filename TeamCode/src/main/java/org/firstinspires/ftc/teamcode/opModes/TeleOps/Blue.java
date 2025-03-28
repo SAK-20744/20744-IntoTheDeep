@@ -1,13 +1,57 @@
 package org.firstinspires.ftc.teamcode.opModes.TeleOps;
 
-import static org.firstinspires.ftc.teamcode.opModes.TeleOps.AmphitriteTeleop.COLOR.BLUE;
-import static org.firstinspires.ftc.teamcode.opModes.TeleOps.AmphitriteTeleop.COLOR.RED;
-import static org.firstinspires.ftc.teamcode.opModes.TeleOps.AmphitriteTeleop.COLOR.YELLOW;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_CLOSED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_CLOSED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_OPEN;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_EXTENDED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_RETRACTED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.E_RETRACT_POWER;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_IN;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OFF;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OUT;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_CLIPPING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_SCORING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_WALL;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_HIGH_BASKET;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_HIGH_RUNG;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_MID_BASKET;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_RETRACTED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LRAIL_CLIPPING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LRAIL_SCORING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LRAIL_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LRAIL_WALL;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RANGEFINDERRANGE;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_CLIPPING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_SCORING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_WALL;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ROLL_DEPO;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ROLL_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RRAIL_CLIPPING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RRAIL_SCORING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RRAIL_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RRAIL_WALL;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_CLOSE_INTAKING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_INTAKING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_UP;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.YAW;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.blueVal;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.clipRange;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ed;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ei;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ep;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.greenVal;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ld;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.li;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.lp;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.redVal;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
-import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -17,8 +61,6 @@ import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -31,8 +73,8 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 
 
 @Config
-@TeleOp(name = "Ampy", group = "Competition")
-public class AmphitriteTeleop extends OpMode {
+@TeleOp(name = "BLUE", group = "Competition")
+public class Blue extends OpMode {
 
     public enum COLOR {
         RED,
@@ -233,24 +275,26 @@ public class AmphitriteTeleop extends OpMode {
             if (gamepad1.left_bumper) {
                 extendoTarget = EXTENDO_EXTENDED;
 
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
+                if (gamepad1.y || colordetected == COLOR.RED) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
-                } else {
+                } else if (gamepad1.right_bumper) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_INTAKING;
+                }
+                else {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_UP;
                 }
             } else {
                 extendoTarget = EXTENDO_RETRACTED;
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_CLOSE_INTAKING;
-                } else if (gamepad1.y) {
+
+                if (gamepad1.y || colordetected == COLOR.RED) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_CLOSE_INTAKING;
                 } else {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_UP;
@@ -311,24 +355,25 @@ public class AmphitriteTeleop extends OpMode {
             if (gamepad1.left_bumper) {
                 extendoTarget = EXTENDO_EXTENDED;
 
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
+                if (gamepad1.y || colordetected == COLOR.RED) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_INTAKING;
                 } else {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_UP;
                 }
             } else {
                 extendoTarget = EXTENDO_RETRACTED;
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_CLOSE_INTAKING;
-                } else if (gamepad1.y) {
+                
+                if (gamepad1.y || colordetected == COLOR.RED) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_CLOSE_INTAKING;
                 } else {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_TRANSFERING;
@@ -417,7 +462,7 @@ public class AmphitriteTeleop extends OpMode {
         else if (colors.red > colors.blue && colors.red > colors.green)
             colordetected = COLOR.RED;
         else
-            colordetected = BLUE;
+            colordetected = COLOR.BLUE;
 
 
 //        telemetry.addData("digital 4", pin4.getState());
