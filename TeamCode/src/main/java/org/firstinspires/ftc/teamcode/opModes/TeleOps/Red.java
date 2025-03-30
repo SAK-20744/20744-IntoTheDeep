@@ -62,6 +62,7 @@ import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -93,6 +94,8 @@ public class Red extends OpMode {
     private boolean specimenmode = false, specimenScoring = false;
 
     private double looptime = 0;
+    private  boolean scoring = false;
+
     private Servo wrist, door, roll, claw, lRail, rRail, lDiffy, rDiffy;
     private DcMotorEx lLift, rLift, intake, extendo;
     private DigitalChannel liftLimit, extendoLimit;
@@ -133,6 +136,11 @@ public class Red extends OpMode {
 
     private COLOR colordetected;
 
+    private boolean readyToTransfer;
+    private  boolean sampleclawopenthingy = false;
+
+    private AnalogInput clawAnalog;
+    private AnalogInput wristAnalog;
 
     private double lRailTarget = LRAIL_TRANSFERING;
     private double rRailTarget = RRAIL_TRANSFERING;
@@ -166,6 +174,9 @@ public class Red extends OpMode {
 
         liftPID = new PIDController(lp, li, ld);
         extendoPID = new PIDController(ep, ei, ed);
+
+        clawAnalog = hardwareMap.get(AnalogInput.class, "clawWire");
+        wristAnalog = hardwareMap.get(AnalogInput.class, "wristWire");
 
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         liftLimit = hardwareMap.get(DigitalChannel.class, "liftLimit");
@@ -226,6 +237,11 @@ public class Red extends OpMode {
 
         intake.setPower(0);
 
+        double clawActual = clawAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Claw Actual", clawActual);
+
+        double wristActual = wristAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Wrist Actual", wristActual);
 
         telemetry.addData("digital 4", pin4.getState());
         telemetry.addData("digital 5", pin5.getState());
@@ -273,29 +289,30 @@ public class Red extends OpMode {
 
         if(specimenmode){
 
-            if (gamepad1.left_bumper) {
-                extendoTarget = EXTENDO_EXTENDED;
-
-                if (gamepad1.y || colordetected == COLOR.BLUE) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                }
-                else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            } else {
+            if (!gamepad1.left_bumper || colordetected == COLOR.RED || colordetected == COLOR.YELLOW) {
                 extendoTarget = EXTENDO_RETRACTED;
 
                 if (gamepad1.y || colordetected == COLOR.BLUE) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
-                } else if (gamepad1.right_bumper) {
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
                     intakePower = INTAKE_IN;
                     wristTarget = WRIST_CLOSE_INTAKING;
+                }
+                else {
+                    intakePower = INTAKE_OFF;
+                    wristTarget = WRIST_TRANSFERING;
+                }
+                ;
+            } else {
+                extendoTarget = EXTENDO_EXTENDED;
+
+                if (gamepad1.y || colordetected == COLOR.BLUE) {
+                    intakePower = INTAKE_OUT;
+                    wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_INTAKING;
                 } else {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_UP;
@@ -304,8 +321,11 @@ public class Red extends OpMode {
 
             liftLiftedTarget = LIFT_HIGH_RUNG;
 
+            boolean clawopenthingy = false;
+
             if (gamepad1.a) {
                 specimenScoring = false;
+                clawopenthingy = true;
                 liftTarget = LIFT_RETRACTED;
                 lDiffyTarget = LDIFFY_WALL;
                 rDiffyTarget = RDIFFY_WALL;
@@ -316,6 +336,7 @@ public class Red extends OpMode {
 
             if (gamepad1.b) {
                 specimenScoring = true;
+                clawTarget = CLAW_CLOSED;
                 liftTarget = liftLiftedTarget;
                 lDiffyTarget = LDIFFY_CLIPPING;
                 rDiffyTarget = RDIFFY_CLIPPING;
@@ -344,40 +365,42 @@ public class Red extends OpMode {
                     clawTarget = CLAW_CLOSED;
             }
             else {
-                if(distance < RANGEFINDERRANGE)
-                    clawTarget = CLAW_CLOSED;
-                else
+                if(distance > RANGEFINDERRANGE || clawopenthingy) {
                     clawTarget = CLAW_OPEN;
+                    clawopenthingy = false;
+                }
+                else
+                    clawTarget = CLAW_CLOSED;
             }
 
         }
         else {
 
-            if (gamepad1.left_bumper) {
-                extendoTarget = EXTENDO_EXTENDED;
-
-                if (gamepad1.y || colordetected == COLOR.BLUE) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            } else {
+            if (!gamepad1.left_bumper || colordetected == COLOR.RED || colordetected == COLOR.YELLOW) {
                 extendoTarget = EXTENDO_RETRACTED;
 
                 if (gamepad1.y || colordetected == COLOR.BLUE) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
-                } else if (gamepad1.right_bumper) {
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
                     intakePower = INTAKE_IN;
                     wristTarget = WRIST_CLOSE_INTAKING;
                 } else {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_TRANSFERING;
+                }
+            } else {
+                extendoTarget = EXTENDO_EXTENDED;
+
+                if (gamepad1.y || colordetected == COLOR.BLUE) {
+                    intakePower = INTAKE_OUT;
+                    wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_INTAKING;
+                } else {
+                    intakePower = INTAKE_OFF;
+                    wristTarget = WRIST_UP;
                 }
             }
 
@@ -388,6 +411,8 @@ public class Red extends OpMode {
 
             if (gamepad1.a) {
                 liftTarget = LIFT_RETRACTED;
+                scoring = false;
+                sampleclawopenthingy = true;
                 lDiffyTarget = LDIFFY_TRANSFERING;
                 rDiffyTarget = RDIFFY_TRANSFERING;
                 rollTarget = ROLL_TRANSFERING;
@@ -397,6 +422,8 @@ public class Red extends OpMode {
 
             if (gamepad1.b) {
                 liftTarget = liftLiftedTarget;
+                sampleclawopenthingy = false;
+                scoring = true;
                 lDiffyTarget = LDIFFY_SCORING;
                 rDiffyTarget = RDIFFY_SCORING;
                 rollTarget = ROLL_DEPO;
@@ -404,15 +431,39 @@ public class Red extends OpMode {
                 rRailTarget = RRAIL_SCORING;
             }
 
-            if(gamepad2.right_bumper && !gamepad1.left_bumper) {
-                clawTarget = CLAW_CLOSED;
-                doorTarget = DOOR_OPEN;
-            } else {
-                clawTarget = CLAW_OPEN;
-                doorTarget = DOOR_CLOSED;
+            if(scoring)
+            {
+                if(gamepad1.right_bumper || gamepad2.right_bumper || sampleclawopenthingy) {
+                    clawTarget = CLAW_OPEN;
+                    sampleclawopenthingy = false;
+                }
+                else
+                    clawTarget = CLAW_CLOSED;
+            }
+            else {
+                if (gamepad2.right_bumper && !gamepad1.left_bumper || readyToTransfer) {
+                    clawTarget = CLAW_CLOSED;
+                    doorTarget = DOOR_OPEN;
+                } else {
+                    clawTarget = CLAW_OPEN;
+                    doorTarget = DOOR_CLOSED;
+                }
             }
 
         }
+
+        double clawActual = clawAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Claw Actual", clawActual);
+
+        double wristActual = wristAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Wrist Actual", wristActual);
+
+        if(extendoTarget == EXTENDO_RETRACTED && liftTarget == LIFT_RETRACTED && !specimenmode && !(colordetected == COLOR.NONE) && wristActual < 102.5 && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
+            readyToTransfer = true;
+        else
+            readyToTransfer = false;
+
+        telemetry.addData("Ready?", readyToTransfer);
 
         door.setPosition(doorTarget);
         roll.setPosition(rollTarget);
@@ -477,7 +528,7 @@ public class Red extends OpMode {
 //            colordetected = COLOR.RED;
 //        else
 //            colordetected = COLOR.NONE;
-//
+
 
         telemetry.addData("Color Detected", colordetected);
 
