@@ -20,7 +20,7 @@ public class RobotConstants {
 
     public static int
             LIFT_RETRACTED = -2, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1350, LIFT_HIGH_RUNG = 440, LIFT_HIGH_RUNG_ADJUSTED = 458,  LIFT_AUTO_RUNG = 478, LIFT_MID_RUNG = 300, clipRange = 20,
-            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 500, EXTENDO_AUTO = 250,
+            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 250,
             RANGEFINDERRANGE = 65;
 
     public static double lp = -0.0085, li = 0.000275, ld = 0;

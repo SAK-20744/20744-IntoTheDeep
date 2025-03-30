@@ -284,8 +284,10 @@ public class Red extends OpMode {
 
         if(gamepad2.dpad_left || gamepad1.dpad_left)
             specimenmode = true;
-        if(gamepad2.dpad_right || gamepad1.dpad_right)
+        if(gamepad2.dpad_right || gamepad1.dpad_right) {
             specimenmode = false;
+            liftLiftedTarget = LIFT_HIGH_BASKET;
+        }
 
         if(specimenmode){
 
