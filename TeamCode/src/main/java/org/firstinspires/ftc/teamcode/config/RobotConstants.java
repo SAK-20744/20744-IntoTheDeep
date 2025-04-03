@@ -7,24 +7,25 @@ public class RobotConstants {
 
     public static double
             INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0.5,
-            LDIFFY_TRANSFERING = 0.94, LDIFFY_CLIPPING = 0.625, LDIFFY_SCORING = 0.49, LDIFFY_WALL = 0.12, LDIFFY_AUTO = 0.4,
+            LDIFFY_TRANSFERING = 0.94, LDIFFY_CLIPPING = 0.625, LDIFFY_SCORING = 0.49, LDIFFY_WALL = 0.16, LDIFFY_AUTO = 0.4,
             RDIFFY_TRANSFERING = 0.83, RDIFFY_CLIPPING = 1, RDIFFY_SCORING = 0.45, RDIFFY_WALL = 0.2, RDIFFY_AUTO = 0.35,
-            CLAW_CLOSED = 0.15, CLAW_OPEN = 0.55,
+            CLAW_CLOSED = 0.1, CLAW_OPEN = 0.38,
             WRIST_TRANSFERING = 1, WRIST_UP = 0.5785, WRIST_INTAKING = 0.342, WRIST_CLOSE_INTAKING = 0.23,
             DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
             ROLL_DEPO = 0.75, ROLL_TRANSFERING = 0.16, YAW = 0.125,
-            LRAIL_TRANSFERING = 0.975, LRAIL_WALL= 0.725, LRAIL_SCORING = 1, LRAIL_CLIPPING = 0,
-            RRAIL_TRANSFERING = 0.975, RRAIL_WALL= 0.725, RRAIL_SCORING = 1, RRAIL_CLIPPING = 0,
+            LRAIL_TRANSFERING = 0.975, LRAIL_WALL= 0.825, LRAIL_SCORING = 1, LRAIL_CLIPPING = 0,
+            RRAIL_TRANSFERING = 0.975, RRAIL_WALL= 0.825, RRAIL_SCORING = 1, RRAIL_CLIPPING = 0,
             E_RETRACT_POWER = -0.15,
-            redVal = 0.02, blueVal = 0.02, greenVal = 0.02;
+            redVal = 0.02, blueVal = 0.02, greenVal = 0.02,
+            grabtime = 0.3;
 
     public static int
-            LIFT_RETRACTED = -2, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1350, LIFT_HIGH_RUNG = 440, LIFT_HIGH_RUNG_ADJUSTED = 458,  LIFT_AUTO_RUNG = 478, LIFT_MID_RUNG = 300, clipRange = 20,
-            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 250,
+            LIFT_RETRACTED = -2, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1350, LIFT_HIGH_RUNG = 440, LIFT_HIGH_RUNG_ADJUSTED = 458,  LIFT_AUTO_RUNG = 458, LIFT_MID_RUNG = 300, clipRange = 20,
+            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 265,
             RANGEFINDERRANGE = 65;
 
     public static double lp = -0.0085, li = 0.000275, ld = 0;
-    public static double autoP = -0.0092, autoI = 0.07, autoD = 0;
+    public static double autoP = -0.0075, autoI = 0.05, autoD = 0;
     public static double ep = 0.02, ei = 0, ed = 0.000005;
 
 }
