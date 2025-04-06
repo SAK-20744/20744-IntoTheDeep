@@ -9,6 +9,7 @@ import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_INTAKIN
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_TRANSFERING;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
+import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -48,6 +49,10 @@ public class NewIntakeSubsystem {
         spin = hardwareMap.get(DcMotorEx.class, "intake");
         wrist = hardwareMap.get(Servo.class, "wrist");
         door = hardwareMap.get(Servo.class, "door");
+
+        colorSense = hardwareMap.get(RevColorSensorV3.class, "NewColor");
+        ((LynxI2cDeviceSynch) colorSense.getDeviceClient()).setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
+
         this.spinState = spinState;
         this.pivotState = pivotState;
 //        this.doorState = doorState;

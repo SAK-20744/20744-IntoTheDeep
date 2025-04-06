@@ -23,7 +23,7 @@ public class ExtendSubsystem {
     public int pos;
     public PIDController extendoPID;
     public static int target;
-    public RunAction extendExtendo, retractExtendo, autoExtendo;
+    public RunAction extendExtendo, retractExtendo, autoExtendo, outtakeExtendo;
 
     public ExtendSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
         this.telemetry = telemetry;
@@ -40,6 +40,7 @@ public class ExtendSubsystem {
 
         extendExtendo = new RunAction(this::extend);
         retractExtendo = new RunAction(this::retract);
+        outtakeExtendo = new RunAction(this::outtake);
         autoExtendo = new RunAction(this::toAuto);
     }
 
@@ -117,6 +118,10 @@ public class ExtendSubsystem {
 
     public void extend() {
         setTarget(EXTENDO_EXTENDED);
+    }
+
+    public void outtake() {
+        setTarget(EXTENDO_OUTTAKE);
     }
 
     public void toAuto() {

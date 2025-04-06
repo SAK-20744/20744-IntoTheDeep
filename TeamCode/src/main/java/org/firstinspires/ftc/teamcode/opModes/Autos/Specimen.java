@@ -19,7 +19,7 @@ public class Specimen extends OpMode {
 
     @Override
     public void init() {
-        auto = new IntakingSpecAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, false);
+        auto = new IntakingSpecAuto(hardwareMap, telemetry, new Follower(hardwareMap));
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
         Actions.runBlocking(auto.diffy.diffyMoveClipping);
@@ -73,7 +73,7 @@ public class Specimen extends OpMode {
                 break;
             case 3: //Once the Pathchain finishes, begins the Specimen State Machine
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.grab();
+                    auto.startGrab();
                     setPathState(4);
                 }
                 break;
@@ -98,7 +98,7 @@ public class Specimen extends OpMode {
                 }
                 break;
             case 7: //Runs to the position of the preload and holds it's point at 0.5 power
-                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 1) {
+                if((!auto.follower.isBusy() && auto.actionNotBusy())) {
                     auto.startAutoIntake();
                     setPathState(8);
                 }
@@ -122,45 +122,83 @@ public class Specimen extends OpMode {
                     setPathState(11);
                 }
                 break;
-//            case 11: //Runs to the position of the preload and holds it's point at 0.5 power
-//                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 2.7) {
-//                    auto.startRelease();
-//                    setPathState(12);
-//                }
-//                break;
-//            case 12: //Once the Pathchain finishes, begins the Specimen State Machine
-//                if(auto.actionNotBusy()) {
-//                    auto.startWall();
-//                    auto.follower.followPath(auto.grab3, true);
-//                    setPathState(13);
-//                }
-//                break;
-//            case 13:
-//                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-//                    auto.startGrab();
-//                    setPathState(14);
-//                }
-//                break;
-//            case 14: //Once the Specimen State Machine finishes, begins the grab path
-//                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-//                    auto.startChamber();
-//                    auto.follower.followPath(auto.specimen3, true);
-//                    setPathState(15);
-//                }
-//                break;
-//            case 15: //Runs to the position of the preload and holds it's point at 0.5 power
-//                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 2.7) {
-//                    auto.startRelease();
-//                    setPathState(16);
-//                }
-//                break;
-//            case 16: //Once the Pathchain finishes, begins the Specimen State Machine
-//                if(auto.actionNotBusy()) {
-//                    auto.startWall();
-//                    auto.follower.followPath(auto.grab4, true);
-//                    setPathState(17);
-//                }
-//                break;
+            case 11: //Runs to the position of the preload and holds it's point at 0.5 power
+                if((!auto.follower.isBusy() && auto.actionNotBusy())) {
+                    auto.startAutoIntake();
+                    setPathState(12);
+                }
+                break;
+            case 12: //Once the Pathchain finishes, begins the Specimen State Machine
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.follower.followPath(auto.drop2);
+                    setPathState(13);
+                }
+                break;
+            case 13:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startEject();
+                    setPathState(14);
+                }
+                break;
+            case 14: //Once the Specimen State Machine finishes, begins the grab path
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.intake3, true);
+                    setPathState(15);
+                }
+                break;
+            case 15: //Runs to the position of the preload and holds it's point at 0.5 power
+                if((!auto.follower.isBusy() && auto.actionNotBusy())) {
+                    auto.startAutoIntake();
+                    setPathState(16);
+                }
+                break;
+            case 16: //Once the Pathchain finishes, begins the Specimen State Machine
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.follower.followPath(auto.drop3);
+                    setPathState(17);
+                }
+                break;
+            case 17:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startEject();
+                    setPathState(18);
+                }
+                break;
+            case 18: //Once the Specimen State Machine finishes, begins the grab path
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.startWall();
+                    auto.follower.followPath(auto.specialPickup, true);
+                    setPathState(19);
+                }
+                break;
+            case 19:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startGrab();
+                    setPathState(20);
+                }
+                break;
+            case 20: //Once the Specimen State Machine finishes, begins the grab path
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startChamber();
+                    auto.follower.followPath(auto.score, true);
+                    setPathState(21);
+                }
+                break;
+            case 21: //Runs to the position of the preload and holds it's point at 0.5 power
+                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 2.7) {
+                    auto.startRelease();
+                    setPathState(22);
+                }
+                break;
+            case 22: //Once the Pathchain finishes, begins the Specimen State Machine
+                if(auto.actionNotBusy()) {
+                    auto.startWall();
+                    auto.follower.followPath(auto.pickup, true);
+                    setPathState(23);
+                }
+                break;
 //            case 17:
 //                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
 //                    auto.startGrab();

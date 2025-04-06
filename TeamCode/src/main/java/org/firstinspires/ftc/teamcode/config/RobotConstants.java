@@ -20,12 +20,12 @@ public class RobotConstants {
             grabtime = 0.3;
 
     public static int
-            LIFT_RETRACTED = -2, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1350, LIFT_HIGH_RUNG = 440, LIFT_HIGH_RUNG_ADJUSTED = 458,  LIFT_AUTO_RUNG = 458, LIFT_MID_RUNG = 300, clipRange = 20,
-            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 265,
+            LIFT_RETRACTED = -2, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1350, LIFT_HIGH_RUNG = 440, LIFT_HIGH_RUNG_ADJUSTED = 458,  LIFT_AUTO_RUNG = 410, LIFT_MID_RUNG = 300, clipRange = 20,
+            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 155, EXTENDO_OUTTAKE = 275,
             RANGEFINDERRANGE = 65;
 
     public static double lp = -0.0085, li = 0.000275, ld = 0;
-    public static double autoP = -0.0075, autoI = 0.05, autoD = 0;
+    public static double autoP = -0.001, autoI = 0.02, autoD = 0;
     public static double ep = 0.02, ei = 0, ed = 0.000005;
 
 }

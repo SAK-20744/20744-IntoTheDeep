@@ -20,6 +20,7 @@ import static org.firstinspires.ftc.teamcode.config.FieldConstants.specIntake1;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.specIntake2;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.specIntake3;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.specIntakeAvoid;
+import static org.firstinspires.ftc.teamcode.config.FieldConstants.specPark;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.specPickup;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.specScoring;
 import static org.firstinspires.ftc.teamcode.config.FieldConstants.specStart;
@@ -72,9 +73,9 @@ public class IntakingSpecAuto {
     public Pose startPose, preloadPose, sample1Pose, sample1ControlPose, sample2Pose, sample2ControlPose, sample3Pose, sample3ControlPose, sampleScorePose, parkControlPose, parkPose, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
 
     public int grabState, releaseState, retractState, chamberState, wallState, autointakeState, ejectState = -1;
-    public Timer grabTimer, ejectTimer, releaseTimer, autoIntakeTimer = new Timer();
+    public Timer grabTimer = new Timer(), ejectTimer = new Timer(), releaseTimer = new Timer(), autoIntakeTimer = new Timer();
 
-    public IntakingSpecAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
+    public IntakingSpecAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry, true);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
@@ -132,6 +133,9 @@ public class IntakingSpecAuto {
         chamber();
         release();
         wall();
+        autointake();
+        eject();
+        retract();
 
         telemetryUpdate();
     }
@@ -286,7 +290,7 @@ public class IntakingSpecAuto {
         switch (ejectState) {
             case 1:
                 actionBusy = true;
-                extend.extend();
+                extend.outtake();
                 intake.spinOut();
                 setEjectState(2);
                 break;
@@ -307,34 +311,41 @@ public class IntakingSpecAuto {
                 rail.transferRail();
                 roll.transferRoll();
                 diffy.transferdiffy();
+                claw.openClaw();
+
                 intake.pivotGround();
                 intake.spinIn();
-                claw.openClaw();
-                extend.extend();
+
                 autoIntakeTimer.resetTimer();
                 setAutoIntakeState(2);
-                break;
             case 2:
-                if (intake.getColorDetected() != NewIntakeSubsystem.COLOR.NONE) {
-                    intake.pivotTransfer();
-                    intake.spinStop();
-                    setAutoIntakeState(-1);
-                }
-                else if(autoIntakeTimer.getElapsedTimeSeconds() > 1) {
-                    actionBusy = false;
-                    extend.retract();
+                if(autoIntakeTimer.getElapsedTimeSeconds() > 0.5) {
+                    extend.toAuto();
                     autoIntakeTimer.resetTimer();
                     setAutoIntakeState(3);
                 }
-                break;
             case 3:
-                if(autoIntakeTimer.getElapsedTimeSeconds() > 0.5) {
-                    extend.extend();
+                if (intake.getColorDetected() != NewIntakeSubsystem.COLOR.NONE) {
+                    intake.pivotTransfer();
+                    intake.spinStop();
+                    actionBusy = false;
+                    setAutoIntakeState(-1);
+                }
+                else if(autoIntakeTimer.getElapsedTimeSeconds() > 1.2) {
+                    extend.retract();
+                    autoIntakeTimer.resetTimer();
+                    setAutoIntakeState(4);
+                }
+            case 4:
+                if(autoIntakeTimer.getElapsedTimeSeconds() > 0.3) {
+                    extend.toAuto();
                     intake.pivotTransfer();
                     intake.spinStop();
                     autoIntakeTimer.resetTimer();
+                    actionBusy = false;
                     setAutoIntakeState(-1);
                 }
+                break;
         }
 
     }
@@ -363,8 +374,8 @@ public class IntakingSpecAuto {
     }
 
     public void createPoses() {
-//        startPose = blueObservationStartPose;
-//        preloadPose = blueObservationPreloadPose;
+        startPose = specStart;
+        preloadPose = specScoring;
 //        specimenSetPose = blueObservationSpecimenSetPose;
 //        grab1Pose = blueObservationSpecimenPickupPose;
 //        grab2Pose = blueObservationSpecimenPickup2Pose;
@@ -382,8 +393,8 @@ public class IntakingSpecAuto {
     public void buildPaths() {
 
         preload = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specStart), new Point(specScoring)))
-                .setLinearHeadingInterpolation(specStart.getHeading(), specScoring.getHeading())
+                .addPath(new BezierLine(new Point(startPose), new Point(preloadPose)))
+                .setLinearHeadingInterpolation(startPose.getHeading(), preloadPose.getHeading())
                 .setZeroPowerAccelerationMultiplier(2.5)
                 .build();
 
@@ -444,8 +455,8 @@ public class IntakingSpecAuto {
                 .build();
 
         park = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specScoring), new Point(parkPose)))
-                .setLinearHeadingInterpolation(specScoring.getHeading(), parkPose.getHeading())
+                .addPath(new BezierLine(new Point(specScoring), new Point(specPark)))
+                .setLinearHeadingInterpolation(specScoring.getHeading(), specPark.getHeading())
                 .setZeroPowerAccelerationMultiplier(3)
                 .build();
     }

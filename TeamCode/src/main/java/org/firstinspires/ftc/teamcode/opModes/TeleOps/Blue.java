@@ -222,7 +222,7 @@ public class Blue extends OpMode {
 
     public void init_loop(){
 
-        if (liftLimit.getState()){
+        if (!liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -485,7 +485,7 @@ public class Blue extends OpMode {
         int pos = rLift.getCurrentPosition();
         double power = liftPID.calculate(pos, liftTarget);
 
-        if (liftLimit.getState()){
+        if (!liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
