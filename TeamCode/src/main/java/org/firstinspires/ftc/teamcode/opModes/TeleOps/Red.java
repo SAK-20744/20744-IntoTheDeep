@@ -305,7 +305,7 @@ public class Red extends OpMode {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_TRANSFERING;
                 }
-                ;
+
             } else {
                 extendoTarget = EXTENDO_EXTENDED;
 
