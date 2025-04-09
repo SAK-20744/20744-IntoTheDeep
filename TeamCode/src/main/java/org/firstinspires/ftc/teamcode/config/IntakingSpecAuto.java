@@ -79,7 +79,7 @@ public class IntakingSpecAuto {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry, true);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
-        intake = new NewIntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState, colordetected);
+        intake = new NewIntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState, colordetected, telemetry);
         diffy = new DiffySubsystem(hardwareMap, diffyState);
         rail = new RailSubsystem(hardwareMap, railState);
         roll = new RollSubsystem(hardwareMap, rollState);
@@ -128,6 +128,7 @@ public class IntakingSpecAuto {
         follower.update();
         lift.updatePIDFSpecAuto();
         extend.updatePIDF();
+        intake.updateCOLOR();
 
         grab();
         chamber();
@@ -272,6 +273,7 @@ public class IntakingSpecAuto {
             case 1:
                 actionBusy = true;
                 lift.toZero();
+                extend.retract();
                 rail.wallRail();
                 diffy.walldiffy();
                 roll.depoRoll();
@@ -295,7 +297,7 @@ public class IntakingSpecAuto {
                 setEjectState(2);
                 break;
             case 2:
-                if(extend.isAtTarget() && colordetected == NewIntakeSubsystem.COLOR.NONE)  {
+                if(extend.isAtTarget() && intake.getColorDetected() == NewIntakeSubsystem.COLOR.NONE)  {
                     actionBusy = false;
                     setEjectState(-1);
                 }
@@ -307,41 +309,37 @@ public class IntakingSpecAuto {
         switch (autointakeState) {
             case 1:
                 actionBusy = true;
+
+                autoIntakeTimer.resetTimer();
+
                 lift.toZero();
                 rail.transferRail();
                 roll.transferRoll();
                 diffy.transferdiffy();
                 claw.openClaw();
 
+                extend.extend();
                 intake.pivotGround();
                 intake.spinIn();
 
-                autoIntakeTimer.resetTimer();
                 setAutoIntakeState(2);
             case 2:
-                if(autoIntakeTimer.getElapsedTimeSeconds() > 0.5) {
-                    extend.toAuto();
-                    autoIntakeTimer.resetTimer();
-                    setAutoIntakeState(3);
-                }
-            case 3:
-                if (intake.getColorDetected() != NewIntakeSubsystem.COLOR.NONE) {
+                if (intake.getColorDetected() != NewIntakeSubsystem.COLOR.NONE && autoIntakeTimer.getElapsedTimeSeconds() > 0.7) {
                     intake.pivotTransfer();
                     intake.spinStop();
                     actionBusy = false;
                     setAutoIntakeState(-1);
                 }
-                else if(autoIntakeTimer.getElapsedTimeSeconds() > 1.2) {
+                else if(autoIntakeTimer.getElapsedTimeSeconds() > 0.5) {
                     extend.retract();
                     autoIntakeTimer.resetTimer();
-                    setAutoIntakeState(4);
+                    setAutoIntakeState(3);
                 }
-            case 4:
-                if(autoIntakeTimer.getElapsedTimeSeconds() > 0.3) {
+            case 3:
+                if(autoIntakeTimer.getElapsedTimeSeconds() > 0.27) {
                     extend.toAuto();
                     intake.pivotTransfer();
                     intake.spinStop();
-                    autoIntakeTimer.resetTimer();
                     actionBusy = false;
                     setAutoIntakeState(-1);
                 }

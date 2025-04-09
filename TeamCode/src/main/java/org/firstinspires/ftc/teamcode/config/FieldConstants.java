@@ -58,16 +58,16 @@ public class FieldConstants {
 
 
     public static final Pose specStart = new Pose(7.5, 65.25, Math.toRadians(0));
-    public static final Pose specScoring = new Pose(41, 69, Math.toRadians(0));
-    public static final Pose specPickup = new Pose(9.5, 25, Math.toRadians(0));
+    public static final Pose specScoring = new Pose(42.5, 69, Math.toRadians(0));
+    public static final Pose specPickup = new Pose(10, 38.5, Math.toRadians(0));
     public static final Pose specIntakeAvoid = new Pose(28, 45, Math.toRadians(-90));
-    public static final Pose specIntake1 = new Pose(44, 41, Math.toRadians(-90));
-    public static final Pose specDrop1 = new Pose(30, 30, Math.toRadians(-170));
-    public static final Pose specIntake2 = new Pose(43, 27.5, Math.toRadians(-90));
-    public static final Pose specDrop2 = new Pose(30, 25, Math.toRadians(-170));
-    public static final Pose specIntake3 = new Pose(42.5, 25, Math.toRadians(-90));
-    public static final Pose specDrop3 = new Pose(30, 20, Math.toRadians(-170));
-    public static final Pose specAvoidPickup = new Pose(18, 16, Math.toRadians(0));
+    public static final Pose specIntake1 = new Pose(30, 40, Math.toRadians(-40));
+    public static final Pose specDrop1 = new Pose(30, 30, Math.toRadians(-100));
+    public static final Pose specIntake2 = new Pose(44, 30, Math.toRadians(-90));
+    public static final Pose specDrop2 = new Pose(30, 25, Math.toRadians(-100));
+    public static final Pose specIntake3 = new Pose(43.5, 28, Math.toRadians(-90));
+    public static final Pose specDrop3 = new Pose(30, 20, Math.toRadians(-100));
+    public static final Pose specAvoidPickup = new Pose(24, 16, Math.toRadians(0));
     public static final Pose specPark = new Pose(12, 32, Math.toRadians(-90));
 
 

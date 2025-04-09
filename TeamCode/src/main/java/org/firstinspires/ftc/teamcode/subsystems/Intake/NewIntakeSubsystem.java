@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
+import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_CLOSED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_OPEN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_IN;
@@ -9,13 +10,17 @@ import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_INTAKIN
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_TRANSFERING;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.opModes.TeleOps.Red;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.ParallelAction;
@@ -43,9 +48,16 @@ public class NewIntakeSubsystem {
     private COLOR colorDetected;
     private DoorState doorState;
 
+    private Telemetry telemetry;
+
     public RunAction spinIn, spinOut, spinStop, pivotTransfer, pivotGround, openDoor, closeDoor;
 
-    public NewIntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState, COLOR colordetected) {
+    public NewIntakeSubsystem(HardwareMap hardwareMap, IntakeSpinState spinState, IntakePivotState pivotState, COLOR colordetected, Telemetry telemetry) {
+
+        this.telemetry = telemetry;
+        this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
+
+
         spin = hardwareMap.get(DcMotorEx.class, "intake");
         wrist = hardwareMap.get(Servo.class, "wrist");
         door = hardwareMap.get(Servo.class, "door");
@@ -103,6 +115,23 @@ public class NewIntakeSubsystem {
             colorDetected = COLOR.BLUE;
 
         return colorDetected;
+    }
+
+    public void updateCOLOR() {
+
+        NormalizedRGBA colors = colorSense.getNormalizedColors();
+
+        if (colors.green < greenVal && colors.red < redVal && colors.blue < blueVal)
+            colorDetected = COLOR.NONE;
+        else if (colors.green > colors.red && colors.green > colors.blue)
+            colorDetected = COLOR.YELLOW;
+        else if (colors.red > colors.blue && colors.red > colors.green)
+            colorDetected = COLOR.RED;
+        else
+            colorDetected = COLOR.BLUE;
+
+        telemetry.addData("Color Detected", colorDetected);
+
     }
 
     // ----------------- Intake Spin -----------------//

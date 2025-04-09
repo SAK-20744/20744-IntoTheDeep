@@ -130,7 +130,7 @@ public class Specimen extends OpMode {
                 break;
             case 12: //Once the Pathchain finishes, begins the Specimen State Machine
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.follower.followPath(auto.drop2);
+                    auto.follower.followPath(auto.drop2, false);
                     setPathState(13);
                 }
                 break;
@@ -167,7 +167,6 @@ public class Specimen extends OpMode {
                 break;
             case 18: //Once the Specimen State Machine finishes, begins the grab path
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.startRetract();
                     auto.startWall();
                     auto.follower.followPath(auto.specialPickup, true);
                     setPathState(19);
