@@ -181,14 +181,14 @@ public class BucketAuto {
                 setBucketState(2);
                 break;
             case 2:
-                if (bucketTimer.getElapsedTimeSeconds() > 1) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.85) {
                     claw.closeClaw();
                     bucketTimer.resetTimer();
                     setBucketState(3);
                 }
                 break;
             case 3:
-                if (bucketTimer.getElapsedTimeSeconds() > 0.4) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.35) {
                     lift.toHighBucket();
                     rail.clipRail();
                     diffy.autodiffy();
@@ -198,18 +198,19 @@ public class BucketAuto {
                 break;
             case 4:
                 if (lift.isAtMax()) {
+                    diffy.scoringdiffy();
                     rail.scoringRail();
                     setBucketState(5);
                 }
             case 5:
-                if (bucketTimer.getElapsedTimeSeconds() > 1.7) {
+                if (bucketTimer.getElapsedTimeSeconds() > 2) {
                     bucketTimer.resetTimer();
                     claw.openClaw();
                     setBucketState(6);
                 }
                 break;
             case 6:
-                if (bucketTimer.getElapsedTimeSeconds() > 0.4) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.3) {
                     actionBusy = false;
                     setBucketState(-1);
                 }
