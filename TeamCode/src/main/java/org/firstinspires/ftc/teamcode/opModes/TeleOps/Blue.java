@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.opModes.TeleOps;
 
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_SPEC;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_CLOSED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_OPEN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_EXTENDED;
@@ -48,6 +49,7 @@ import static org.firstinspires.ftc.teamcode.config.RobotConstants.ld;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.li;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.lp;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.redVal;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.wristNeeded;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
@@ -98,8 +100,11 @@ public class Blue extends OpMode {
     private Servo wrist, door, roll, claw, lRail, rRail, lDiffy, rDiffy;
     private DcMotorEx lLift, rLift, intake, extendo;
     private DigitalChannel liftLimit, extendoLimit;
-    private LaserRangefinder lrf;
-    private RevColorSensorV3 colorSense;
+//    private LaserRangefinder lrf;
+    private RevColorSensorV3 colorSense, wallS;
+
+    private double distance;
+
 //    RevColorSensorV3 sensor = hardwareMap.get(RevColorSensorV3.class, "Color");
 
 //    public static double
@@ -178,8 +183,14 @@ public class Blue extends OpMode {
         liftLimit = hardwareMap.get(DigitalChannel.class, "liftLimit");
         extendoLimit = hardwareMap.get(DigitalChannel.class, "extendoLimit");
 
-        lrf = new LaserRangefinder(hardwareMap.get(RevColorSensorV3.class, "laser"));
-        lrf.i2c.setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
+
+//        lrf = new LaserRangefinder(hardwareMap.get(RevColorSensorV3.class, "laser"));
+//
+
+
+
+        wallS = hardwareMap.get(RevColorSensorV3.class, "laser");
+        ((LynxI2cDeviceSynch) wallS.getDeviceClient()).setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
 
         clawAnalog = hardwareMap.get(AnalogInput.class, "clawWire");
         wristAnalog = hardwareMap.get(AnalogInput.class, "wristWire");
@@ -216,7 +227,7 @@ public class Blue extends OpMode {
         lRail.setPosition(lRailTarget);
         intake.setPower(intakePower);
 
-        lrf.setDistanceMode(LaserRangefinder.DistanceMode.SHORT); // SHORT, MEDIUM, or LONG
+//        lrf.setDistanceMode(LaserRangefinder.DistanceMode.SHORT); // SHORT, MEDIUM, or LONG
 
     }
 
@@ -248,9 +259,11 @@ public class Blue extends OpMode {
         telemetry.addData("digital 4", pin4.getState());
         telemetry.addData("digital 5", pin5.getState());
 
-        double distance = lrf.getDistance(DistanceUnit.MM);
+//        double distance = lrf.getDistance(DistanceUnit.MM);
+        distance = wallS.getDistance(DistanceUnit.MM);
+
         telemetry.addData("Distance", distance);
-        telemetry.addData("Status", lrf.getStatus());
+//        telemetry.addData("Status", lrf.getStatus());
 
         telemetry.addData("lLift Current", lLift.getCurrentPosition());
         telemetry.addData("rLift Current", rLift.getCurrentPosition());
@@ -263,9 +276,11 @@ public class Blue extends OpMode {
     @Override
     public void loop() {
 
-        double distance = lrf.getDistance(DistanceUnit.MM);
+        //        if(lrf.getDistance(DistanceUnit.MM)>0)
+//            distance = lrf.getDistance(DistanceUnit.MM);
+        distance = wallS.getDistance(DistanceUnit.MM);
         telemetry.addData("Distance", distance);
-        telemetry.addData("Status", lrf.getStatus());
+//        telemetry.addData("Status", lrf.getStatus());
 
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -369,7 +384,7 @@ public class Blue extends OpMode {
             }
             else {
                 if(distance > RANGEFINDERRANGE || clawopenthingy) {
-                    clawTarget = CLAW_OPEN;
+                    clawTarget = CLAW_SPEC;
                     clawopenthingy = false;
                 }
                 else
@@ -461,7 +476,7 @@ public class Blue extends OpMode {
         double wristActual = wristAnalog.getVoltage() / 3.3 * 360;
         telemetry.addData("Wrist Actual", wristActual);
 
-        if(extendoTarget == EXTENDO_RETRACTED && liftTarget == LIFT_RETRACTED && !specimenmode && !(colordetected == COLOR.NONE) && wristActual < 102.5 && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
+        if(extendoTarget == EXTENDO_RETRACTED && liftTarget == LIFT_RETRACTED && !specimenmode && !(colordetected == COLOR.NONE) && wristActual < wristNeeded && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
             readyToTransfer = true;
         else
             readyToTransfer = false;
