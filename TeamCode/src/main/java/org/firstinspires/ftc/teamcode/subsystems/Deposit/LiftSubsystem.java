@@ -104,7 +104,7 @@ public class LiftSubsystem {
     }
 
     public boolean isAtMax() {
-        return pos > 1230;
+        return pos > 1100;
     }
 
 

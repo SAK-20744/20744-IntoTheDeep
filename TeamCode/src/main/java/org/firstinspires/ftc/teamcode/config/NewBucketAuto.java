@@ -49,14 +49,14 @@ public class NewBucketAuto {
     public Follower follower;
     public Telemetry telemetry;
 
-    public Path preload, element1, score1, element2, score2, element3, score3, park;
+    public Path preload, element1, score1, element2, score2, element3, score3, end, park, scoreLast;
 //    public PathChain park;
-    public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, elementScore2Pose, elementScore3Pose, parkControlPose, parkPose, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
+    public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, endControlPose, endPose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, elementScore2Pose, elementScore3Pose, elementScore4Pose, parkControlPose, parkPose, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
 
     public int bucketState, intakeState, autointakeState, retractState = -1;
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
-
+    public int test = 0;
     public NewBucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry, false);
@@ -167,9 +167,16 @@ public class NewBucketAuto {
                 setIntakeState(2);
                 break;
             case 2:
-                if (intakeTimer.getElapsedTimeSeconds() > 1.5) {
+                if (intakeTimer.getElapsedTimeSeconds() > 1.5 || intake.getColorDetected().equals(NewIntakeSubsystem.COLOR.YELLOW)) {
                     actionBusy = false;
+                    intake.spinStop();
                     setIntakeState(-1);
+                }
+                else if ((intake.getColorDetected().equals(NewIntakeSubsystem.COLOR.BLUE)) || (intake.getColorDetected().equals(NewIntakeSubsystem.COLOR.RED))){
+                    intake.spinOut();
+                }
+                else {
+                    intake.spinIn();
                 }
                 break;
 
@@ -187,7 +194,8 @@ public class NewBucketAuto {
                 setBucketState(2);
                 break;
             case 2:
-                if(extend.getPos() == EXTENDO_RETRACTED && lift.getPos() == LIFT_RETRACTED && !(intake.getColorDetected().equals(Blue.COLOR.NONE)) && intake.getWristActual() < wristNeeded) {
+                if((lift.isAtTarget() && !(intake.getColorDetected().equals(Blue.COLOR.NONE)) && intake.getWristActual() < wristNeeded) || bucketTimer.getElapsedTimeSeconds() > 1.5) {
+                    test = 2;
                     claw.closeClaw();
                     bucketTimer.resetTimer();
                     setBucketState(3);
@@ -195,6 +203,7 @@ public class NewBucketAuto {
                 break;
             case 3:
                 if (bucketTimer.getElapsedTimeSeconds() > 0.3) {
+                    test = 3;
                     lift.toHighBucket();
                     rail.clipRail();
                     diffy.autodiffy();
@@ -204,18 +213,16 @@ public class NewBucketAuto {
                 break;
             case 4:
                 if (lift.isAtMax()) {
+                    bucketTimer.resetTimer();
+                    test = 4;
                     diffy.scoringdiffy();
                     rail.scoringRail();
                     setBucketState(5);
                 }
-            case 5:
-                if ((lift.getPos() > (LIFT_HIGH_BASKET - 150))){
-                    bucketTimer.resetTimer();
-                    setBucketState(6);
-                }
                 break;
-            case 6:
-                if (bucketTimer.getElapsedTimeSeconds() > 0.3) {
+            case 5:
+                if (bucketTimer.getElapsedTimeSeconds() > 0.65) {
+                    test = 6;
                     claw.openClaw();
                     actionBusy = false;
                     setBucketState(-1);
@@ -268,8 +275,11 @@ public class NewBucketAuto {
         elementScorePose = blueBucketScore1Pose;
         elementScore2Pose = blueBucketScore2Pose;
         elementScore3Pose = blueBucketScore3Pose;
+        elementScore4Pose = blueBucketScore4Pose;
         parkControlPose = blueBucketParkControlPose;
         parkPose = blueBucketParkPose;
+        endControlPose = blueBucketEndControlPose;
+        endPose = blueBucketEndPose;
 
         follower.setStartingPose(startPose);
     }
@@ -299,6 +309,13 @@ public class NewBucketAuto {
 
         park = new Path(new BezierCurve(new Point(elementScore3Pose), new Point(parkControlPose), new Point(parkPose)));
         park.setLinearHeadingInterpolation(elementScore3Pose.getHeading(), parkPose.getHeading(), 0.7);
+
+        scoreLast = new Path(new BezierCurve(new Point(parkPose), new Point(parkControlPose), new Point(elementScore4Pose)));
+        scoreLast.setLinearHeadingInterpolation(parkPose.getHeading(), elementScore4Pose.getHeading(), 0.7);
+
+        end = new Path(new BezierCurve(new Point(elementScore4Pose), new Point(endControlPose), new Point(endPose)));
+        end.setLinearHeadingInterpolation(elementScore4Pose.getHeading(), endPose.getHeading(), 0.7);
+
     }
 
     public boolean notBusy() {
@@ -316,6 +333,7 @@ public class NewBucketAuto {
 //        telemetry.addData("Retract State: ", retractState);
         telemetry.addData("Heading: ", follower.getPose().getHeading());
         telemetry.addData("Action Busy?: ", actionBusy);
+        telemetry.addData("state", test);
         telemetry.update();
     }
 }

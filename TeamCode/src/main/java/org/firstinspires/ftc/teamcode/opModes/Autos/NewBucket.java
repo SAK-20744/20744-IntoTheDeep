@@ -46,7 +46,6 @@ public class NewBucket extends OpMode {
         auto.update();
         pathUpdate();
 
-//        telemetry.addData("state", pathState);
 //        telemetry.addData("x", auto.follower.getPose().getX());
 //        telemetry.addData("y", auto.follower.getPose().getY());
 //        telemetry.addData("h", auto.follower.getPose().getHeading());
@@ -145,14 +144,33 @@ public class NewBucket extends OpMode {
                 }
                 break;
             case 14:
-                if(auto.actionNotBusy()) {
-                    auto.rail.scoringRail();
-                    auto.diffy.scoringdiffy();
-                    Actions.runBlocking(auto.lift.toPark);
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+//                    Actions.runBlocking(auto.lift.toPark);
+                    auto.startIntake();
                     setPathState(15);
                 }
                 break;
             case 15:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.scoreLast, true);
+                    setPathState(16);
+                }
+                break;
+            case 16:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startBucket();
+                    setPathState(17);
+                }
+                break;
+            case 17:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startRetract();
+                    auto.follower.followPath(auto.end, true);
+                    setPathState(18);
+                }
+                break;
+            case 18:
                 if(!auto.follower.isBusy()) {
                     setPathState(-1);
                 }
