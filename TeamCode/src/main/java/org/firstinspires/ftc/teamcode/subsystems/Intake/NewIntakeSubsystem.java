@@ -14,6 +14,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -47,6 +48,8 @@ public class NewIntakeSubsystem {
     private IntakePivotState pivotState;
     private COLOR colorDetected;
     private DoorState doorState;
+    private AnalogInput wristAnalog;
+    public double wristActual;
 
     private Telemetry telemetry;
 
@@ -61,9 +64,12 @@ public class NewIntakeSubsystem {
         spin = hardwareMap.get(DcMotorEx.class, "intake");
         wrist = hardwareMap.get(Servo.class, "wrist");
         door = hardwareMap.get(Servo.class, "door");
+        wristAnalog = hardwareMap.get(AnalogInput.class, "wristWire");
 
         colorSense = hardwareMap.get(RevColorSensorV3.class, "NewColor");
         ((LynxI2cDeviceSynch) colorSense.getDeviceClient()).setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
+
+        wristActual = wristAnalog.getVoltage() / 3.3 * 360;
 
         this.spinState = spinState;
         this.pivotState = pivotState;
@@ -115,6 +121,12 @@ public class NewIntakeSubsystem {
             colorDetected = COLOR.BLUE;
 
         return colorDetected;
+    }
+
+    public double getWristActual() {
+
+        wristActual = wristAnalog.getVoltage() / 3.3 * 360;
+        return wristActual;
     }
 
     public void updateCOLOR() {

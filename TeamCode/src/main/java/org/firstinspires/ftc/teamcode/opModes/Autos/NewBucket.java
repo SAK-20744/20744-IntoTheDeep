@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.config.BucketAuto;
+import org.firstinspires.ftc.teamcode.config.NewBucketAuto;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
@@ -12,13 +13,13 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 @Autonomous(name="New Bucket", group="B")
 public class NewBucket extends OpMode {
     public int pathState;
-    public BucketAuto auto;
+    public NewBucketAuto auto;
     public Timer pathTimer = new Timer();
 
 
     @Override
     public void init() {
-        auto = new BucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
+        auto = new NewBucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
         Actions.runBlocking(auto.diffy.diffyMoveClipping);
