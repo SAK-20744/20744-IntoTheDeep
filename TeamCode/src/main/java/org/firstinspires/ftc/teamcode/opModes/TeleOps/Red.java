@@ -526,12 +526,14 @@ public class Red extends OpMode {
 
         if(colors.green < greenVal && colors.red < redVal && colors.blue < blueVal)
             colordetected = COLOR.NONE;
-        else if(colors.green > colors.red && colors.green > colors.blue)
-            colordetected = COLOR.YELLOW;
+        else if(colors.blue > colors.red && colors.blue > colors.green)
+            colordetected = COLOR.BLUE;
         else if (colors.red > colors.blue && colors.red > colors.green)
             colordetected = COLOR.RED;
+        else if (colors.green > colors.blue && colors.green > colors.red)
+            colordetected = COLOR.YELLOW;
         else
-            colordetected = COLOR.BLUE;
+            colordetected = COLOR.NONE;
 
 
 //        telemetry.addData("digital 4", pin4.getState());

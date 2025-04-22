@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 public class DiffySubsystem {
 
     public enum diffyState {
-        TRANSFER, WALL, SCORING, CLIP, SAMPLE_AUTO
+        TRANSFER, WALL, SCORING, CLIP, SAMPLE_AUTO, NEW_AUTO
     }
 
     private Servo lDiffy, rDiffy;
@@ -59,6 +59,11 @@ public class DiffySubsystem {
             rDiffy.setPosition(RDIFFY_AUTO);
             this.state = diffyState.SAMPLE_AUTO;
         }
+        else if (diffyState == diffyState.NEW_AUTO) {
+            lDiffy.setPosition(LDIFFY_NEW_AUTO);
+            rDiffy.setPosition(RDIFFY_NEW_AUTO);
+            this.state = diffyState.NEW_AUTO;
+        }
     }
 
     public void transferdiffy() {
@@ -75,6 +80,10 @@ public class DiffySubsystem {
 
     public void autodiffy() {
         setState(diffyState.SAMPLE_AUTO);
+    }
+
+    public void newautodiffy() {
+        setState(diffyState.NEW_AUTO);
     }
 
     public void scoringdiffy() {

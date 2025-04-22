@@ -205,8 +205,9 @@ public class NewBucketAuto {
                 if (bucketTimer.getElapsedTimeSeconds() > 0.3) {
                     test = 3;
                     lift.toHighBucket();
-                    rail.clipRail();
-                    diffy.autodiffy();
+                    extend.toAuto();
+                    rail.scoringRail();
+                    diffy.newautodiffy();
                     roll.depoRoll();
                     setBucketState(4);
                 }
@@ -216,7 +217,7 @@ public class NewBucketAuto {
                     bucketTimer.resetTimer();
                     test = 4;
                     diffy.scoringdiffy();
-                    rail.scoringRail();
+//                    rail.scoringRail();
                     setBucketState(5);
                 }
                 break;
@@ -236,7 +237,7 @@ public class NewBucketAuto {
         switch (retractState) {
             case 1:
                 actionBusy = true;
-                extend.retract();
+                extend.toAuto();
                 rail.transferRail();
                 roll.transferRoll();
                 diffy.transferdiffy();
@@ -244,7 +245,7 @@ public class NewBucketAuto {
                 setRetractState(2);
                 break;
             case 2:
-                if (retractTimer.getElapsedTimeSeconds() > 1.2) {
+                if (retractTimer.getElapsedTimeSeconds() > 0.175) {
                     lift.toZero();
                     claw.openClaw();
                     retractTimer.resetTimer();
@@ -253,6 +254,28 @@ public class NewBucketAuto {
                 break;
             case 3:
                 if (lift.isAtTarget()) {
+                    actionBusy = false;
+                    setRetractState(-1);
+                }
+                break;
+        }
+    }
+
+    public void intakeRetract() {
+        switch (retractState) {
+            case 1:
+                actionBusy = true;
+                extend.retract();
+                rail.transferRail();
+                roll.transferRoll();
+                diffy.transferdiffy();
+                lift.toZero();
+                claw.openClaw();
+                retractTimer.resetTimer();
+                setRetractState(2);
+                break;
+            case 2:
+                if (lift.isAtTarget() && extend.isAtTarget()) {
                     actionBusy = false;
                     setRetractState(-1);
                 }

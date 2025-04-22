@@ -21,7 +21,7 @@ public class NewFieldConstants {
     public static final Pose blueObservationStartPose = new Pose(7.5, 65.25, Math.toRadians(0));
 
     // Preload Poses
-    public static final Pose blueBucketPreloadPose = new Pose(5.9,17.8, -0.33);
+    public static final Pose blueBucketPreloadPose = new Pose(6.2,18.3, -0.35);
     public static final Pose blueObservationPreloadPose = new Pose(40.5, 75, Math.toRadians(0));
 
     // Blue Bucket Sample Poses

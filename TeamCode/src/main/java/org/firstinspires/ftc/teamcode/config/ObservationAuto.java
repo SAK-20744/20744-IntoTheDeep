@@ -181,7 +181,7 @@ public class ObservationAuto {
                 setReleaseState(2);
                 break;
             case 2:
-                if(releaseTimer.getElapsedTime() > .3)
+                if(releaseTimer.getElapsedTimeSeconds() > .3)
                 {
                     actionBusy = false;
                     setReleaseState(-1);
