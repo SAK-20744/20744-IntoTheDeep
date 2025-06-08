@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.subsystems.Deposit;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -13,6 +14,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 
+@Config
 public class LiftSubsystem {
     private Telemetry telemetry;
     private DigitalChannel liftLimit;
@@ -22,10 +24,10 @@ public class LiftSubsystem {
     public int pos, bottom;
     public RunAction toZero, toHighBucket, toHighRung, toPark;
     public PIDController liftPID;
-    public static int target = 0, range = 20;
+    public static int target = 0, range = 25;
 //    public static double p = 0.015, i = 0, d = 0.0005;
 
-    public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry) {
+    public LiftSubsystem(HardwareMap hardwareMap, Telemetry telemetry, boolean specautoPID) {
         this.telemetry = telemetry;
         this.telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
 
@@ -40,7 +42,10 @@ public class LiftSubsystem {
         rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        liftPID = new PIDController(lp, li, ld);
+        if(specautoPID)
+            liftPID = new PIDController(autoP, autoI, autoD);
+        else
+            liftPID = new PIDController(lp, li, ld);
 
         toZero = new RunAction(this::toZero);
         toPark = new RunAction(this::toPark);
@@ -48,12 +53,33 @@ public class LiftSubsystem {
         toHighRung = new RunAction(this::toHighRung);
     }
 
+    public void updatePIDFSpecAuto() {
+
+        liftPID.setPID(autoP,autoI,autoD);
+        int pos = rLift.getCurrentPosition();
+        double power = liftPID.calculate(pos, target);
+        if (!liftLimit.getState()){
+            lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            rLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        lLift.setPower(power);
+        rLift.setPower(power);
+
+        telemetry.addData("lift pos", getPos());
+        telemetry.addData("Lift Limit", liftLimit.getState());
+        telemetry.addData("lift target", target);
+
+    }
+
     public void updatePIDF() {
 
         liftPID.setPID(lp,li,ld);
         int pos = rLift.getCurrentPosition();
         double power = liftPID.calculate(pos, target);
-        if (liftLimit.getState()){
+        if (!liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -77,6 +103,11 @@ public class LiftSubsystem {
         return Math.abs(pos - target) < range;
     }
 
+    public boolean isAtMax() {
+        return pos > 1100;
+    }
+
+
     public void setTarget(int b) {
         target = b;
     }
@@ -90,7 +121,7 @@ public class LiftSubsystem {
     public void init() {
         liftPID.setPID(lp,li,ld);
 
-        if (liftLimit.getState()){
+        if (!liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -101,7 +132,7 @@ public class LiftSubsystem {
 
     public void init_loop() {
 
-        if (liftLimit.getState()){
+        if (!liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -133,6 +164,11 @@ public class LiftSubsystem {
     public void toHighRung() {
         manual = false;
         setTarget(LIFT_HIGH_RUNG);
+    }
+
+    public void toSpecAuto() {
+        manual = false;
+        setTarget(LIFT_AUTO_RUNG);
     }
 
 }

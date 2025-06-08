@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.opModes.Autos.Ampy;
+package org.firstinspires.ftc.teamcode.opModes.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 import org.firstinspires.ftc.teamcode.config.*;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
@@ -72,7 +71,7 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 3: //Once the Pathchain finishes, begins the Specimen State Machine
-                if(pathTimer.getElapsedTimeSeconds() > 2) {
+                if(pathTimer.getElapsedTimeSeconds() > 2.5) {
                     auto.extend.toAuto();
                     setPathState(4);
                 }
@@ -92,20 +91,20 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 6: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy() || pathTimer.getElapsedTimeSeconds() > 1.5) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen1, true);
                     setPathState(7);
                 }
                 break;
             case 7: //Runs to the position of the preload and holds it's point at 0.5 power
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 2.7) {
                     auto.startRelease();
                     setPathState(8);
                 }
                 break;
             case 8: //Once the Pathchain finishes, begins the Specimen State Machine
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                if(auto.actionNotBusy()) {
                     auto.startWall();
                     auto.follower.followPath(auto.grab2, true);
                     setPathState(9);
@@ -118,20 +117,20 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 10: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen2, true);
                     setPathState(11);
                 }
                 break;
             case 11: //Runs to the position of the preload and holds it's point at 0.5 power
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 2.7) {
                     auto.startRelease();
                     setPathState(12);
                 }
                 break;
             case 12: //Once the Pathchain finishes, begins the Specimen State Machine
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                if(auto.actionNotBusy()) {
                     auto.startWall();
                     auto.follower.followPath(auto.grab3, true);
                     setPathState(13);
@@ -144,20 +143,20 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 14: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen3, true);
                     setPathState(15);
                 }
                 break;
             case 15: //Runs to the position of the preload and holds it's point at 0.5 power
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 2.7) {
                     auto.startRelease();
                     setPathState(16);
                 }
                 break;
             case 16: //Once the Pathchain finishes, begins the Specimen State Machine
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                if(auto.actionNotBusy()) {
                     auto.startWall();
                     auto.follower.followPath(auto.grab4, true);
                     setPathState(17);
@@ -170,35 +169,33 @@ public class BlueObservation extends OpMode {
                 }
                 break;
             case 18: //Once the Specimen State Machine finishes, begins the grab path
-                if(auto.actionNotBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startChamber();
                     auto.follower.followPath(auto.specimen4, true);
                     setPathState(19);
                 }
                 break;
             case 19: //Runs to the position of the preload and holds it's point at 0.5 power
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                if((!auto.follower.isBusy() && auto.actionNotBusy()) || pathTimer.getElapsedTimeSeconds() > 2.7) {
                     auto.startRelease();
                     setPathState(20);
                 }
                 break;
 
-
-//            case 25: //Park and End the autonomous
-//                if(auto.actionNotBusy()) {
-//                    auto.follower.setMaxPower(1);
-//                    auto.follower.followPath(auto.park, true);
-//                 //   auto.extend.toFull();
-//                    setPathState(26);
-//                }
-//                break;
-//            case 26:
-//                if(pathTimer.getElapsedTimeSeconds() > 0.5) {
-//                   // auto.intake.pivotGround();
-//                   // auto.intake.spinIn();
-//                    setPathState(-1);
-//                }
-//                break;
+            case 20: //Park and End the autonomous
+                if(auto.actionNotBusy()) {
+                    auto.follower.setMaxPower(1);
+                    auto.follower.followPath(auto.park, true);
+                    setPathState(21);
+                }
+                break;
+            case 21:
+                if(auto.actionNotBusy()) {
+                    auto.lift.toZero();
+                    auto.diffy.scoringdiffy();
+                    setPathState(-1);
+                }
+                break;
         }
     }
 

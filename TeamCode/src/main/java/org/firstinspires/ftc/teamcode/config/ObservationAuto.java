@@ -53,7 +53,7 @@ public class ObservationAuto {
 
     public ObservationAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
-        lift = new LiftSubsystem(hardwareMap, telemetry);
+        lift = new LiftSubsystem(hardwareMap, telemetry, true);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
         intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
         diffy = new DiffySubsystem(hardwareMap, diffyState);
@@ -102,7 +102,7 @@ public class ObservationAuto {
 
     public void update() {
         follower.update();
-        lift.updatePIDF();
+        lift.updatePIDFSpecAuto();
         extend.updatePIDF();
 
         grab();
@@ -158,11 +158,12 @@ public class ObservationAuto {
         switch (grabState) {
             case 1:
                 actionBusy = true;
+                grabTimer.resetTimer();
                 claw.closeClaw();
                 setGrabState(2);
                 break;
             case 2:
-                if(grabTimer.getElapsedTime() > .5)
+                if(grabTimer.getElapsedTimeSeconds() > grabtime)
                 {
                     actionBusy = false;
                     setGrabState(-1);
@@ -180,7 +181,7 @@ public class ObservationAuto {
                 setReleaseState(2);
                 break;
             case 2:
-                if(releaseTimer.getElapsedTime() > .5)
+                if(releaseTimer.getElapsedTimeSeconds() > .3)
                 {
                     actionBusy = false;
                     setReleaseState(-1);
@@ -193,7 +194,7 @@ public class ObservationAuto {
         switch (chamberState) {
             case 1:
                 actionBusy = true;
-                lift.toHighRung();
+                lift.toSpecAuto();
                 rail.clipRail();
                 diffy.clipdiffy();
                 roll.transferRoll();
@@ -253,33 +254,33 @@ public class ObservationAuto {
         preload = follower.pathBuilder()
                 .addPath(new BezierLine(new Point(startPose), new Point(preloadPose)))
                 .setLinearHeadingInterpolation(startPose.getHeading(), preloadPose.getHeading())
-                .setZeroPowerAccelerationMultiplier(4)
+                .setZeroPowerAccelerationMultiplier(2.5)
                 .build();
 
         pushSamples = follower.pathBuilder()
-                .addPath(new BezierCurve(new Point(preloadPose), new Point(15, 36, Point.CARTESIAN), new Point(61, 36.25, Point.CARTESIAN), new Point(59, 26.000, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(preloadPose), new Point(15, 36, Point.CARTESIAN), new Point(59, 30, Point.CARTESIAN), new Point(59, 26.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(preloadPose.getHeading(), Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(0.1)
-                .addPath(new BezierCurve(new Point(59.000, 26.000, Point.CARTESIAN), new Point(26, 26.000, Point.CARTESIAN)))
+                .setZeroPowerAccelerationMultiplier(0.4)
+                .addPath(new BezierCurve(new Point(57.700, 26.000, Point.CARTESIAN), new Point(26, 26.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
                 .addPath(new BezierCurve(new Point(26, 26.000, Point.CARTESIAN), new Point(52.000, 30.000, Point.CARTESIAN), new Point(58.000, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(0.1)
+                .setZeroPowerAccelerationMultiplier(0.4)
                 .addPath(new BezierCurve(new Point(58.000, 16.000, Point.CARTESIAN),new Point(26, 16.000, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
-                .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(56.000, 16.000, Point.CARTESIAN), new Point(56.000, 10, Point.CARTESIAN)))
+                .addPath(new BezierCurve(new Point(26, 16.000, Point.CARTESIAN), new Point(55.000, 16.000, Point.CARTESIAN), new Point(57.000, 9.25, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
-                .setZeroPowerAccelerationMultiplier(0.1)
-                .addPath(new BezierCurve(new Point(57.700, 11, Point.CARTESIAN), new Point(26, 11, Point.CARTESIAN)))
+                .setZeroPowerAccelerationMultiplier(0.4)
+                .addPath(new BezierCurve(new Point(57.000, 8.9, Point.CARTESIAN), new Point(19, 10, Point.CARTESIAN)))
                 .setLinearHeadingInterpolation(Math.toRadians(0),Math.toRadians(0))
                 .setZeroPowerAccelerationMultiplier(2)
                 //.setZeroPowerAccelerationMultiplier(0.5)
                 .build();
 
         grab1 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(26,10,Point.CARTESIAN), new Point(grab1Pose)))
+                .addPath(new BezierCurve(new Point(19,10,Point.CARTESIAN), new Point(grab1Pose.getX() + 3, grab1Pose.getY()),  new Point(grab1Pose)))
                 .setLinearHeadingInterpolation(Math.toRadians(0), grab1Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
@@ -292,7 +293,7 @@ public class ObservationAuto {
                 .build();
 
         grab2 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specimen1Pose), new Point(grab2Pose)))
+                .addPath(new BezierCurve(new Point(specimen1Pose), new Point(grab2Pose.getX() + 10, grab2Pose.getY()), new Point(grab2Pose)))
                 .setLinearHeadingInterpolation(specimen1Pose.getHeading(), grab2Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
@@ -305,7 +306,7 @@ public class ObservationAuto {
                 .build();
 
         grab3 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specimen2Pose), new Point(grab3Pose)))
+                .addPath(new BezierCurve(new Point(specimen2Pose), new Point(grab3Pose.getX() + 10, grab3Pose.getY()), new Point(grab3Pose)))
                 .setLinearHeadingInterpolation(specimen2Pose.getHeading(), grab3Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)
@@ -318,7 +319,7 @@ public class ObservationAuto {
                 .build();
 
         grab4 = follower.pathBuilder()
-                .addPath(new BezierLine(new Point(specimen3Pose), new Point(grab4Pose)))
+                .addPath(new BezierCurve(new Point(specimen3Pose), new Point(grab4Pose.getX() + 10, grab4Pose.getY()), new Point(grab4Pose)))
                 .setLinearHeadingInterpolation(specimen3Pose.getHeading(), grab4Pose.getHeading())
                 .setZeroPowerAccelerationMultiplier(1)
                 .setPathEndTimeoutConstraint(350)

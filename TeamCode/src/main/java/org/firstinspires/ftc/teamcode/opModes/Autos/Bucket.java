@@ -1,30 +1,29 @@
-package org.firstinspires.ftc.teamcode.opModes.Autos.Old;
+package org.firstinspires.ftc.teamcode.opModes.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.config.Auto;
+import org.firstinspires.ftc.teamcode.config.BucketAuto;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-@Disabled
-@Autonomous(name="old Bucket", group="B")
-public class OldBucket extends OpMode {
+//@Disabled
+@Autonomous(name="Bucket", group="B")
+public class Bucket extends OpMode {
     public int pathState;
-    public Auto auto;
+    public BucketAuto auto;
     public Timer pathTimer = new Timer();
 
 
     @Override
     public void init() {
-        auto = new Auto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
+        auto = new BucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
-        Actions.runBlocking(auto.intake.openDoor);
-//        Actions.runBlocking(auto.depo.armIn);
-//        Actions.runBlocking(auto.pitch.pitchIn);
+        Actions.runBlocking(auto.diffy.diffyMoveClipping);
+        Actions.runBlocking(auto.roll.transferRoll);
+        Actions.runBlocking(auto.rail.railMoveTransfering);
     }
 
     @Override
@@ -146,8 +145,8 @@ public class OldBucket extends OpMode {
                 break;
             case 14:
                 if(auto.actionNotBusy()) {
-//                    auto.pitch.setPitchIn();
-//                    auto.depo.setArmOut();
+                    auto.rail.scoringRail();
+                    auto.diffy.scoringdiffy();
                     Actions.runBlocking(auto.lift.toPark);
                     setPathState(15);
                 }

@@ -1,25 +1,29 @@
 package org.firstinspires.ftc.teamcode.config;
 
-import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.FieldConstants.*;
+import static org.firstinspires.ftc.teamcode.config.FieldConstants.*;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.subsystems.Deposit.ClawSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Deposit.DiffySubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Deposit.LiftSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Deposit.RailSubsystem;
+import org.firstinspires.ftc.teamcode.subsystems.Deposit.RollSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Path;
+import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-public class Auto {
-
-    private RobotStart startLocation;
+public class BucketAuto {
+//
+//    private RobotStart startLocation;
 
     public ClawSubsystem claw;
     public ClawSubsystem.ClawState clawState;
@@ -28,32 +32,38 @@ public class Auto {
     public IntakeSubsystem intake;
     public IntakeSubsystem.IntakeSpinState intakeSpinState;
     public IntakeSubsystem.IntakePivotState intakePivotState;
-    public IntakeSubsystem.DoorState doorState;
+    public RailSubsystem rail;
+    public RailSubsystem.railState railState;
+    public RollSubsystem roll;
+    public RollSubsystem.RollState rollState;
+    public DiffySubsystem diffy;
+    public DiffySubsystem.diffyState diffyState;
 
     public boolean actionBusy = false;
-
     public Follower follower;
     public Telemetry telemetry;
-    public boolean liftPIDF = true;
-    public double liftManual = 0;
 
-    public int bucketState, intakeState, retractState = -1;
+    public Path preload, element1, score1, element2, score2, element3, score3, park;
+//    public PathChain park;
+    public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
+
+    public int bucketState, intakeState, autointakeState, retractState = -1;
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
-    public RunAction transfer;
-    public Path preload, element1, score1, element2, score2, element3, score3, park;
-    private Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose;
 
-    public Auto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
+    public BucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
-        lift = new LiftSubsystem(hardwareMap, telemetry);
+        lift = new LiftSubsystem(hardwareMap, telemetry, false);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
-//        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState, doorState);
+        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
+        diffy = new DiffySubsystem(hardwareMap, diffyState);
+        rail = new RailSubsystem(hardwareMap, railState);
+        roll = new RollSubsystem(hardwareMap, rollState);
 
         this.follower = follower;
         this.telemetry = telemetry;
 
-        startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
+//        startLocation = isBlue ? (isBucket ? RobotStart.BLUE_BUCKET : RobotStart.BLUE_OBSERVATION) : (isBucket ? RobotStart.RED_BUCKET : RobotStart.RED_OBSERVATION);
 
         createPoses();
         buildPaths();
@@ -61,31 +71,47 @@ public class Auto {
     }
 
     public void init() {
+
         claw.init();
         lift.init();
         extend.init();
         intake.init();
+        roll.init();
+        rail.init();
+        diffy.init();
+        telemetryUpdate();
+
+
+        follower.setStartingPose(startPose);
     }
 
-    public void init_loop() {}
+    public void init_loop() {
+        lift.init_loop();
+        extend.init_loop();
+    }
 
     public void start() {
         claw.start();
         lift.start();
         extend.start();
         intake.start();
+        diffy.start();
+        rail.start();
+        roll.start();
     }
 
     public void update() {
         follower.update();
-
         lift.updatePIDF();
+        extend.updatePIDF();
 
         intake();
         bucket();
         retract();
+
         telemetryUpdate();
     }
+
 
     public void setBucketState(int x) {
         bucketState = x;
@@ -117,17 +143,17 @@ public class Auto {
         }
     }
 
-
     public boolean actionNotBusy() {
         return !actionBusy;
     }
+
 
     public void intake() {
         switch (intakeState) {
             case 1:
                 actionBusy = true;
+                roll.transferRoll();
                 intake.pivotGround();
-                intake.doorClosed();
                 intake.spinIn();
                 claw.openClaw();
                 extend.extend();
@@ -150,42 +176,41 @@ public class Auto {
                 actionBusy = true;
                 intake.pivotTransfer();
                 intake.spinStop();
-//                claw.openClaw();
-//                intake.doorClosed();
                 extend.retract();
                 bucketTimer.resetTimer();
                 setBucketState(2);
                 break;
             case 2:
-                if (bucketTimer.getElapsedTimeSeconds() > 1) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.85) {
                     claw.closeClaw();
-                    intake.doorOpen();
                     bucketTimer.resetTimer();
                     setBucketState(3);
                 }
                 break;
             case 3:
-                if (bucketTimer.getElapsedTimeSeconds() > 0.4) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.35) {
                     lift.toHighBucket();
+                    rail.clipRail();
+                    diffy.autodiffy();
+                    roll.depoRoll();
                     setBucketState(4);
                 }
                 break;
             case 4:
-                if (lift.isAtTarget()) {
-//                    bucketTimer.resetTimer();
-//                    depo.setArmOut();
-//                    pitch.setPitchOut();
+                if (lift.isAtMax()) {
+                    diffy.scoringdiffy();
+                    rail.scoringRail();
                     setBucketState(5);
                 }
             case 5:
                 if (bucketTimer.getElapsedTimeSeconds() > 2) {
-//                    bucketTimer.resetTimer();
+                    bucketTimer.resetTimer();
                     claw.openClaw();
                     setBucketState(6);
                 }
                 break;
             case 6:
-                if (bucketTimer.getElapsedTimeSeconds() > 2.4) {
+                if (bucketTimer.getElapsedTimeSeconds() > 0.3) {
                     actionBusy = false;
                     setBucketState(-1);
                 }
@@ -198,15 +223,15 @@ public class Auto {
         switch (retractState) {
             case 1:
                 actionBusy = true;
-                intake.doorClosed();
                 extend.retract();
-//                depo.setArmIn();
-//                pitch.setPitchIn();
+                rail.transferRail();
+                roll.transferRoll();
+                diffy.transferdiffy();
                 retractTimer.resetTimer();
                 setRetractState(2);
                 break;
             case 2:
-                if (retractTimer.getElapsedTimeSeconds() > 0.4) {
+                if (retractTimer.getElapsedTimeSeconds() > 1.2) {
                     lift.toZero();
                     claw.openClaw();
                     retractTimer.resetTimer();
@@ -223,42 +248,25 @@ public class Auto {
     }
 
 
+
+
     public void createPoses() {
-        switch (startLocation) {
-            case BLUE_BUCKET:
-                startPose = blueBucketStartPose;
-                preloadPose = blueBucketPreloadPose;
-//                element1ControlPose = blueBucketLeftSampleControlPose;
-                element1Pose = blueBucketLeftSamplePose;
-//                element2ControlPose = blueBucketMidSampleControlPose;
-                element2Pose = blueBucketMidSamplePose;
-//                element3ControlPose = blueBucketRightSampleControlPose;
-                element3Pose = blueBucketRightSamplePose;
-                elementScorePose = blueBucketScorePose;
-                parkControlPose = blueBucketParkControlPose;
-                parkPose = blueBucketParkPose;
-                break;
+        startPose = blueBucketStartPose;
+        preloadPose = blueBucketPreloadPose;
+//        sample1ControlPose = blueBucketLeftSampleControlPose;
+        element1Pose = blueBucketLeftSamplePose;
+//        sample2ControlPose = blueBucketMidSampleControlPose;
+        element2Pose = blueBucketMidSamplePose;
+//        sample3ControlPose = blueBucketRightSampleControlPose;
+        element3Pose = blueBucketRightSamplePose;
+        elementScorePose = blueBucketScorePose;
+        parkControlPose = blueBucketParkControlPose;
+        parkPose = blueBucketParkPose;
 
-            case BLUE_OBSERVATION:
-                startPose = blueObservationStartPose;
-                //parkPose = blueObservationPark;
-                break;
-
-            case RED_BUCKET:
-                startPose = redBucketStartPose;
-                //parkPose = redBucketPark;
-                break;
-
-            case RED_OBSERVATION:
-                startPose = redObservationStartPose;
-                //parkPose = redObservationPark;
-                break;
-        }
-
+        follower.setStartingPose(startPose);
     }
 
     public void buildPaths() {
-        follower.setStartingPose(startPose);
 
         preload = new Path(new BezierLine(new Point(startPose), new Point(preloadPose)));
         preload.setLinearHeadingInterpolation(startPose.getHeading(), preloadPose.getHeading());
@@ -294,8 +302,10 @@ public class Auto {
         telemetry.addData("Y: ", follower.getPose().getY());
         telemetry.addData("lift: ", lift.getPos());
         telemetry.addData("liftAtTarget?: ", lift.isAtTarget());
-        telemetry.addData("Bucket State: ", bucketState);
-        telemetry.addData("Retract State: ", retractState);
+        telemetry.addData("extendo: ", extend.getPos());
+        telemetry.addData("extendoAtTarget?: ", extend.isAtTarget());
+//        telemetry.addData("Bucket State: ", bucketState);
+//        telemetry.addData("Retract State: ", retractState);
         telemetry.addData("Heading: ", follower.getPose().getHeading());
         telemetry.addData("Action Busy?: ", actionBusy);
         telemetry.update();

@@ -11,12 +11,12 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
 public class DiffySubsystem {
 
     public enum diffyState {
-        TRANSFER, WALL, SCORING, CLIP
+        TRANSFER, WALL, SCORING, CLIP, SAMPLE_AUTO, NEW_AUTO
     }
 
     private Servo lDiffy, rDiffy;
     private diffyState state;
-    public RunAction diffyMoveTransfering, diffyMoveScoring, diffyMoveClipping, diffyMoveWall;
+    public RunAction diffyMoveTransfering, diffyMoveScoring, diffyMoveClipping, diffyMoveWall, diffyMoveAuto;
 
     public DiffySubsystem(HardwareMap hardwareMap, diffyState diffyState) {
         lDiffy = hardwareMap.get(Servo.class, "lDiffy");
@@ -27,6 +27,7 @@ public class DiffySubsystem {
         diffyMoveScoring = new RunAction(this::scoringdiffy);
         diffyMoveClipping = new RunAction(this::clipdiffy);
         diffyMoveWall = new RunAction(this::walldiffy);
+        diffyMoveAuto = new RunAction(this::autodiffy);
     }
 
     public void setPos(double lDiffyPos, double rDiffyPos) {
@@ -53,6 +54,16 @@ public class DiffySubsystem {
             rDiffy.setPosition(RDIFFY_CLIPPING);
             this.state = diffyState.CLIP;
         }
+        else if (diffyState == diffyState.SAMPLE_AUTO) {
+            lDiffy.setPosition(LDIFFY_AUTO);
+            rDiffy.setPosition(RDIFFY_AUTO);
+            this.state = diffyState.SAMPLE_AUTO;
+        }
+        else if (diffyState == diffyState.NEW_AUTO) {
+            lDiffy.setPosition(LDIFFY_NEW_AUTO);
+            rDiffy.setPosition(RDIFFY_NEW_AUTO);
+            this.state = diffyState.NEW_AUTO;
+        }
     }
 
     public void transferdiffy() {
@@ -65,6 +76,14 @@ public class DiffySubsystem {
 
     public void walldiffy() {
         setState(diffyState.WALL);
+    }
+
+    public void autodiffy() {
+        setState(diffyState.SAMPLE_AUTO);
+    }
+
+    public void newautodiffy() {
+        setState(diffyState.NEW_AUTO);
     }
 
     public void scoringdiffy() {

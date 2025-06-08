@@ -14,12 +14,13 @@ public class RailSubsystem {
         TRANSFER, WALL, SCORING, CLIP
     }
 
-    private Servo rail;
+    private Servo lRail, rRail;
     private railState state;
     public RunAction railMoveTransfering, railMoveScoring, railMoveClipping, railMoveWall;
 
     public RailSubsystem(HardwareMap hardwareMap, railState railState) {
-        rail = hardwareMap.get(Servo.class, "rail");
+        lRail = hardwareMap.get(Servo.class, "lRail");
+        rRail = hardwareMap.get(Servo.class, "rRail");
         this.state = railState;
 
         railMoveTransfering = new RunAction(this::transferRail);
@@ -29,22 +30,27 @@ public class RailSubsystem {
     }
 
     public void setPos(double railPos) {
-        rail.setPosition(railPos);
+        lRail.setPosition(railPos);
+        rRail.setPosition(railPos);
     }
 
     public void setState(railState railState) {
         if (railState == railState.TRANSFER) {
-            rail.setPosition(RAIL_TRANSFERING);
+            lRail.setPosition(LRAIL_TRANSFERING);
+            rRail.setPosition(RRAIL_TRANSFERING);
             this.state = railState.TRANSFER;
         } else if (railState == railState.WALL) {
-            rail.setPosition(RAIL_WALL);
+            lRail.setPosition(LRAIL_WALL);
+            rRail.setPosition(RRAIL_WALL);
             this.state = railState.WALL;
         } else if (railState == railState.SCORING) {
-            rail.setPosition(RAIL_SCORING);
+            lRail.setPosition(LRAIL_SCORING);
+            rRail.setPosition(RRAIL_SCORING);
             this.state = railState.SCORING;
         }
         else if (railState == railState.CLIP) {
-            rail.setPosition(RAIL_CLIPPING);
+            lRail.setPosition(LRAIL_CLIPPING);
+            rRail.setPosition(RRAIL_CLIPPING);
             this.state = railState.CLIP;
         }
     }
