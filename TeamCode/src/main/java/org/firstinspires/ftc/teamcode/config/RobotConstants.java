@@ -6,24 +6,28 @@ import com.acmerobotics.dashboard.config.Config;
 public class RobotConstants {
 
     public static double
-            INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0.3,
-            LDIFFY_TRANSFERING = 0.86, LDIFFY_CLIPPING = 0.42, LDIFFY_SCORING = 0.65, LDIFFY_WALL = 0.93,
-            RDIFFY_TRANSFERING = 0.87, RDIFFY_CLIPPING = 0, RDIFFY_SCORING = 0.5, RDIFFY_WALL = 0.82,
-            CLAW_CLOSED = 0.55, CLAW_OPEN = 0.25,
-            WRIST_TRANSFERING = 0.9, WRIST_UP = 0.5, WRIST_INTAKING = 0.2,
+            INTAKE_IN = 1, INTAKE_OUT = -1, INTAKE_OFF = 0.7,
+            LDIFFY_TRANSFERING = 0.86, LDIFFY_CLIPPING = 0.56, LDIFFY_SCORING = 0.4375, LDIFFY_WALL = 0.07, LDIFFY_AUTO = 0.4, LDIFFY_NEW_AUTO = 0.6,
+            RDIFFY_TRANSFERING = 0.87, RDIFFY_CLIPPING = 1, RDIFFY_SCORING = 0.4, RDIFFY_WALL = 0.02, RDIFFY_AUTO = 0.35, RDIFFY_NEW_AUTO = 0.6,
+            CLAW_CLOSED = 0.1, CLAW_OPEN = 0.34, CLAW_SPEC = 0.38,
+            WRIST_TRANSFERING = 1, WRIST_UP = 0.625, WRIST_INTAKING = 0.24, WRIST_CLOSE_INTAKING = 0.23725,
             DOOR_OPEN = 0.6, DOOR_CLOSED = 0.2,
-            ROLL_DEPO = 0.55, ROLL_TRANSFERING = 0,
-            RAIL_TRANSFERING = 0.2, RAIL_WALL= 0.5, RAIL_SCORING = 0, RAIL_CLIPPING = 1,
-            E_RETRACT_POWER = -0;
+            ROLL_DEPO = 0.75, ROLL_TRANSFERING = 0.16, YAW = 0.125,
+            LRAIL_TRANSFERING = 1, LRAIL_WALL= 0.9, LRAIL_SCORING = 1, LRAIL_CLIPPING = 0,
+            RRAIL_TRANSFERING = 1, RRAIL_WALL= 0.9, RRAIL_SCORING = 1, RRAIL_CLIPPING = 0,
+            E_RETRACT_POWER = -0.5,
+            redVal = 0.035, blueVal = 0.035, greenVal = 0.5,
+            grabtime = 0.18,
+            wristNeeded = 135;
 
     public static int
-            LIFT_RETRACTED = -5, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1250, LIFT_HIGH_RUNG = 450, LIFT_MID_RUNG = 300, clipRange = 250,
-            EXTENDO_RETRACTED = -25, EXTENDO_EXTENDED = 450, EXTENDO_AUTO = 250;
+            LIFT_RETRACTED = -7, LIFT_MID_BASKET = 500, LIFT_HIGH_BASKET = 1350, LIFT_HIGH_RUNG = 410, LIFT_HIGH_RUNG_ADJUSTED = 458,  LIFT_AUTO_RUNG = 378, LIFT_MID_RUNG = 300, clipRange = 20,
+            EXTENDO_RETRACTED = -25, EXTENDO_RETRACTED_TELE = -250, EXTENDO_EXTENDED = 500, EXTENDO_AUTO = 220, EXTENDO_OUTTAKE = 275,
+            RANGEFINDERRANGE = 65;
 
-    public static double WALLDIST = 13.25;
-
-    public static double lp = -0.0088, li = 0.07, ld = 0.000000012;
-    public static double ep = 0.038, ei = 0, ed = 0.000005;
+    public static double lp = -0.0085, li = 0.000275, ld = 0;
+    public static double autoP = -0.01, autoI = 0.007, autoD = 0.0000;
+    public static double ep = 0.02, ei = 0, ed = 0.000005;
 
 }
 
