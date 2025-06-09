@@ -7,6 +7,7 @@ import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_CLOSED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_OPEN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_EXTENDED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_RETRACTED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_RETRACTED_TELE;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.E_RETRACT_POWER;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_IN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OFF;
@@ -124,7 +125,7 @@ public class Blue extends OpMode {
 
     private int liftTarget = LIFT_RETRACTED;
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
-    private int extendoTarget = EXTENDO_RETRACTED;
+    private int extendoTarget = EXTENDO_RETRACTED_TELE;
 
     private double lDiffyTarget = LDIFFY_TRANSFERING;
     private double rDiffyTarget = RDIFFY_TRANSFERING;
@@ -309,7 +310,7 @@ public class Blue extends OpMode {
         if(specimenmode){
 
             if (!gamepad1.left_bumper || colordetected == COLOR.BLUE || colordetected == COLOR.YELLOW) {
-                extendoTarget = EXTENDO_RETRACTED;
+                extendoTarget = EXTENDO_RETRACTED_TELE;
 
                 if (gamepad1.y || colordetected == COLOR.RED) {
                     intakePower = INTAKE_OUT;
@@ -395,7 +396,7 @@ public class Blue extends OpMode {
         else {
 
             if (!gamepad1.left_bumper || colordetected == COLOR.BLUE || colordetected == COLOR.YELLOW) {
-                extendoTarget = EXTENDO_RETRACTED;
+                extendoTarget = EXTENDO_RETRACTED_TELE;
 
                 if (gamepad1.y || colordetected == COLOR.RED) {
                     intakePower = INTAKE_OUT;
@@ -476,7 +477,7 @@ public class Blue extends OpMode {
         double wristActual = wristAnalog.getVoltage() / 3.3 * 360;
         telemetry.addData("Wrist Actual", wristActual);
 
-        if(extendoTarget == EXTENDO_RETRACTED && liftTarget == LIFT_RETRACTED && !specimenmode && !(colordetected == COLOR.NONE) && wristActual < wristNeeded && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
+        if(extendoTarget == EXTENDO_RETRACTED_TELE && liftTarget == LIFT_RETRACTED && !specimenmode && !(colordetected == COLOR.NONE) && wristActual < wristNeeded && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
             readyToTransfer = true;
         else
             readyToTransfer = false;
