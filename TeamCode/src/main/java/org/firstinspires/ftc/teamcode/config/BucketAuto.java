@@ -43,9 +43,9 @@ public class BucketAuto {
     public Follower follower;
     public Telemetry telemetry;
 
-    public Path preload, element1, score1, element2, score2, element3, score3, park;
+    public Path preload, element1, score1, element2, score2, element3, score3, park, parkObs;
 //    public PathChain park;
-    public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
+    public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, parkPoseObs, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
 
     public int bucketState, intakeState, autointakeState, retractState = -1;
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
@@ -262,6 +262,7 @@ public class BucketAuto {
         elementScorePose = blueBucketScorePose;
         parkControlPose = blueBucketParkControlPose;
         parkPose = blueBucketParkPose;
+        parkPoseObs = blueBucketObsPark;
 
         follower.setStartingPose(startPose);
     }
@@ -291,6 +292,9 @@ public class BucketAuto {
 
         park = new Path(new BezierCurve(new Point(elementScorePose), new Point(parkControlPose), new Point(parkPose)));
         park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading(), 0.7);
+
+        parkObs = new Path(new BezierLine(new Point(elementScorePose), new Point(parkPoseObs)));
+        parkObs.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPoseObs.getHeading(), 0.7);
     }
 
     public boolean notBusy() {
