@@ -21,7 +21,7 @@ public class NewFieldConstants {
     public static final Pose blueObservationStartPose = new Pose(7.5, 65.25, Math.toRadians(0));
 
     // Preload Poses
-    public static final Pose blueBucketPreloadPose = new Pose(6.2,18.3, -0.35);
+    public static final Pose blueBucketPreloadPose = new Pose(7.0,17.5, -0.35);
     public static final Pose blueObservationPreloadPose = new Pose(40.5, 75, Math.toRadians(0));
 
     // Blue Bucket Sample Poses
@@ -29,7 +29,7 @@ public class NewFieldConstants {
     //    public static final Pose blueBucketLeftSampleControlPose = new Pose(32, 108);
     public static final Pose blueBucketMidSamplePose =  new Pose(10.73,19.7, -0.07);
     //    public static final Pose blueBucketMidSampleControlPose = new Pose(11,15, Math.toRadians(25));
-    public static final Pose blueBucketRightSamplePose = new Pose(10.7,17, -0.33);
+    public static final Pose blueBucketRightSamplePose = new Pose(11.5,16, -0.33);
     //    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
     public static final Pose blueBucketScore1Pose = new Pose(6,17, Math.toRadians(-45));
@@ -39,6 +39,10 @@ public class NewFieldConstants {
 
     public static final Pose controlPose = new Pose(47.8,0.7, -1);
 //    public static final Pose blueObservationPushingEndPose = new Pose(22.5, 68.0, Math.toRadians(0));
+
+    // Blue Left Bucket Observation Zone Parking CRI
+    public static final Pose blueBucketObsPark = new Pose(85.5213,19.2958, 6.28);
+
 
 
 
