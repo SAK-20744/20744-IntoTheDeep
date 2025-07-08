@@ -17,11 +17,10 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.localization.Pose;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierCurve;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.BezierLine;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Path;
-import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.PathChain;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-public class BucketAuto {
+public class BlueBucketAuto {
 //
 //    private RobotStart startLocation;
 
@@ -46,12 +45,14 @@ public class BucketAuto {
     public Path preload, element1, score1, element2, score2, element3, score3, park, parkObs;
 //    public PathChain park;
     public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, parkPoseObs, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
+  //  public Pose startPose2, preloadPose2, element1Pose2, element2Pose2, element3Pose2, elementScorePose2, parkControlPose2, parkPose2;
+
 
     public int bucketState, intakeState, autointakeState, retractState = -1;
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
 
-    public BucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
+    public BlueBucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry, false);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
@@ -252,49 +253,81 @@ public class BucketAuto {
 
     public void createPoses() {
         startPose = blueBucketStartPose;
+//        startPose2 = redBucketStartPose;
         preloadPose = blueBucketPreloadPose;
+ //       preloadPose2 = redBucketPreloadPose;
 //        sample1ControlPose = blueBucketLeftSampleControlPose;
         element1Pose = blueBucketLeftSamplePose;
+ //       element1Pose2 = redBucketLeftSamplePose;
 //        sample2ControlPose = blueBucketMidSampleControlPose;
         element2Pose = blueBucketMidSamplePose;
+ //       element2Pose2 = redBucketMidSamplePose;
 //        sample3ControlPose = blueBucketRightSampleControlPose;
         element3Pose = blueBucketRightSamplePose;
+ //       element3Pose2 = redBucketRightSamplePose;
         elementScorePose = blueBucketScorePose;
+//        elementScorePose2 = redBucketScorePose;
         parkControlPose = blueBucketParkControlPose;
+ //       parkControlPose2 = redBucketParkControlPose;
         parkPose = blueBucketParkPose;
-        parkPoseObs = blueBucketObsPark;
+ //       parkPose2 = redBucketParkPose;
+//        parkPoseObs = blueBucketObsPark;
 
         follower.setStartingPose(startPose);
+ //       follower.setStartingPose(startPose2);
     }
 
     public void buildPaths() {
 
-        preload = new Path(new BezierLine(new Point(startPose), new Point(preloadPose)));
+       preload = new Path(new BezierLine(new Point(startPose), new Point(preloadPose)));
         preload.setLinearHeadingInterpolation(startPose.getHeading(), preloadPose.getHeading());
+
+   //     preload = new Path(new BezierLine(new Point(startPose2), new Point(preloadPose2)));
+     //   preload.setLinearHeadingInterpolation(startPose2.getHeading(), preloadPose2.getHeading());
 
         element1 = new Path(new BezierCurve(new Point(preloadPose), new Point(element1Pose)));
         element1.setLinearHeadingInterpolation(preloadPose.getHeading(), element1Pose.getHeading());
 
+  //      element1 = new Path(new BezierCurve(new Point(preloadPose2), new Point(element1Pose2)));
+ //       element1.setLinearHeadingInterpolation(preloadPose2.getHeading(), element1Pose2.getHeading());
+
         score1 = new Path(new BezierLine(new Point(element1Pose), new Point(elementScorePose)));
         score1.setLinearHeadingInterpolation(element1Pose.getHeading(), elementScorePose.getHeading());
 
+  //      score1 = new Path(new BezierLine(new Point(element1Pose2), new Point(elementScorePose2)));
+  //      score1.setLinearHeadingInterpolation(element1Pose2.getHeading(), elementScorePose2.getHeading());
+
         element2 = new Path(new BezierCurve(new Point(element1Pose), new Point(element2Pose)));
-        element2.setLinearHeadingInterpolation(element1Pose.getHeading(), element2Pose.getHeading(), 0.5);
+      element2.setLinearHeadingInterpolation(element1Pose.getHeading(), element2Pose.getHeading(), 0.5);
+
+   //     element2 = new Path(new BezierCurve(new Point(element1Pose2), new Point(element2Pose2)));
+   //     element2.setLinearHeadingInterpolation(element1Pose2.getHeading(), element2Pose2.getHeading(), 0.5);
 
         score2 = new Path(new BezierLine(new Point(element2Pose), new Point(elementScorePose)));
         score2.setLinearHeadingInterpolation(element2Pose.getHeading(), elementScorePose.getHeading());
 
+   //     score2 = new Path(new BezierLine(new Point(element2Pose2), new Point(elementScorePose2)));
+    //    score2.setLinearHeadingInterpolation(element2Pose2.getHeading(), elementScorePose2.getHeading());
+
+
         element3 = new Path(new BezierCurve(new Point(element2Pose), new Point(element3Pose)));
         element3.setLinearHeadingInterpolation(element2Pose.getHeading(), element3Pose.getHeading(), 0.5);
 
+   //     element3 = new Path(new BezierCurve(new Point(element2Pose2), new Point(element3Pose2)));
+ //       element3.setLinearHeadingInterpolation(element2Pose2.getHeading(), element3Pose2.getHeading(), 0.5);
+
         score3 = new Path(new BezierLine(new Point(element3Pose), new Point(elementScorePose)));
-        score3.setLinearHeadingInterpolation(element3Pose.getHeading(), elementScorePose.getHeading());
+       score3.setLinearHeadingInterpolation(element3Pose.getHeading(), elementScorePose.getHeading());
+
+  //      score3 = new Path(new BezierLine(new Point(element3Pose2), new Point(elementScorePose2)));
+  //      score3.setLinearHeadingInterpolation(element3Pose2.getHeading(), elementScorePose2.getHeading());
 
         park = new Path(new BezierCurve(new Point(elementScorePose), new Point(parkControlPose), new Point(parkPose)));
         park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading(), 0.7);
 
-        parkObs = new Path(new BezierLine(new Point(elementScorePose), new Point(parkPoseObs)));
-        parkObs.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPoseObs.getHeading(), 0.7);
+ //       park = new Path(new BezierCurve(new Point(elementScorePose2), new Point(parkControlPose2), new Point(parkPose2)));
+   //     park.setLinearHeadingInterpolation(elementScorePose2.getHeading(), parkPose2.getHeading(), 0.7);
+
     }
 
     public boolean notBusy() {

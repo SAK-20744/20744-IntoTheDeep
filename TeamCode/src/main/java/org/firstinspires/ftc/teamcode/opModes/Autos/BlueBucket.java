@@ -3,22 +3,23 @@ package org.firstinspires.ftc.teamcode.opModes.Autos;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.config.BucketAuto;
+import org.firstinspires.ftc.teamcode.config.BlueBucketAuto;
+import org.firstinspires.ftc.teamcode.config.BlueBucketAuto;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
 //@Disabled
-@Autonomous(name="Bucket", group="B")
-public class Bucket extends OpMode {
+@Autonomous(name="BlueBucket", group="B")
+public class BlueBucket extends OpMode {
     public int pathState;
-    public BucketAuto auto;
+    public BlueBucketAuto auto;
     public Timer pathTimer = new Timer();
 
 
     @Override
     public void init() {
-        auto = new BucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
+        auto = new BlueBucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
         Actions.runBlocking(auto.diffy.diffyMoveClipping);

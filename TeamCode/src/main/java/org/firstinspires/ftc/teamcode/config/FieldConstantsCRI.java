@@ -26,13 +26,21 @@ public class FieldConstantsCRI {
 
     // Blue Bucket Sample Poses
     public static final Pose blueBucketLeftSamplePose = new Pose(11.42,12, Math.toRadians(32));
+    public static final Pose redBucketLeftSamplePose = new Pose(-11.42,12, Math.toRadians(32));
+
     //    public static final Pose blueBucketLeftSampleControlPose = new Pose(32, 108);
     public static final Pose blueBucketMidSamplePose =  new Pose(9.3,15.5, Math.toRadians(-1));
+    public static final Pose redBucketMidSamplePose =  new Pose(-9.3,15.5, Math.toRadians(-1));
+
     //    public static final Pose blueBucketMidSampleControlPose = new Pose(11,15, Math.toRadians(25));
     public static final Pose blueBucketRightSamplePose = new Pose(8.7,11, Math.toRadians(0));
+    public static final Pose redBucketRightSamplePose = new Pose(-8.7,11, Math.toRadians(0));
+
     //    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
     public static final Pose blueBucketScorePose = new Pose(7,16, Math.toRadians(-45));
+    public static final Pose redBucketScorePose = new Pose(-7,16, Math.toRadians(-45));
+
 
 //    public static final Pose blueObservationPushingEndPose = new Pose(22.5, 68.0, Math.toRadians(0));
 
