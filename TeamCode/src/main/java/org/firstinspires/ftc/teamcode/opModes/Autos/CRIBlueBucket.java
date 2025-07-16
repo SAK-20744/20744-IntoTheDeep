@@ -10,8 +10,8 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
 //@Disabled
-@Autonomous(name="RedBucket", group="B")
-public class RedBucket extends OpMode {
+@Autonomous(name="BlueBucket", group="B")
+public class CRIBlueBucket extends OpMode {
     public int pathState;
     public RedBucketAuto auto;
     public Timer pathTimer = new Timer();

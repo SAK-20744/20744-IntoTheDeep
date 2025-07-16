@@ -1,6 +1,14 @@
 //package org.firstinspires.ftc.teamcode.config;
 //
-//import static org.firstinspires.ftc.teamcode.config.FieldConstants.*;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.*;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.CRIblueBucketStartPose;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRILeftSamplePose;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIMidSamplePose;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIParkControlPose;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIParkPose;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIPreloadPose;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIRightSamplePose;
+////import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIScorePose;
 //
 //import com.qualcomm.robotcore.hardware.HardwareMap;
 //
@@ -8,8 +16,8 @@
 //import org.firstinspires.ftc.teamcode.subsystems.Deposit.ClawSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Deposit.DiffySubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Deposit.LiftSubsystem;
-////import org.firstinspires.ftc.teamcode.subsystems.Deposit.RailSubsystem;
-////import org.firstinspires.ftc.teamcode.subsystems.Deposit.RollSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.Deposit.RailSubsystem;
+//import org.firstinspires.ftc.teamcode.subsystems.Deposit.RollSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
@@ -21,7 +29,7 @@
 //import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 //import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 //
-//public class BucketAuto {
+//public class CRIBucketAuto {
 ////
 ////    private RobotStart startLocation;
 //
@@ -32,10 +40,10 @@
 //    public IntakeSubsystem intake;
 //    public IntakeSubsystem.IntakeSpinState intakeSpinState;
 //    public IntakeSubsystem.IntakePivotState intakePivotState;
-////    public RailSubsystem rail;
-////    public RailSubsystem.railState railState;
-////    public RollSubsystem roll;
-////    public RollSubsystem.RollState rollState;
+//    public RailSubsystem rail;
+//    public RailSubsystem.railState railState;
+//    public RollSubsystem roll;
+//    public RollSubsystem.RollState rollState;
 //    public DiffySubsystem diffy;
 //    public DiffySubsystem.diffyState diffyState;
 //
@@ -43,22 +51,22 @@
 //    public Follower follower;
 //    public Telemetry telemetry;
 //
-//    public Path preload, element1, score1, element2, score2, element3, score3, park;
-////    public PathChain park;
-//    public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
+//    public Path preload, element1, score1, element2, score2, element3, score3, park, parkObs;
+//    //    public PathChain park;
+//    public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, parkPoseObs, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
 //
 //    public int bucketState, intakeState, autointakeState, retractState = -1;
 //    public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 //
 //
-//    public BucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
+//    public CRIBucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
 //        claw = new ClawSubsystem(hardwareMap, clawState);
 //        lift = new LiftSubsystem(hardwareMap, telemetry, false);
 //        extend = new ExtendSubsystem(hardwareMap, telemetry);
 //        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
 //        diffy = new DiffySubsystem(hardwareMap, diffyState);
-////        rail = new RailSubsystem(hardwareMap, railState);
-////        roll = new RollSubsystem(hardwareMap, rollState);
+//        rail = new RailSubsystem(hardwareMap, railState);
+//        roll = new RollSubsystem(hardwareMap, rollState);
 //
 //        this.follower = follower;
 //        this.telemetry = telemetry;
@@ -76,8 +84,8 @@
 //        lift.init();
 //        extend.init();
 //        intake.init();
-////        roll.init();
-////        rail.init();
+//        roll.init();
+//        rail.init();
 //        diffy.init();
 //        telemetryUpdate();
 //
@@ -96,8 +104,8 @@
 //        extend.start();
 //        intake.start();
 //        diffy.start();
-////        rail.start();
-////        roll.start();
+//        rail.start();
+//        roll.start();
 //    }
 //
 //    public void update() {
@@ -152,7 +160,7 @@
 //        switch (intakeState) {
 //            case 1:
 //                actionBusy = true;
-////                roll.transferRoll();
+//                roll.transferRoll();
 //                intake.pivotGround();
 //                intake.spinIn();
 //                claw.openClaw();
@@ -190,16 +198,16 @@
 //            case 3:
 //                if (bucketTimer.getElapsedTimeSeconds() > 0.35) {
 //                    lift.toHighBucket();
-////                    rail.clipRail();
+//                    rail.clipRail();
 //                    diffy.autodiffy();
-////                    roll.depoRoll();
+//                    roll.depoRoll();
 //                    setBucketState(4);
 //                }
 //                break;
 //            case 4:
 //                if (lift.isAtMax()) {
 //                    diffy.scoringdiffy();
-////                    rail.scoringRail();
+//                    rail.scoringRail();
 //                    setBucketState(5);
 //                }
 //            case 5:
@@ -224,8 +232,8 @@
 //            case 1:
 //                actionBusy = true;
 //                extend.retract();
-////                rail.transferRail();
-////                roll.transferRoll();
+//                rail.transferRail();
+//                roll.transferRoll();
 //                diffy.transferdiffy();
 //                retractTimer.resetTimer();
 //                setRetractState(2);
@@ -251,17 +259,18 @@
 //
 //
 //    public void createPoses() {
-//        startPose = blueBucketStartPose;
-//        preloadPose = blueBucketPreloadPose;
+//        startPose = CRIblueBucketStartPose;
+//        preloadPose = blueBucketCRIPreloadPose;
 ////        sample1ControlPose = blueBucketLeftSampleControlPose;
-//        element1Pose = blueBucketLeftSamplePose;
+//        element1Pose = blueBucketCRILeftSamplePose;
 ////        sample2ControlPose = blueBucketMidSampleControlPose;
-//        element2Pose = blueBucketMidSamplePose;
+//        element2Pose = blueBucketCRIMidSamplePose;
 ////        sample3ControlPose = blueBucketRightSampleControlPose;
-//        element3Pose = blueBucketRightSamplePose;
-//        elementScorePose = blueBucketScorePose;
-//        parkControlPose = blueBucketParkControlPose;
-//        parkPose = blueBucketParkPose;
+//        element3Pose = blueBucketCRIRightSamplePose;
+//        elementScorePose = blueBucketCRIScorePose;
+//        parkControlPose = blueBucketCRIParkControlPose;
+//        parkPose = blueBucketCRIParkPose;
+////        parkPoseObs = blueBucketObsPark;
 //
 //        follower.setStartingPose(startPose);
 //    }
@@ -291,6 +300,9 @@
 //
 //        park = new Path(new BezierCurve(new Point(elementScorePose), new Point(parkControlPose), new Point(parkPose)));
 //        park.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPose.getHeading(), 0.7);
+//
+//        parkObs = new Path(new BezierLine(new Point(elementScorePose), new Point(parkPoseObs)));
+//        parkObs.setLinearHeadingInterpolation(elementScorePose.getHeading(), parkPoseObs.getHeading(), 0.7);
 //    }
 //
 //    public boolean notBusy() {

@@ -40,29 +40,15 @@ public class DiffySubsystem {
             lDiffy.setPosition(LDIFFY_TRANSFERING);
             rDiffy.setPosition(RDIFFY_TRANSFERING);
             this.state = diffyState.TRANSFER;
-        } else if (diffyState == diffyState.WALL) {
-            lDiffy.setPosition(LDIFFY_WALL);
-            rDiffy.setPosition(RDIFFY_WALL);
-            this.state = diffyState.WALL;
         } else if (diffyState == diffyState.SCORING) {
             lDiffy.setPosition(LDIFFY_SCORING);
             rDiffy.setPosition(RDIFFY_SCORING);
             this.state = diffyState.SCORING;
-        }
-        else if (diffyState == diffyState.CLIP) {
-            lDiffy.setPosition(LDIFFY_CLIPPING);
-            rDiffy.setPosition(RDIFFY_CLIPPING);
-            this.state = diffyState.CLIP;
-        }
-        else if (diffyState == diffyState.SAMPLE_AUTO) {
-            lDiffy.setPosition(LDIFFY_AUTO);
-            rDiffy.setPosition(RDIFFY_AUTO);
+        } else if (diffyState == DiffySubsystem.diffyState.SAMPLE_AUTO)
+        {
+            lDiffy.setPosition(LDIFFY_START);
+            rDiffy.setPosition(RDIFFY_START);
             this.state = diffyState.SAMPLE_AUTO;
-        }
-        else if (diffyState == diffyState.NEW_AUTO) {
-            lDiffy.setPosition(LDIFFY_NEW_AUTO);
-            rDiffy.setPosition(RDIFFY_NEW_AUTO);
-            this.state = diffyState.NEW_AUTO;
         }
     }
 
@@ -91,7 +77,7 @@ public class DiffySubsystem {
     }
 
     public void init() {
-        Actions.runBlocking(diffyMoveTransfering);
+        Actions.runBlocking(diffyMoveAuto);
     }
 
     public void start() {

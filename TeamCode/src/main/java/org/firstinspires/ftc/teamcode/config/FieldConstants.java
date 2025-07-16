@@ -25,41 +25,27 @@ public class FieldConstants {
 
     // Preload Poses
     public static final Pose blueBucketPreloadPose = new Pose(5.4,-14.6, Math.toRadians(45));
-    public static final Pose redBucketPreloadPose = new Pose(6,-17, Math.toRadians(-45));
+    public static final Pose redBucketPreloadPose = new Pose(7.7,15.1, Math.toRadians(-45));
     public static final Pose blueObservationPreloadPose = new Pose(40.5, 75, Math.toRadians(0));
 
     // Blue Bucket Sample Poses
-    public static final Pose blueBucketLeftSamplePose = new Pose(13.739,-12.99, Math.toRadians(-32));
-    public static final Pose redBucketLeftSamplePose = new Pose(11.42,-12, Math.toRadians(32));
+    public static final Pose blueBucketLeftSamplePose = new Pose(13.739,-12.99, Math.toRadians(15));
+    public static final Pose redBucketLeftSamplePose = new Pose(15.11,11.02, Math.toRadians(34));
     //    public static final Pose blueBucketLeftSampleControlPose = new Pose(32, 108);
-    public static final Pose blueBucketMidSamplePose =  new Pose(8,-10, Math.toRadians(-1));
-    public static final Pose redBucketMidSamplePose =  new Pose(9.8,-15.5, Math.toRadians(-1));
+    public static final Pose blueBucketMidSamplePose =  new Pose(8,-18.84, Math.toRadians(-1));
+    public static final Pose redBucketMidSamplePose =  new Pose(11.97,17.84, Math.toRadians(0));
     //    public static final Pose blueBucketMidSampleControlPose = new Pose(11,15, Math.toRadians(25));
     public static final Pose blueBucketRightSamplePose = new Pose(9.2,-7.46, Math.toRadians(0));
-    public static final Pose redBucketRightSamplePose = new Pose(8.7,-11, Math.toRadians(0));
+    public static final Pose redBucketRightSamplePose = new Pose(11.07,12, Math.toRadians(0));
 
     //    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
-    public static final Pose blueBucketScorePose = new Pose(5.5,-13, Math.toRadians(45));
-    public static final Pose redBucketScorePose = new Pose(7,-16, Math.toRadians(-45));
+    public static final Pose blueBucketScorePose = new Pose(5.84,-14, Math.toRadians(45));
+    public static final Pose redBucketScorePose = new Pose(7.7,15.1, Math.toRadians(-45));
 
 
 
 //    public static final Pose blueObservationPushingEndPose = new Pose(22.5, 68.0, Math.toRadians(0));
-
-//    CRI FAR BUCKET POSES
-
-    //Change Positions
-    public static final Pose commonAreaBlockPose = new Pose(13, 35, Math.toRadians(0));
-    public static final Pose commonAreaPreScorePose = new Pose(13, 35, Math.toRadians(0));
-    public static final Pose oppositeAreaControlBucketScorePose = new Pose(13, 35, Math.toRadians(0));
-    public static final Pose oppositeAreaBucketScorePose = new Pose(13, 35, Math.toRadians(0));
-
-
-
-
-
-
 
 
 
@@ -77,7 +63,7 @@ public class FieldConstants {
 
     // Park Poses
     public static final Pose blueBucketParkPose = new Pose(42.92,26.829 , Math.toRadians(180));
-    public static final Pose redBucketParkPose = new Pose(54,14 , Math.toRadians(90));
+    public static final Pose redBucketParkPose = new Pose(54,-3 , Math.toRadians(90));
 
     public static final Pose blueBucketParkControlPose = new Pose(48.92, 22, Math.toRadians(180));
     public static final Pose redBucketParkControlPose = new Pose(60, -4, Math.toRadians(90));

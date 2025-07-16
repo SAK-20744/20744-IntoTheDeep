@@ -1,13 +1,45 @@
 package org.firstinspires.ftc.teamcode.opModes.TeleOps;
 
-import static org.firstinspires.ftc.teamcode.opModes.TeleOps.AmphitriteTeleop.COLOR.BLUE;
-import static org.firstinspires.ftc.teamcode.opModes.TeleOps.AmphitriteTeleop.COLOR.RED;
-import static org.firstinspires.ftc.teamcode.opModes.TeleOps.AmphitriteTeleop.COLOR.YELLOW;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_CLOSED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_INT;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_OPEN;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_SPEC;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_EXTENDED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_RETRACTED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.E_RETRACT_POWER;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_IN;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OFF;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OUT;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_DROP;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_SCORING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_HIGH_BASKET;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_HIGH_RUNG;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_MID_BASKET;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_RETRACTED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RANGEFINDERRANGE;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_DROP;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_SCORING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_CLOSE_INTAKING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_INTAKING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_TRANSFERING;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_UP;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.blueVal;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.clipRange;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ed;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ei;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ep;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.greenVal;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.ld;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.li;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.lp;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.redVal;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.wristNeeded;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.leftRearMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightFrontMotorName;
 import static org.firstinspires.ftc.teamcode.subsystems.pedroPathing.tuning.FollowerConstants.rightRearMotorName;
-import static org.firstinspires.ftc.teamcode.config.RobotConstants.*;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.config.Config;
@@ -15,10 +47,10 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.hardware.lynx.LynxI2cDeviceSynch;
 import com.qualcomm.hardware.rev.RevColorSensorV3;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
-import com.qualcomm.robotcore.hardware.ColorRangeSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -31,8 +63,9 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 
 
 @Config
-@TeleOp(name = "Ampy", group = "Competition")
-public class AmphitriteTeleop extends OpMode {
+//@Disabled
+@TeleOp(name = "RED", group = "Competition")
+public class NewRed extends OpMode {
 
     public enum COLOR {
         RED,
@@ -47,14 +80,19 @@ public class AmphitriteTeleop extends OpMode {
     private DcMotorEx rightFront;
     private DcMotorEx rightRear;
 
-    private boolean specimenmode = false, specimenScoring = false;
+//    private boolean specimenmode = false, specimenScoring = false;
 
     private double looptime = 0;
-    private Servo wrist, door, roll, claw, lRail, rRail, lDiffy, rDiffy;
+    private  boolean scoring = false;
+
+    private Servo wrist, claw, lArm, rArm;
     private DcMotorEx lLift, rLift, intake, extendo;
     private DigitalChannel liftLimit, extendoLimit;
-    private LaserRangefinder lrf;
-    private RevColorSensorV3 colorSense;
+//    private LaserRangefinder lrf;
+    private RevColorSensorV3 colorSense, wallS;
+
+    private double distance;
+
 //    RevColorSensorV3 sensor = hardwareMap.get(RevColorSensorV3.class, "Color");
 
 //    public static double
@@ -81,18 +119,18 @@ public class AmphitriteTeleop extends OpMode {
 
     private double clawTarget = CLAW_OPEN;
     private double wristTarget = WRIST_TRANSFERING;
-    private double doorTarget = DOOR_OPEN;
     private double intakePower = INTAKE_OFF;
-    private double rollTarget = ROLL_TRANSFERING;
 
     private DigitalChannel pin4;
     private DigitalChannel pin5;
 
     private COLOR colordetected;
 
+    private boolean readyToTransfer;
+    private  boolean sampleclawopenthingy = false;
 
-    private double lRailTarget = LRAIL_TRANSFERING;
-    private double rRailTarget = RRAIL_TRANSFERING;
+    private AnalogInput clawAnalog;
+    private AnalogInput wristAnalog;
 
     private PIDController liftPID;
 //    public static double lp = -0.007, li = 0, ld = 0.000003;
@@ -124,12 +162,20 @@ public class AmphitriteTeleop extends OpMode {
         liftPID = new PIDController(lp, li, ld);
         extendoPID = new PIDController(ep, ei, ed);
 
+        clawAnalog = hardwareMap.get(AnalogInput.class, "clawWire");
+        wristAnalog = hardwareMap.get(AnalogInput.class, "wristWire");
+
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
         liftLimit = hardwareMap.get(DigitalChannel.class, "liftLimit");
         extendoLimit = hardwareMap.get(DigitalChannel.class, "extendoLimit");
 
-        lrf = new LaserRangefinder(hardwareMap.get(RevColorSensorV3.class, "laser"));
-        lrf.i2c.setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
+//        lrf = new LaserRangefinder(hardwareMap.get(RevColorSensorV3.class, "laser"));
+//
+
+
+
+        wallS = hardwareMap.get(RevColorSensorV3.class, "laser");
+        ((LynxI2cDeviceSynch) wallS.getDeviceClient()).setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
 
         colorSense = hardwareMap.get(RevColorSensorV3.class, "NewColor");
         ((LynxI2cDeviceSynch) colorSense.getDeviceClient()).setBusSpeed(LynxI2cDeviceSynch.BusSpeed.FAST_400K);
@@ -140,36 +186,29 @@ public class AmphitriteTeleop extends OpMode {
 
         intake = hardwareMap.get(DcMotorEx.class, "intake");
         wrist = hardwareMap.get(Servo.class, "wrist");
-        roll = hardwareMap.get(Servo.class, "roll");
-        door = hardwareMap.get(Servo.class, "door");
         claw = hardwareMap.get(Servo.class, "claw");
-        lDiffy = hardwareMap.get(Servo.class, "lDiffy");
-        rDiffy = hardwareMap.get(Servo.class, "rDiffy");
-        lRail = hardwareMap.get(Servo.class, "lRail");
-        rRail = hardwareMap.get(Servo.class, "rRail");
+        lArm = hardwareMap.get(Servo.class, "lDiffy");
+        rArm = hardwareMap.get(Servo.class, "rDiffy");
 
         lLift.setDirection(DcMotorSimple.Direction.REVERSE);
         extendo.setDirection(DcMotorSimple.Direction.REVERSE);
 
         intakePower = INTAKE_OFF;
 
-        door.setPosition(doorTarget);
-        roll.setPosition(rollTarget);
-        rRail.setPosition(rRailTarget);
+
         wrist.setPosition(wristTarget);
         claw.setPosition(clawTarget);
-        lDiffy.setPosition(lDiffyTarget);
-        rDiffy.setPosition(rDiffyTarget);
-        lRail.setPosition(lRailTarget);
+        lArm.setPosition(lDiffyTarget);
+        rArm.setPosition(rDiffyTarget);
         intake.setPower(intakePower);
 
-        lrf.setDistanceMode(LaserRangefinder.DistanceMode.SHORT); // SHORT, MEDIUM, or LONG
+//        lrf.setDistanceMode(LaserRangefinder.DistanceMode.SHORT); // SHORT, MEDIUM, or LONG
 
     }
 
     public void init_loop(){
 
-        if (liftLimit.getState()){
+        if (!liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -183,13 +222,21 @@ public class AmphitriteTeleop extends OpMode {
 
         intake.setPower(0);
 
+        double clawActual = clawAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Claw Actual", clawActual);
+
+        double wristActual = wristAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Wrist Actual", wristActual);
 
         telemetry.addData("digital 4", pin4.getState());
         telemetry.addData("digital 5", pin5.getState());
 
-        double distance = lrf.getDistance(DistanceUnit.MM);
+//        double distance = lrf.getDistance(DistanceUnit.MM);
+        distance = wallS.getDistance(DistanceUnit.MM);
+
         telemetry.addData("Distance", distance);
-        telemetry.addData("Status", lrf.getStatus());
+//        telemetry.addData("Status", lrf.getStatus());
+
 
         telemetry.addData("lLift Current", lLift.getCurrentPosition());
         telemetry.addData("rLift Current", rLift.getCurrentPosition());
@@ -202,9 +249,11 @@ public class AmphitriteTeleop extends OpMode {
     @Override
     public void loop() {
 
-        double distance = lrf.getDistance(DistanceUnit.MM);
+//        if(lrf.getDistance(DistanceUnit.MM)>0)
+//            distance = lrf.getDistance(DistanceUnit.MM);
+        distance = wallS.getDistance(DistanceUnit.MM);
         telemetry.addData("Distance", distance);
-        telemetry.addData("Status", lrf.getStatus());
+//        telemetry.addData("Status", lrf.getStatus());
 
         double y = -gamepad1.left_stick_y; // Remember, Y stick value is reversed
         double x = gamepad1.left_stick_x * 1.1; // Counteract imperfect strafing
@@ -224,114 +273,36 @@ public class AmphitriteTeleop extends OpMode {
 //        follower.getTotalHeading();
 
         if(gamepad2.dpad_left || gamepad1.dpad_left)
-            specimenmode = true;
-        if(gamepad2.dpad_right || gamepad1.dpad_right)
-            specimenmode = false;
-
-        if(specimenmode){
-
-            if (gamepad1.left_bumper) {
-                extendoTarget = EXTENDO_EXTENDED;
-
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            } else {
-                extendoTarget = EXTENDO_RETRACTED;
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_CLOSE_INTAKING;
-                } else if (gamepad1.y) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            }
-
-            liftLiftedTarget = LIFT_HIGH_RUNG;
-
-            if (gamepad1.a) {
-                specimenScoring = false;
-                liftTarget = LIFT_RETRACTED;
-                lDiffyTarget = LDIFFY_WALL;
-                rDiffyTarget = RDIFFY_WALL;
-                rollTarget = ROLL_DEPO;
-                lRailTarget = RRAIL_WALL;
-                rRailTarget = LRAIL_WALL;
-            }
-
-            if (gamepad1.b) {
-                specimenScoring = true;
-                liftTarget = liftLiftedTarget;
-                lDiffyTarget = LDIFFY_CLIPPING;
-                rDiffyTarget = RDIFFY_CLIPPING;
-                rollTarget = ROLL_TRANSFERING;
-                lRailTarget = LRAIL_CLIPPING;
-                rRailTarget = RRAIL_CLIPPING;
-            }
-
-            if(specimenScoring) {
-
-                if (gamepad2.right_trigger > 0.5)
-                    liftTarget = liftLiftedTarget + clipRange;
-                else if (gamepad2.left_trigger > 0.5)
-                    liftTarget = liftLiftedTarget;
-
-                if(gamepad1.right_trigger > 0.5)
-                    rollTarget = ROLL_TRANSFERING + YAW*gamepad1.right_trigger;
-                else if (gamepad1.left_trigger > 0.5)
-                    rollTarget = ROLL_TRANSFERING - YAW*gamepad1.left_trigger;
-                else
-                    rollTarget = ROLL_TRANSFERING;
-
-                if (gamepad2.right_bumper)
-                    clawTarget = CLAW_OPEN;
-                else
-                    clawTarget = CLAW_CLOSED;
-            }
-            else {
-                if(distance < RANGEFINDERRANGE)
-                    clawTarget = CLAW_CLOSED;
-                else
-                    clawTarget = CLAW_OPEN;
-            }
-
+//            specimenmode = true;
+        if(gamepad2.dpad_right || gamepad1.dpad_right) {
+//            specimenmode = false;
+            liftLiftedTarget = LIFT_HIGH_BASKET;
         }
-        else {
+            if (!gamepad1.left_bumper || colordetected == COLOR.RED || colordetected == COLOR.YELLOW) {
+                extendoTarget = EXTENDO_RETRACTED;
 
-            if (gamepad1.left_bumper) {
-                extendoTarget = EXTENDO_EXTENDED;
-
-                if (gamepad1.right_bumper) {
-                    intakePower = INTAKE_IN;
-                    wristTarget = WRIST_INTAKING;
-                } else if (gamepad1.y) {
+                if (gamepad1.y || colordetected == COLOR.BLUE) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
-                } else {
-                    intakePower = INTAKE_OFF;
-                    wristTarget = WRIST_UP;
-                }
-            } else {
-                extendoTarget = EXTENDO_RETRACTED;
-                if (gamepad1.right_bumper) {
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
                     intakePower = INTAKE_IN;
                     wristTarget = WRIST_CLOSE_INTAKING;
-                } else if (gamepad1.y) {
-                    intakePower = INTAKE_OUT;
-                    wristTarget = WRIST_UP;
                 } else {
                     intakePower = INTAKE_OFF;
                     wristTarget = WRIST_TRANSFERING;
+                }
+            } else {
+                extendoTarget = EXTENDO_EXTENDED;
+
+                if (gamepad1.y || colordetected == COLOR.BLUE) {
+                    intakePower = INTAKE_OUT;
+                    wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_INTAKING;
+                } else {
+                    intakePower = INTAKE_OFF;
+                    wristTarget = WRIST_UP;
                 }
             }
 
@@ -342,50 +313,67 @@ public class AmphitriteTeleop extends OpMode {
 
             if (gamepad1.a) {
                 liftTarget = LIFT_RETRACTED;
+                scoring = false;
+                sampleclawopenthingy = true;
                 lDiffyTarget = LDIFFY_TRANSFERING;
                 rDiffyTarget = RDIFFY_TRANSFERING;
-                rollTarget = ROLL_TRANSFERING;
-                lRailTarget = LRAIL_TRANSFERING;
-                rRailTarget = RRAIL_TRANSFERING;
             }
 
             if (gamepad1.b) {
                 liftTarget = liftLiftedTarget;
+                sampleclawopenthingy = false;
+                scoring = true;
                 lDiffyTarget = LDIFFY_SCORING;
                 rDiffyTarget = RDIFFY_SCORING;
-                rollTarget = ROLL_DEPO;
-                lRailTarget = LRAIL_SCORING;
-                rRailTarget = RRAIL_SCORING;
             }
 
-            if(gamepad2.right_bumper && !gamepad1.left_bumper) {
-                clawTarget = CLAW_CLOSED;
-                doorTarget = DOOR_OPEN;
-            } else {
-                clawTarget = CLAW_OPEN;
-                doorTarget = DOOR_CLOSED;
+            if(scoring)
+            {
+                if(gamepad1.right_bumper || gamepad2.right_bumper || sampleclawopenthingy) {
+                    clawTarget = CLAW_INT;
+                    rDiffyTarget = RDIFFY_DROP;
+                    lDiffyTarget = LDIFFY_DROP;
+                    clawTarget = CLAW_OPEN;
+                    sampleclawopenthingy = false;
+                }
+                else
+                    clawTarget = CLAW_CLOSED;
+            }
+            else {
+                if (gamepad2.right_bumper && !gamepad1.left_bumper || readyToTransfer) {
+                    clawTarget = CLAW_CLOSED;
+                } else {
+                    clawTarget = CLAW_OPEN;
+                }
             }
 
-        }
+        double clawActual = clawAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Claw Actual", clawActual);
 
-        door.setPosition(doorTarget);
-        roll.setPosition(rollTarget);
-        lRail.setPosition(lRailTarget);
+        double wristActual = wristAnalog.getVoltage() / 3.3 * 360;
+        telemetry.addData("Wrist Actual", wristActual);
+
+        if(extendoTarget == EXTENDO_RETRACTED && liftTarget == LIFT_RETRACTED && !(colordetected == COLOR.NONE) && wristActual < wristNeeded && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
+            readyToTransfer = true;
+        else
+            readyToTransfer = false;
+
+        telemetry.addData("Ready?", readyToTransfer);
+
         wrist.setPosition(wristTarget);
         extendo.setTargetPosition(extendoTarget);
         lLift.setTargetPosition(liftTarget);
         rLift.setTargetPosition(liftTarget);
         claw.setPosition(clawTarget);
-        lDiffy.setPosition(lDiffyTarget);
-        rDiffy.setPosition(rDiffyTarget);
-        rRail.setPosition(rRailTarget);
+        lArm.setPosition(lDiffyTarget);
+        rArm.setPosition(rDiffyTarget);
         intake.setPower(intakePower);
 
         liftPID.setPID(lp,li,ld);
         int pos = rLift.getCurrentPosition();
         double power = liftPID.calculate(pos, liftTarget);
 
-        if (liftLimit.getState()){
+        if (!liftLimit.getState()){
             lLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             lLift.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             rLift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -412,26 +400,15 @@ public class AmphitriteTeleop extends OpMode {
 
         if(colors.green < greenVal && colors.red < redVal && colors.blue < blueVal)
             colordetected = COLOR.NONE;
-        else if(colors.green > colors.red && colors.green > colors.blue)
-            colordetected = COLOR.YELLOW;
+        else if(colors.blue > colors.red && colors.blue > colors.green)
+            colordetected = COLOR.BLUE;
         else if (colors.red > colors.blue && colors.red > colors.green)
             colordetected = COLOR.RED;
+        else if (colors.green > colors.blue && colors.green > colors.red)
+            colordetected = COLOR.YELLOW;
         else
-            colordetected = BLUE;
+            colordetected = COLOR.NONE;
 
-
-//        telemetry.addData("digital 4", pin4.getState());
-//        telemetry.addData("digital 5", pin5.getState());
-//
-//        if(pin5.getState() && pin4.getState())
-//            colordetected = COLOR.YELLOW;
-//        else if (pin5.getState())
-//            colordetected = COLOR.BLUE;
-//        else if (pin4.getState())
-//            colordetected = COLOR.RED;
-//        else
-//            colordetected = COLOR.NONE;
-//
 
         telemetry.addData("Color Detected", colordetected);
 
@@ -443,7 +420,7 @@ public class AmphitriteTeleop extends OpMode {
         telemetry.addData("Lift Limit", liftLimit.getState());
         telemetry.addData("Extendo Limit", extendoLimit.getState());
         telemetry.addData("Intake", intake.getPower());
-        telemetry.addData("Specimen?", specimenmode);
+//        telemetry.addData("Specimen?", specimenmode);
 
         double loop = System.nanoTime();
         telemetry.addData("hz ", 1000000000 / (loop - looptime));
