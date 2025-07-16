@@ -101,7 +101,7 @@ public class Blue extends OpMode {
     private Servo wrist, door, roll, claw, lRail, rRail, lDiffy, rDiffy;
     private DcMotorEx lLift, rLift, intake, extendo;
     private DigitalChannel liftLimit, extendoLimit;
-//    private LaserRangefinder lrf;
+    //    private LaserRangefinder lrf;
     private RevColorSensorV3 colorSense, wallS;
 
     private double distance;
@@ -410,7 +410,7 @@ public class Blue extends OpMode {
                 }
             } else {
                 extendoTarget = EXTENDO_EXTENDED;
-                
+
                 if (gamepad1.y || colordetected == COLOR.RED) {
                     intakePower = INTAKE_OUT;
                     wristTarget = WRIST_UP;
