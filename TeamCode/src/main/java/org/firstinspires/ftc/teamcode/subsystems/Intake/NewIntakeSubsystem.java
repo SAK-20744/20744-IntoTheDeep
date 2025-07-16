@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.subsystems.Intake;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.telemetry;
-import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_CLOSED;
-import static org.firstinspires.ftc.teamcode.config.RobotConstants.DOOR_OPEN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_IN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OFF;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OUT;
@@ -22,7 +20,7 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.opModes.TeleOps.Red;
+//import org.firstinspires.ftc.teamcode.opModes.TeleOps.Red;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.ParallelAction;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.RunAction;
@@ -80,8 +78,6 @@ public class NewIntakeSubsystem {
         spinIn = new RunAction(this::spinIn);
         spinOut = new RunAction(this::spinOut);
         spinStop = new RunAction(this::spinStop);
-        openDoor = new RunAction(this::doorOpen);
-        closeDoor = new RunAction(this::doorClosed);
         pivotTransfer = new RunAction(this::pivotTransfer);
         pivotGround = new RunAction(this::pivotGround);
 
@@ -205,16 +201,6 @@ public class NewIntakeSubsystem {
     public void pivotGround() {
         wrist.setPosition(WRIST_INTAKING);
         this.pivotState = IntakePivotState.GROUND;
-    }
-
-    public void doorOpen() {
-        door.setPosition(DOOR_OPEN);
-        this.doorState = DoorState.OPEN;
-    }
-
-    public void doorClosed() {
-        door.setPosition(DOOR_CLOSED);
-        this.doorState = DoorState.CLOSED;
     }
 
     public void init() {

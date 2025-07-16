@@ -1,25 +1,25 @@
+
 package org.firstinspires.ftc.teamcode.opModes.Autos;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-import org.firstinspires.ftc.teamcode.config.BucketAuto;
-import org.firstinspires.ftc.teamcode.config.NewBucketAuto;
+import org.firstinspires.ftc.teamcode.config.RedBucketAuto;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.Actions;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
 //@Disabled
-@Autonomous(name="New Bucket", group="B")
-public class NewBucket extends OpMode {
+@Autonomous(name="RedBucket", group="B")
+public class RedBucket extends OpMode {
     public int pathState;
-    public NewBucketAuto auto;
+    public RedBucketAuto auto;
     public Timer pathTimer = new Timer();
 
 
     @Override
     public void init() {
-        auto = new NewBucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
+        auto = new RedBucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
         Actions.runBlocking(auto.diffy.diffyMoveClipping);
@@ -46,6 +46,7 @@ public class NewBucket extends OpMode {
         auto.update();
         pathUpdate();
 
+//        telemetry.addData("state", pathState);
 //        telemetry.addData("x", auto.follower.getPose().getX());
 //        telemetry.addData("y", auto.follower.getPose().getY());
 //        telemetry.addData("h", auto.follower.getPose().getHeading());
@@ -55,13 +56,13 @@ public class NewBucket extends OpMode {
         switch (pathState) {
             case 0:
                 auto.startBucket();
-                auto.follower.followPath(auto.preload, true);
+                auto.follower.followPath(auto.preload2, true);
                 setPathState(1);
                 break;
             case 1:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.element1, true);
+                    auto.follower.followPath(auto.element12, true);
                     setPathState(2);
                 }
                 break;
@@ -74,7 +75,7 @@ public class NewBucket extends OpMode {
             case 3:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.score1, true);
+                    auto.follower.followPath(auto.score12, true);
                     setPathState(4);
                 }
                 break;
@@ -87,7 +88,7 @@ public class NewBucket extends OpMode {
             case 5:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.element2, true);
+                    auto.follower.followPath(auto.element22, true);
                     setPathState(6);
                 }
                 break;
@@ -100,7 +101,7 @@ public class NewBucket extends OpMode {
             case 7:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.score2, true);
+                    auto.follower.followPath(auto.score22, true);
                     setPathState(8);
                 }
                 break;
@@ -113,7 +114,7 @@ public class NewBucket extends OpMode {
             case 9:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.element3);
+                    auto.follower.followPath(auto.element32);
                     setPathState(10);
                 }
                 break;
@@ -126,7 +127,7 @@ public class NewBucket extends OpMode {
             case 11:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.score3, true);
+                    auto.follower.followPath(auto.score32, true);
                     setPathState(12);
                 }
                 break;
@@ -139,38 +140,19 @@ public class NewBucket extends OpMode {
             case 13:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.park, true);
+                    auto.follower.followPath(auto.park2, true);
                     setPathState(14);
                 }
                 break;
             case 14:
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-//                    Actions.runBlocking(auto.lift.toPark);
-                    auto.startIntake();
+                if(auto.actionNotBusy()) {
+                    auto.rail.scoringRail();
+                    auto.diffy.scoringdiffy();
+                    Actions.runBlocking(auto.lift.toPark);
                     setPathState(15);
                 }
                 break;
             case 15:
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.startRetract();
-                    auto.follower.followPath(auto.scoreLast, true);
-                    setPathState(16);
-                }
-                break;
-            case 16:
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.startBucket();
-                    setPathState(17);
-                }
-                break;
-            case 17:
-                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
-                    auto.startRetract();
-                    auto.follower.followPath(auto.end, true);
-                    setPathState(18);
-                }
-                break;
-            case 18:
                 if(!auto.follower.isBusy()) {
                     setPathState(-1);
                 }

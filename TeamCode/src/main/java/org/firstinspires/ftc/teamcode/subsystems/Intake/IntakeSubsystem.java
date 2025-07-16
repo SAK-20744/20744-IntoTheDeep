@@ -43,8 +43,6 @@ public class IntakeSubsystem {
         spinIn = new RunAction(this::spinIn);
         spinOut = new RunAction(this::spinOut);
         spinStop = new RunAction(this::spinStop);
-        openDoor = new RunAction(this::doorOpen);
-        closeDoor = new RunAction(this::doorClosed);
         pivotTransfer = new RunAction(this::pivotTransfer);
         pivotGround = new RunAction(this::pivotGround);
 
@@ -109,16 +107,6 @@ public class IntakeSubsystem {
     public void pivotGround() {
         wrist.setPosition(WRIST_INTAKING);
         this.pivotState = IntakePivotState.GROUND;
-    }
-
-    public void doorOpen() {
-        door.setPosition(DOOR_OPEN);
-        this.doorState = DoorState.OPEN;
-    }
-
-    public void doorClosed() {
-        door.setPosition(DOOR_CLOSED);
-        this.doorState = DoorState.CLOSED;
     }
 
     public void init() {
