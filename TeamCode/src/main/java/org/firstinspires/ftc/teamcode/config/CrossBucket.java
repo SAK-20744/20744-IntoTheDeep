@@ -21,7 +21,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-public class BucketAuto {
+public class CrossBucket {
 //
 //    private RobotStart startLocation;
 
@@ -44,14 +44,14 @@ public class BucketAuto {
     public Telemetry telemetry;
 
     public Path preload, element1, score1, element2, score2, element3, score3, park, parkObs;
-//    public PathChain park;
+    //    public PathChain park;
     public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, parkPoseObs, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
 
     public int bucketState, intakeState, autointakeState, retractState = -1;
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
 
-    public BucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
+    public CrossBucket(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry, false);
         extend = new ExtendSubsystem(hardwareMap, telemetry);

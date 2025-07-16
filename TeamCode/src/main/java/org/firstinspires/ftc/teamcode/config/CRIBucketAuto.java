@@ -1,6 +1,14 @@
 package org.firstinspires.ftc.teamcode.config;
 
-import static org.firstinspires.ftc.teamcode.config.FieldConstants.*;
+import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.*;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.CRIblueBucketStartPose;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRILeftSamplePose;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIMidSamplePose;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIParkControlPose;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIParkPose;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIPreloadPose;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIRightSamplePose;
+//import static org.firstinspires.ftc.teamcode.config.FieldConstantsCRI.blueBucketCRIScorePose;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -21,7 +29,7 @@ import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Pat
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.pathGeneration.Point;
 import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.util.Timer;
 
-public class BucketAuto {
+public class CRIBucketAuto {
 //
 //    private RobotStart startLocation;
 
@@ -44,14 +52,14 @@ public class BucketAuto {
     public Telemetry telemetry;
 
     public Path preload, element1, score1, element2, score2, element3, score3, park, parkObs;
-//    public PathChain park;
+    //    public PathChain park;
     public Pose startPose, preloadPose, element1Pose, element1ControlPose, element2Pose, element2ControlPose, element3Pose, element3ControlPose, elementScorePose, parkControlPose, parkPose, parkPoseObs, grab1Pose, specimen1Pose, grab2Pose, specimen2Pose, grab3Pose, specimen3Pose, grab4Pose, specimen4Pose, specimenSetPose;
 
     public int bucketState, intakeState, autointakeState, retractState = -1;
     public Timer intakeTimer = new Timer(), retractTimer = new Timer(), bucketTimer = new Timer();
 
 
-    public BucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
+    public CRIBucketAuto(HardwareMap hardwareMap, Telemetry telemetry, Follower follower, boolean isBlue, boolean isBucket) {
         claw = new ClawSubsystem(hardwareMap, clawState);
         lift = new LiftSubsystem(hardwareMap, telemetry, false);
         extend = new ExtendSubsystem(hardwareMap, telemetry);
@@ -251,17 +259,17 @@ public class BucketAuto {
 
 
     public void createPoses() {
-        startPose = blueBucketStartPose;
-        preloadPose = blueBucketPreloadPose;
+        startPose = CRIblueBucketStartPose;
+        preloadPose = blueBucketCRIPreloadPose;
 //        sample1ControlPose = blueBucketLeftSampleControlPose;
-        element1Pose = blueBucketLeftSamplePose;
+        element1Pose = blueBucketCRILeftSamplePose;
 //        sample2ControlPose = blueBucketMidSampleControlPose;
-        element2Pose = blueBucketMidSamplePose;
+        element2Pose = blueBucketCRIMidSamplePose;
 //        sample3ControlPose = blueBucketRightSampleControlPose;
-        element3Pose = blueBucketRightSamplePose;
-        elementScorePose = blueBucketScorePose;
-        parkControlPose = blueBucketParkControlPose;
-        parkPose = blueBucketParkPose;
+        element3Pose = blueBucketCRIRightSamplePose;
+        elementScorePose = blueBucketCRIScorePose;
+        parkControlPose = blueBucketCRIParkControlPose;
+        parkPose = blueBucketCRIParkPose;
 //        parkPoseObs = blueBucketObsPark;
 
         follower.setStartingPose(startPose);

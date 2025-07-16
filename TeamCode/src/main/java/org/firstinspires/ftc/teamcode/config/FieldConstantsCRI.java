@@ -17,22 +17,22 @@ public class FieldConstantsCRI {
         RED_BUCKET,
         RED_OBSERVATION
     }
-    public static final Pose blueBucketStartPose = new Pose(0,0, Math.toRadians(0));;
+    public static final Pose CRIblueBucketStartPose = new Pose(0,0, Math.toRadians(0));;
     public static final Pose blueObservationStartPose = new Pose(7.5, 65.25, Math.toRadians(0));
 
     // Preload Poses
-    public static final Pose blueBucketPreloadPose = new Pose(6,17, Math.toRadians(-45));
+    public static final Pose blueBucketCRIPreloadPose = new Pose(5.84,-14.6, Math.toRadians(45));
     public static final Pose blueObservationPreloadPose = new Pose(40.5, 75, Math.toRadians(0));
 
     // Blue Bucket Sample Poses
-    public static final Pose blueBucketLeftSamplePose = new Pose(11.42,12, Math.toRadians(32));
+    public static final Pose blueBucketCRILeftSamplePose = new Pose(13.739,-12.99, Math.toRadians(-32));
     //    public static final Pose blueBucketLeftSampleControlPose = new Pose(32, 108);
-    public static final Pose blueBucketMidSamplePose =  new Pose(9.3,15.5, Math.toRadians(-1));
+    public static final Pose blueBucketCRIMidSamplePose =  new Pose(10.682,-18.84, Math.toRadians(-1));
     //    public static final Pose blueBucketMidSampleControlPose = new Pose(11,15, Math.toRadians(25));
-    public static final Pose blueBucketRightSamplePose = new Pose(8.7,11, Math.toRadians(0));
+    public static final Pose blueBucketCRIRightSamplePose = new Pose(10.32,-7.46, Math.toRadians(0));
     //    public static final Pose blueBucketRightSampleControlPose = new Pose(46, 101);
 
-    public static final Pose blueBucketScorePose = new Pose(7,16, Math.toRadians(-45));
+    public static final Pose blueBucketCRIScorePose = new Pose(5.84,-14.6, Math.toRadians(45));
 
 //    public static final Pose blueObservationPushingEndPose = new Pose(22.5, 68.0, Math.toRadians(0));
 
@@ -51,8 +51,8 @@ public class FieldConstantsCRI {
 
 
     // Park Poses
-    public static final Pose blueBucketParkPose = new Pose(54,-14 , Math.toRadians(90));
-    public static final Pose blueBucketParkControlPose = new Pose(60, 4, Math.toRadians(90));
+    public static final Pose blueBucketCRIParkPose = new Pose(42.92,26.829 , Math.toRadians(180));
+    public static final Pose blueBucketCRIParkControlPose = new Pose(48.92, 22, Math.toRadians(180));
 
     public static final Pose blueObservationParkPose = new Pose(12, 32, Math.toRadians(0));
 

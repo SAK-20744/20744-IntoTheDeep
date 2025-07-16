@@ -139,7 +139,7 @@ public class CRIBucket extends OpMode {
             case 13:
                 if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     auto.startRetract();
-                    auto.follower.followPath(auto.parkObs, true);
+                    auto.follower.followPath(auto.park, true);
                     setPathState(14);
                 }
                 break;
@@ -147,7 +147,7 @@ public class CRIBucket extends OpMode {
                 if(auto.actionNotBusy()) {
                     auto.rail.scoringRail();
                     auto.diffy.scoringdiffy();
-                    auto.startRetract();
+                    Actions.runBlocking(auto.lift.toPark);
                     setPathState(15);
                 }
                 break;
