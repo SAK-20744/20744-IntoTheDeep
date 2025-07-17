@@ -16,8 +16,8 @@
 //import org.firstinspires.ftc.teamcode.subsystems.Deposit.ClawSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Deposit.DiffySubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Deposit.LiftSubsystem;
-//import org.firstinspires.ftc.teamcode.subsystems.Deposit.RailSubsystem;
-//import org.firstinspires.ftc.teamcode.subsystems.Deposit.RollSubsystem;
+////import org.firstinspires.ftc.teamcode.subsystems.Deposit.RailSubsystem;
+////import org.firstinspires.ftc.teamcode.subsystems.Deposit.RollSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Intake.ExtendSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.Intake.IntakeSubsystem;
 //import org.firstinspires.ftc.teamcode.subsystems.pedroPathing.follower.Follower;
@@ -40,10 +40,10 @@
 //    public IntakeSubsystem intake;
 //    public IntakeSubsystem.IntakeSpinState intakeSpinState;
 //    public IntakeSubsystem.IntakePivotState intakePivotState;
-//    public RailSubsystem rail;
-//    public RailSubsystem.railState railState;
-//    public RollSubsystem roll;
-//    public RollSubsystem.RollState rollState;
+////    public RailSubsystem rail;
+////    public RailSubsystem.railState railState;
+////    public RollSubsystem roll;
+////    public RollSubsystem.RollState rollState;
 //    public DiffySubsystem diffy;
 //    public DiffySubsystem.diffyState diffyState;
 //
@@ -65,8 +65,8 @@
 //        extend = new ExtendSubsystem(hardwareMap, telemetry);
 //        intake = new IntakeSubsystem(hardwareMap, intakeSpinState, intakePivotState);
 //        diffy = new DiffySubsystem(hardwareMap, diffyState);
-//        rail = new RailSubsystem(hardwareMap, railState);
-//        roll = new RollSubsystem(hardwareMap, rollState);
+////        rail = new RailSubsystem(hardwareMap, railState);
+////        roll = new RollSubsystem(hardwareMap, rollState);
 //
 //        this.follower = follower;
 //        this.telemetry = telemetry;
@@ -84,8 +84,8 @@
 //        lift.init();
 //        extend.init();
 //        intake.init();
-//        roll.init();
-//        rail.init();
+////        roll.init();
+////        rail.init();
 //        diffy.init();
 //        telemetryUpdate();
 //
@@ -104,8 +104,8 @@
 //        extend.start();
 //        intake.start();
 //        diffy.start();
-//        rail.start();
-//        roll.start();
+////        rail.start();
+////        roll.start();
 //    }
 //
 //    public void update() {
@@ -160,7 +160,7 @@
 //        switch (intakeState) {
 //            case 1:
 //                actionBusy = true;
-//                roll.transferRoll();
+////                roll.transferRoll();
 //                intake.pivotGround();
 //                intake.spinIn();
 //                claw.openClaw();
@@ -198,16 +198,16 @@
 //            case 3:
 //                if (bucketTimer.getElapsedTimeSeconds() > 0.35) {
 //                    lift.toHighBucket();
-//                    rail.clipRail();
+////                    rail.clipRail();
 //                    diffy.autodiffy();
-//                    roll.depoRoll();
+////                    roll.depoRoll();
 //                    setBucketState(4);
 //                }
 //                break;
 //            case 4:
 //                if (lift.isAtMax()) {
 //                    diffy.scoringdiffy();
-//                    rail.scoringRail();
+////                    rail.scoringRail();
 //                    setBucketState(5);
 //                }
 //            case 5:
@@ -232,8 +232,8 @@
 //            case 1:
 //                actionBusy = true;
 //                extend.retract();
-//                rail.transferRail();
-//                roll.transferRoll();
+////                rail.transferRail();
+////                roll.transferRoll();
 //                diffy.transferdiffy();
 //                retractTimer.resetTimer();
 //                setRetractState(2);

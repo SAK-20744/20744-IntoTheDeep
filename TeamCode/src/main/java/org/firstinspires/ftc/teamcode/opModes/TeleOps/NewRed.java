@@ -276,14 +276,16 @@ public class NewRed extends OpMode {
 
 //        follower.getTotalHeading();
 
+
+        if (gamepad2.dpad_left || gamepad1.dpad_left)
+            specimenmode = true;
+        if (gamepad2.dpad_right || gamepad1.dpad_right) {
+            specimenmode = false;
+            liftLiftedTarget = LIFT_HIGH_BASKET;
+        }
+
         if(!specimenmode) {
 
-            if (gamepad2.dpad_left || gamepad1.dpad_left)
-                specimenmode = true;
-            if (gamepad2.dpad_right || gamepad1.dpad_right) {
-                specimenmode = false;
-                liftLiftedTarget = LIFT_HIGH_BASKET;
-            }
 
             if (!gamepad1.left_bumper || colordetected == COLOR.RED || colordetected == COLOR.YELLOW) {
                 extendoTarget = EXTENDO_RETRACTED;
@@ -412,13 +414,13 @@ public class NewRed extends OpMode {
                 else
                     liftTarget = liftLiftedTarget;
 
-                if (gamepad2.right_bumper)
+                if (gamepad2.right_bumper || gamepad1.left_trigger > 0.5)
                     clawTarget = CLAW_OPEN;
                 else
                     clawTarget = CLAW_CLOSED;
             }
             else {
-                if (gamepad2.right_bumper)
+                if (gamepad2.right_bumper || gamepad1.left_trigger > 0.5)
                     clawTarget = CLAW_OPEN;
                 else
                     clawTarget = CLAW_CLOSED;

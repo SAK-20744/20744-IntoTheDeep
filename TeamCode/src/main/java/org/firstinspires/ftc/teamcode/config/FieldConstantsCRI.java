@@ -45,6 +45,12 @@ public class FieldConstantsCRI {
 //    public static final Pose blueObservationPushingEndPose = new Pose(22.5, 68.0, Math.toRadians(0));
 
 
+    //CRI poses
+    public static final Pose commonAreaBlockPose = new Pose(-75, 0, Math.toRadians(0));
+    public static final Pose commonAreaPreScorePose = new Pose(-98, 0, Math.toRadians(0));
+    public static final Pose oppositeAreaControlBucketScorePose = new Pose(-100, -22, Math.toRadians(0));
+    public static final Pose oppositeAreaBucketScorePose = new Pose(-117, -17.6, Math.toRadians(45));
+
 
     // Blue Observation Specimen Poses
     public static final Pose blueObservationSpecimenSetPose = new Pose(13, 35, Math.toRadians(0));
