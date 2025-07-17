@@ -4,6 +4,7 @@ import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_CLOSED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_INT;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_OPEN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLAW_SPEC;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.CLIPUP;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_EXTENDED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.EXTENDO_RETRACTED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.E_RETRACT_POWER;
@@ -11,14 +12,17 @@ import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_IN;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OFF;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.INTAKE_OUT;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_DROP;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_PICKUP;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_SCORING;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.LDIFFY_TRANSFERING;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_HIGH_BASKET;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_HIGH_RUNG;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_MID_BASKET;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_RETRACTED;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.LIFT_SPEC_RETRACTED;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.RANGEFINDERRANGE;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_DROP;
+import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_PICKUP;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_SCORING;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.RDIFFY_TRANSFERING;
 import static org.firstinspires.ftc.teamcode.config.RobotConstants.WRIST_CLOSE_INTAKING;
@@ -80,7 +84,7 @@ public class NewRed extends OpMode {
     private DcMotorEx rightFront;
     private DcMotorEx rightRear;
 
-//    private boolean specimenmode = false, specimenScoring = false;
+    private boolean specimenmode = false, specimenScoring = false;
 
     private double looptime = 0;
     private  boolean scoring = false;
@@ -272,12 +276,15 @@ public class NewRed extends OpMode {
 
 //        follower.getTotalHeading();
 
-        if(gamepad2.dpad_left || gamepad1.dpad_left)
-//            specimenmode = true;
-        if(gamepad2.dpad_right || gamepad1.dpad_right) {
-//            specimenmode = false;
-            liftLiftedTarget = LIFT_HIGH_BASKET;
-        }
+        if(!specimenmode) {
+
+            if (gamepad2.dpad_left || gamepad1.dpad_left)
+                specimenmode = true;
+            if (gamepad2.dpad_right || gamepad1.dpad_right) {
+                specimenmode = false;
+                liftLiftedTarget = LIFT_HIGH_BASKET;
+            }
+
             if (!gamepad1.left_bumper || colordetected == COLOR.RED || colordetected == COLOR.YELLOW) {
                 extendoTarget = EXTENDO_RETRACTED;
 
@@ -327,19 +334,16 @@ public class NewRed extends OpMode {
                 rDiffyTarget = RDIFFY_SCORING;
             }
 
-            if(scoring)
-            {
-                if(gamepad1.right_bumper || gamepad2.right_bumper || sampleclawopenthingy) {
+            if (scoring) {
+                if (gamepad1.right_bumper || gamepad2.right_bumper || sampleclawopenthingy) {
                     clawTarget = CLAW_INT;
                     rDiffyTarget = RDIFFY_DROP;
                     lDiffyTarget = LDIFFY_DROP;
                     clawTarget = CLAW_OPEN;
                     sampleclawopenthingy = false;
-                }
-                else
+                } else
                     clawTarget = CLAW_CLOSED;
-            }
-            else {
+            } else {
                 if (gamepad2.right_bumper && !gamepad1.left_bumper || readyToTransfer) {
                     clawTarget = CLAW_CLOSED;
                 } else {
@@ -347,14 +351,91 @@ public class NewRed extends OpMode {
                 }
             }
 
+        }
+
+        else {
+
+            if (!gamepad1.left_bumper || colordetected == COLOR.RED || colordetected == COLOR.YELLOW) {
+                extendoTarget = EXTENDO_RETRACTED;
+
+                if (gamepad1.y || colordetected == COLOR.BLUE) {
+                    intakePower = INTAKE_OUT;
+                    wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_CLOSE_INTAKING;
+                }
+                else {
+                    intakePower = INTAKE_OFF;
+                    wristTarget = WRIST_TRANSFERING;
+                }
+
+            } else {
+                extendoTarget = EXTENDO_EXTENDED;
+
+                if (gamepad1.y || colordetected == COLOR.BLUE) {
+                    intakePower = INTAKE_OUT;
+                    wristTarget = WRIST_UP;
+                } else if (gamepad1.right_bumper && !(colordetected == COLOR.RED || colordetected == COLOR.YELLOW)) {
+                    intakePower = INTAKE_IN;
+                    wristTarget = WRIST_INTAKING;
+                } else {
+                    intakePower = INTAKE_OFF;
+                    wristTarget = WRIST_UP;
+                }
+            }
+
+            liftLiftedTarget = LIFT_HIGH_RUNG;
+
+            boolean clawopenthingy = false;
+
+            if (gamepad1.a) {
+                specimenScoring = false;
+                clawopenthingy = true;
+                liftTarget = LIFT_SPEC_RETRACTED;
+                lDiffyTarget = LDIFFY_PICKUP;
+                rDiffyTarget = RDIFFY_PICKUP;
+            }
+
+            if (gamepad1.b) {
+                specimenScoring = true;
+                clawTarget = CLAW_CLOSED;
+                liftTarget = liftLiftedTarget;
+                lDiffyTarget = LDIFFY_TRANSFERING;
+                rDiffyTarget = RDIFFY_TRANSFERING;
+            }
+
+            if(specimenScoring) {
+
+                if (gamepad1.right_trigger > 0.5)
+                    liftTarget = liftLiftedTarget + CLIPUP;
+                else
+                    liftTarget = liftLiftedTarget;
+
+                if (gamepad2.right_bumper)
+                    clawTarget = CLAW_OPEN;
+                else
+                    clawTarget = CLAW_CLOSED;
+            }
+            else {
+                if (gamepad2.right_bumper)
+                    clawTarget = CLAW_OPEN;
+                else
+                    clawTarget = CLAW_CLOSED;
+            }
+
+
+        }
+
+
         double clawActual = clawAnalog.getVoltage() / 3.3 * 360;
         telemetry.addData("Claw Actual", clawActual);
 
         double wristActual = wristAnalog.getVoltage() / 3.3 * 360;
         telemetry.addData("Wrist Actual", wristActual);
 
-        if(extendoTarget == EXTENDO_RETRACTED && liftTarget == LIFT_RETRACTED && !(colordetected == COLOR.NONE) && wristActual < wristNeeded && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
-            readyToTransfer = true;
+        if(extendoTarget == EXTENDO_RETRACTED && liftTarget == LIFT_RETRACTED && !specimenmode && !(colordetected == COLOR.NONE) && wristActual < wristNeeded && extendo.getCurrentPosition() < 25 && rLift.getCurrentPosition() < 25)
+             readyToTransfer = true;
         else
             readyToTransfer = false;
 
