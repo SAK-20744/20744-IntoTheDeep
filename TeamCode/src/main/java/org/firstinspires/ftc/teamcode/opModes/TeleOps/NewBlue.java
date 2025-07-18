@@ -925,7 +925,7 @@ public class NewBlue extends OpMode {
                 } else
                     clawTarget = CLAW_CLOSED;
             } else {
-                if (gamepad2.right_bumper && !gamepad1.left_bumper || readyToTransfer) {
+                if ((gamepad1.left_trigger > 0.5 || gamepad2.right_bumper) && !gamepad1.left_bumper || readyToTransfer) {
                     clawTarget = CLAW_CLOSED;
                 } else {
                     clawTarget = CLAW_OPEN;
