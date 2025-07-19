@@ -60,6 +60,7 @@ public class farBucket extends OpMode {
             case 0:
                 auto.startBucket();
                 auto.follower.followPath(auto.commonBlock, true);
+                pathTimer.resetTimer();
                 setPathState(1);
                 break;
             case 1:
