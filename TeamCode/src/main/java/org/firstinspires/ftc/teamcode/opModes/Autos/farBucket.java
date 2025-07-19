@@ -22,7 +22,9 @@ public class farBucket extends OpMode {
         auto = new farBucketAuto(hardwareMap, telemetry, new Follower(hardwareMap), true, true);
         Actions.runBlocking(auto.extend.retractExtendo);
         Actions.runBlocking(auto.intake.pivotTransfer);
-        Actions.runBlocking(auto.diffy.diffyMoveClipping);
+        Actions.runBlocking(auto.diffy.diffyMoveTransfering);
+
+
 
         pathTimer.resetTimer();
 
@@ -58,13 +60,13 @@ public class farBucket extends OpMode {
     public void pathUpdate() {
         switch (pathState) {
             case 0:
-                auto.startBucket();
+//                auto.startBucket();
                 auto.follower.followPath(auto.commonBlock, true);
-                pathTimer.resetTimer();
+//                pathTimer.resetTimer();
                 setPathState(1);
                 break;
             case 1:
-                if(!auto.follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 20) {
+                if(!auto.follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 18) {
 //                    auto.startRetract();
 //                    auto.follower.followPath(auto.element1, true);
                     setPathState(2);
@@ -92,9 +94,21 @@ public class farBucket extends OpMode {
                 }
                 break;
             case 5:
-                if(!auto.follower.isBusy()) {
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
+                    auto.startBucket();
+                    pathTimer.resetTimer();
+                    setPathState(6);
+                }
+            case 6:
+                if(!auto.follower.isBusy() && pathTimer.getElapsedTimeSeconds() > 2) {
+                    auto.startRetract();
+                    setPathState(7);
+                }
+            case 7:
+                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
                     setPathState(-1);
                 }
+
                 break;
 //            case 6:
 //                if(!auto.follower.isBusy() && auto.actionNotBusy()) {
