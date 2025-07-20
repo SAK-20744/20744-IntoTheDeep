@@ -118,6 +118,8 @@ public class NewRed extends OpMode {
     private int liftLiftedTarget = LIFT_HIGH_BASKET;
     private int extendoTarget = EXTENDO_RETRACTED;
 
+    private double closedTarget = CLAW_CLOSED;
+
     private double lDiffyTarget = LDIFFY_TRANSFERING;
     private double rDiffyTarget = RDIFFY_TRANSFERING;
 
@@ -284,6 +286,11 @@ public class NewRed extends OpMode {
             liftLiftedTarget = LIFT_HIGH_BASKET;
         }
 
+        if (gamepad2.dpad_left || gamepad1.dpad_left)
+            closedTarget = CLAW_CLOSED + 0.05;
+        if (gamepad2.dpad_right || gamepad1.dpad_right)
+            closedTarget = CLAW_CLOSED - 0.05;
+
         if(!specimenmode) {
 
 
@@ -344,10 +351,10 @@ public class NewRed extends OpMode {
                     clawTarget = CLAW_OPEN;
                     sampleclawopenthingy = false;
                 } else
-                    clawTarget = CLAW_CLOSED;
+                    clawTarget = closedTarget;
             } else {
                 if ((gamepad1.left_trigger > 0.5 || gamepad2.right_bumper) && !gamepad1.left_bumper || readyToTransfer) {
-                    clawTarget = CLAW_CLOSED;
+                    clawTarget = closedTarget;
                 } else {
                     clawTarget = CLAW_OPEN;
                 }
@@ -401,7 +408,7 @@ public class NewRed extends OpMode {
 
             if (gamepad1.b) {
                 specimenScoring = true;
-                clawTarget = CLAW_CLOSED;
+                clawTarget = closedTarget;
                 liftTarget = liftLiftedTarget;
                 lDiffyTarget = LDIFFY_TRANSFERING;
                 rDiffyTarget = RDIFFY_TRANSFERING;
@@ -417,13 +424,13 @@ public class NewRed extends OpMode {
                 if (gamepad2.right_bumper || gamepad1.left_trigger > 0.5)
                     clawTarget = CLAW_OPEN;
                 else
-                    clawTarget = CLAW_CLOSED;
+                    clawTarget = closedTarget;
             }
             else {
                 if (gamepad2.right_bumper || gamepad1.left_trigger > 0.5)
                     clawTarget = CLAW_OPEN;
                 else
-                    clawTarget = CLAW_CLOSED;
+                    clawTarget = closedTarget;
             }
 
 
