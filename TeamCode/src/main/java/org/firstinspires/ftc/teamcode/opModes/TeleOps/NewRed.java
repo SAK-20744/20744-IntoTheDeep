@@ -286,9 +286,9 @@ public class NewRed extends OpMode {
             liftLiftedTarget = LIFT_HIGH_BASKET;
         }
 
-        if (gamepad2.dpad_left || gamepad1.dpad_left)
+        if (gamepad2.dpad_up || gamepad1.dpad_up)
             closedTarget = CLAW_CLOSED + 0.05;
-        if (gamepad2.dpad_right || gamepad1.dpad_right)
+        if (gamepad2.dpad_down || gamepad1.dpad_down)
             closedTarget = CLAW_CLOSED - 0.05;
 
         if(!specimenmode) {
